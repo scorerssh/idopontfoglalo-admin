@@ -1,7 +1,6 @@
 <script setup>
 import { reactive } from 'vue'
 import { useUserStore } from '@features/users/stores/user.store'
-import userCreateSchema from '../schemas/userCreate.schema'
 
 const emit = defineEmits(['close'])
 
@@ -21,26 +20,11 @@ const formData = reactive({
     role: 'User'
 })
 
-const errors = reactive({
-    username: null,
-    email: null,
-    password: null,
-    role: null
-})
-
-const resetErrors = () => {
-    errors.username = null
-    errors.email = null
-    errors.password = null
-    errors.role = null
-}
-
 const resetForm = () => {
     formData.username = ''
     formData.email = ''
     formData.password = ''
     formData.role = 'User'
-    resetErrors()
 
 }
 
