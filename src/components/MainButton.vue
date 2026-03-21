@@ -8,7 +8,9 @@ const props = defineProps({
     type: String,
     onClick: Function,
     to: String,
-    icon: Object
+    icon: Object,
+    iconClass: String,
+    buttonClass: String,
 })
 
 function handleClick() {
@@ -23,9 +25,9 @@ const componentType = computed(() => {
 </script>
 
 <template>
-    <component :is="componentType" :to="componentType === RouterLink ? to : undefined" @click="handleClick">
+    <component :is="componentType" :to="componentType === RouterLink ? to : undefined" @click="handleClick" :class="[ props.buttonClass, 'flex items-center gap-2 flex-row gap-x-2 p-2' ]">
         <span v-if="props.icon">
-            <component :is="props.icon" class="w-6 h-6" />
+            <component :is="props.icon" :class="[ props.iconClass ]" />
         </span>
         <span v-if="props.text">{{ props.text }}</span>
     </component>
