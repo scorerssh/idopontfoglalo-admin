@@ -1,25 +1,43 @@
 <script setup>
 import MainTitle from '@shared/components/MainTitle.vue'
+import { BookMarked, Rss, CalendarCheck, GalleryHorizontalEnd, MapPinHouse } from 'lucide-vue-next';
+import DashboardStatCard from '@shared/components/DashboardStatCard.vue';
+
 const statCardContent = [
     {
-        title: 'Ma aktív szobák', icon: '', text: '', additional: '',
+        title: 'Ma aktív szobák', content: '23', icon: CalendarCheck, additional: 'asdf', bgColor: '#f3fbff', iconBgColor: '#c8f1fb',
     },
     {
-        title: 'Foglalt szobák', icon: '', text: '', additional: '',
+        title: 'Foglalt szobák', content: '34', icon: BookMarked, additional: 'asdf', bgColor: '#fef5f8', iconBgColor: '#fbc3d7',
     },
     {
-        title: 'Elérhető szobák', icon: '', text: '', additional: '',
+        title: 'Elérhető szobák', content: '56', icon: Rss, additional: 'asdf', bgColor: '#fff0ec', iconBgColor: '#fdd1c5',
     },
     {
-        title: 'Leadott foglalások', icon: '', text: '', additional: '',
+        title: 'Leadott foglalások', content: '540', icon: GalleryHorizontalEnd, additional: 'asdf', bgColor: '#fffcf1', iconBgColor: '#f9e7b5',
+    },
+    {
+        title: 'Összes apartman', content: '90', icon: MapPinHouse, additional: 'asdf', bgColor: '#fef3ff', iconBgColor: '#fbcffd',
     }
 ]
+
+const dashboardStats = {
+    activeRooms: 12,
+    bookedRooms: 34,
+    availableRooms: 56,
+    submittedBookings: 78,
+    totalApartments: 90
+}
+
 </script>
 
 <template>
     <div class="listing-overview-continer w-full pb-4 gap-4 flex flex-col">
         <MainTitle title="Áttekintés" barColor="#fbcfc4" />
-        <div class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <DashboardStatCard v-for="(card, index) in statCardContent" :key="index" :title="card.title"
+                :icon="card.icon" :additional="card.additional" :bgColor="card.bgColor" :iconBgColor="card.iconBgColor"
+                :content="card.content" />
         </div>
     </div>
     <!-- Revenue -->
