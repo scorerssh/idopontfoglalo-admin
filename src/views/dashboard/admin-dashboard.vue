@@ -20,26 +20,26 @@ const statCardContent = [
         title: 'Összes apartman', content: '90', icon: MapPinHouse, additional: 'asdf', bgColor: '#fef3ff', iconBgColor: '#fbcffd',
     }
 ]
-
-const dashboardStats = {
-    activeRooms: 12,
-    bookedRooms: 34,
-    availableRooms: 56,
-    submittedBookings: 78,
-    totalApartments: 90
-}
-
 </script>
 
 <template>
     <div class="listing-overview-continer w-full pb-4 gap-4 flex flex-col">
         <MainTitle title="Áttekintés" barColor="#fbcfc4" />
-        <div class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            <DashboardStatCard v-for="(card, index) in statCardContent" :key="index" :title="card.title"
-                :icon="card.icon" :additional="card.additional" :bgColor="card.bgColor" :iconBgColor="card.iconBgColor"
-                :content="card.content" />
-        </div>
+        <TransitionGroup name="card" appear tag="div" class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <DashboardStatCard
+                v-for="(card, index) in statCardContent"
+                :key="index"
+                :title="card.title"
+                :icon="card.icon"
+                :additional="card.additional"
+                :bgColor="card.bgColor"
+                :iconBgColor="card.iconBgColor"
+                :content="card.content"
+                :style="{ animationDelay: `${index * 0.2}s` }"
+            />
+        </TransitionGroup>
     </div>
+
     <!-- Revenue -->
     <div class="revenue-sale-progress w-full flex flex-row justify-between pb-4">
         <div class="revenue-stats-container w-[70%]">
@@ -49,12 +49,30 @@ const dashboardStats = {
             <MainTitle title="Szobák bevételei" barColor="#c5edfc" />
         </div>
     </div>
-    <!-- Listing -->
 
+    <!-- Listing -->
     <div class="listing">
         <MainTitle title="Listázás" barColor="#d8d6f9" />
     </div>
-
 </template>
 
-<style scoped></style>
+<style scoped>
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-enter-active {
+    animation: slideUp 0.4s ease both;
+}
+
+.card-enter-from {
+    opacity: 0;
+}
+</style>
