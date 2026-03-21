@@ -14,7 +14,7 @@ const statCardContent = [
         title: 'Elérhető szobák', content: '56', icon: Rss, additional: 'asdf', bgColor: '#fff0ec', iconBgColor: '#fdd1c5',
     },
     {
-        title: 'Leadott foglalások', content: '540', icon: GalleryHorizontalEnd, additional: 'asdf', bgColor: '#fffcf1', iconBgColor: '#f9e7b5',
+        title: 'Leadott foglalások', content: '540', icon: GalleryHorizontalEnd, additional: 'asdf', bgColor: '#fdf6d8', iconBgColor: '#f4d778',
     },
     {
         title: 'Összes apartman', content: '90', icon: MapPinHouse, additional: 'asdf', bgColor: '#fef3ff', iconBgColor: '#fbcffd',

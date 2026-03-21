@@ -4,6 +4,7 @@ import DashboardStatCard from '@shared/components/DashboardStatCard.vue'
 import MainButton from '@components/MainButton.vue'
 import UserCreateModal from '@features/users/components/UserCreateModal.vue'
 import UserModifyModal from '@features/users/components/UserModifyModal.vue'
+import UserCard from '@features/users/components/UserCard.vue'
 import { useUserStore } from '@/features/users/stores/user.store'
 import { ref, onMounted } from 'vue'
 
@@ -56,15 +57,8 @@ onMounted(() => {
                 <MainButton @click="openCreateModal" :text="'Felhasználó hozzáadása'" />
             </span>
         </div>
-        <div class="user-list w-full">
-            <ul class="flex flex-col gap-y-2">
-                <li class="flex flex-row border-b border-gray-200" v-for="user in userStore.users" :key="user.id">
-                    <span>{{ user.userName }}</span>
-                    <span>{{ user.userEmail }}</span>
-                    <span>{{ user.role }}</span>
-                    <button @click="openModifyModal(user)">Módosítás</button>
-                </li>
-            </ul>
+        <div class="user-list w-full h-full mt-4 overflow-y-scroll scrollbar-hide grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <UserCard v-for="user in userStore.users" :key="user.id" :email="user.userEmail" :userName="user.userName" :role="user.role" :activityStatus="user.activityStatus" :cityName="user.cityName" :countryName="user.countryName" :region="user.region" />
         </div>
         <button @click="userStore.goToPage(userStore.pagination.page - 1)">
             Előző oldal

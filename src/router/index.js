@@ -14,23 +14,7 @@ const router = createRouter({
     },
     {
       path: '/',
-      component: () => import('@layouts/UserLayout.vue'),
-      children: [
-        {
-          path: '/user-dashboard',
-          name: 'user-dashboard',
-          component: () => import('@views/dashboard/user-dashboard.vue'),
-        },
-        {
-          path: '/connected-platforms',
-          name: 'connected-platforms',
-          component: () => import('@views/connected-platforms.vue'),
-        },
-      ],
-    },
-    {
-      path: '/',
-      component: () => import('@layouts/AdminLayout.vue'),
+      component: () => import('@layouts/DefaultLayout.vue'),
       children: [
         {
           path: '/admin-dashboard',
@@ -48,6 +32,11 @@ const router = createRouter({
           component: () => import('@/views/bookings.vue'),
         },
         {
+          path: '/rooms',
+          name: 'rooms',
+          component: () => import('@/views/rooms.vue'),
+        },  
+        {
           path: '/settings',
           name: 'settings',
           component: () => import('@/views/settings.vue'),
@@ -57,23 +46,23 @@ const router = createRouter({
           name: 'apartments',
           component: () => import('@/views/apartments.vue'),
         },
-      ],
-    },
-    {
-      path: '/videos',
-      name: 'videos',
-      component: () => import('@views/videos.vue'),
-    },
-    {
-      path: '/calendar',
-      name: 'calendar',
-      component: () => import('@views/calendar.vue'),
-    },
+        {
+          path: '/videos',
+          name: 'videos',
+          component: () => import('@views/videos.vue'),
+        },
+        {
+          path: '/calendar',
+          name: 'calendar',
+          component: () => import('@views/calendar.vue'),
+        },
 
-    {
-      path: '/403',
-      name: 'forbidden',
-      component: () => import('@views/errors/403.vue'),
+        {
+          path: '/403',
+          name: 'forbidden',
+          component: () => import('@views/errors/403.vue'),
+        },
+      ],
     },
 
     {
