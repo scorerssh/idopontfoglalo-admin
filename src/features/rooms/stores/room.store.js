@@ -7,8 +7,23 @@ const svc = roomService
 export const useRoomStore = defineStore('roomStore', {
   state: () => ({
     rooms: [],
+    pagination: {
+      page: 1,
+      perPage: 10,
+    },
+    filters: {
+      name: '',
+      minCapacity: null,
+      maxCapacity: null,
+    },
+    order: {
+      sortBy: 'name',
+      sort: 'Ascending',
+      combineWith: 'And',
+    },
     ops: {
       getAll: defaultOp(),
+      getById: defaultOp(),
       create: defaultOp(),
       update: defaultOp(),
       delete: defaultOp(),
@@ -18,11 +33,27 @@ export const useRoomStore = defineStore('roomStore', {
   getters: {},
 
   actions: {
-    async getAll() {
+    async getAll(overrides = {}) {
+      const activeFilters = Object.fromEntries(
+        Object.entries(this.filters).filter(
+          ([key, value]) =>
+            ['name', 'minCapacity', 'maxCapacity'].includes(key) &&
+            value !== '' &&
+            value !== null &&
+            value !== undefined,
+        ),
+      )
+
+      const payload = {
+        page: this.pagination.page,
+        ...(Object.keys(activeFilters).length > 0 ? { filter: activeFilters } : {}),
+        ...overrides,
+      }
+
       return runOp(
         this.ops.getAll,
         async () => {
-          const data = await svc.getAll()
+          const data = await svc.getAll(payload)
           this.rooms = data
           return data
         },
@@ -33,13 +64,28 @@ export const useRoomStore = defineStore('roomStore', {
       )
     },
 
+    async getById(id) {
+      if (!id) throw new Error('Nincs azonosító')
+      return runOp(
+        this.ops.getById,
+        async () => {
+          const data = await svc.getById(id)
+          return data
+        },
+        {
+          notifyOnSuccess: false,
+          errorMessage: 'Sikertelen volt a szoba betöltése.',
+        },
+      )
+    },
+
     async create(payload) {
       if (!payload) throw new Error('Nincs payload')
       return runOp(
         this.ops.create,
         async () => {
           const data = await svc.create(payload)
-          this.rooms.push(data)
+          await this.getAll()
           return data
         },
         {
@@ -50,18 +96,13 @@ export const useRoomStore = defineStore('roomStore', {
       )
     },
 
-    async update(id, payload) {
+    async update(payload) {
       if (!payload) throw new Error('Nincs payload')
-      if (!id) throw new Error('Nincs azonosító')
       return runOp(
         this.ops.update,
         async () => {
-          const updated = await svc.update(id, payload)
-          const key = updated?.id ?? updated?.userId ?? payload.id
-          const index = this.rooms.findIndex((r) => r.id === key)
-          if (index !== -1) {
-            this.rooms[index] = { ...this.rooms[index], ...updated }
-          }
+          const updated = await svc.update(payload)
+          await this.getAll()
           return updated
         },
         {
@@ -89,6 +130,18 @@ export const useRoomStore = defineStore('roomStore', {
           errorMessage: 'Sikertelen volt a szoba törlése.',
         },
       )
+    },
+
+    async goToPage(page) {
+      if (page < 1) return
+      this.pagination.page = page
+      return this.getAll()
+    },
+
+    async applyFilters(newFilters = {}) {
+      this.filters = { ...this.filters, ...newFilters }
+      this.pagination.page = 1
+      return this.getAll()
     },
   },
 })

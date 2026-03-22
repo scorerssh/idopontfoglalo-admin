@@ -1,5 +1,5 @@
 <script setup>
-import { EllipsisVertical, HouseHeart } from 'lucide-vue-next'
+import { EllipsisVertical, House } from 'lucide-vue-next'
 import placeholderImage from '@assets/pictures/profile_pic_placeholder.webp'
 import { computed } from 'vue'
 
@@ -85,7 +85,7 @@ function openModifyModal(selectedUser) {
                     <img :src="placeholderImage" alt="User placeholder image"
                         class="rounded-full w-12 h-12 object-cover" />
                 </div>
-                <div class="name-email flex flex-col">
+                <div class="name-email flex flex-col justify-center">
                     <span class="text-black font-semibold">
                         {{ userName }}
                     </span>
@@ -104,20 +104,20 @@ function openModifyModal(selectedUser) {
                 </span>
             </div>
         </section>
-        <section class="middle-section flex flex-col gap-y-3">
+        <section class="middle-section flex flex-col gap-y-2">
             <div class="user-role flex flex-row items-center mt-3 w-full gap-x-2">
                 <div class="flex w-1/2 flex-col rounded-lg">
                     <span class="text-sm text-black/70">Jogosultság</span>
                     <span :class="['text-lg font-semibold', props.role === 'Admin' ? 'text-red-600' : 'text-blue-600']">
                         {{ role ?? 'Ismeretlen' }}
-                    </span> 
+                    </span>
                 </div>
                 <div class="flex flex-col  w-1/2">
-                <span class="text-sm text-black/70">Város</span>
-                <span class="text-lg text-black font-semibold">{{ cityName ?? 'Ismeretlen' }}</span>
+                    <span class="text-sm text-black/70">Város</span>
+                    <span class="text-lg text-black font-semibold">{{ cityName ?? 'Ismeretlen' }}</span>
+                </div>
             </div>
-            </div>
-            
+
             <div class="user-destination flex flex-row justify-between items-center mt-3 w-full gap-x-2">
                 <div class="flex flex-col w-1/2">
                     <span class="text-sm text-black/70">Ország</span>
@@ -131,9 +131,10 @@ function openModifyModal(selectedUser) {
         </section>
         <section class="bottom-section flex flex-row justify-between items-center mt-3">
             <div class="room-counter">
-                <HouseHeart class="h-5 w-5" />
+                <House class="h-5 w-5" />
             </div>
-            <button @click="openModifyModal(selectedUser)"  class="actions p-2 rounded-full hover:bg-gray-200 transition-colors">
+            <button @click="openModifyModal(selectedUser)"
+                class="actions p-2 rounded-full hover:bg-gray-200 transition-colors">
                 <EllipsisVertical class="h-5 w-5" />
             </button>
         </section>

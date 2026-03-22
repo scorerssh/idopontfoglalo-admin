@@ -20,6 +20,7 @@ const showPassword = ref(false)
 let interval = null
 
 const authStore = useAuthStore()
+const userRole = authStore.user?.role || null
 
 const form = reactive({
     email: '',
@@ -34,7 +35,12 @@ const submitLogin = async () => {
     }
     try {
         await authStore.login(credentials)
-        router.push('/dashboard')
+        if (userRole === 'Admin') {
+            router.push('/admin-dashboard')
+        } else {
+            router.push('/user-dashboard')
+        }
+
     } catch (error) {
         console.error('Login failed:', error)
     }

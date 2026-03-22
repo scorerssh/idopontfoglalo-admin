@@ -1,5 +1,4 @@
 <script setup>
-import { Icon } from 'lucide-vue-next';
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
@@ -25,9 +24,10 @@ const componentType = computed(() => {
 </script>
 
 <template>
-    <component :is="componentType" :to="componentType === RouterLink ? to : undefined" @click="handleClick" :class="[ props.buttonClass, 'flex items-center gap-2 flex-row gap-x-2 p-2' ]">
+    <component :is="componentType" :to="componentType === RouterLink ? to : undefined" @click="handleClick"
+        :class="[props.buttonClass, 'flex items-center gap-2 flex-row gap-x-2 p-2']">
         <span v-if="props.icon">
-            <component :is="props.icon" :class="[ props.iconClass ]" />
+            <component :is="props.icon" :class="[props.iconClass]" />
         </span>
         <span v-if="props.text">{{ props.text }}</span>
     </component>

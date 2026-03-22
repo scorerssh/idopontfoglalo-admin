@@ -14,7 +14,8 @@ const props = defineProps({
 
 <template>
     <div>
-        <div class="p-4 bg-white flex-row rounded-lg flex items-center gap-x-4" :style="{ backgroundColor: bgColor }">
+        <div class="p-4 bg-white flex-row rounded-lg shadow flex items-center gap-x-4"
+            :style="{ backgroundColor: bgColor }">
             <div class="icon-container">
                 <div class="p-2 flex items-center justify-center rounded-full "
                     :style="{ backgroundColor: iconBgColor }">

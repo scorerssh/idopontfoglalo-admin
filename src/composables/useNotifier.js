@@ -1,6 +1,6 @@
 // composables/useNotifier.js
 import { storeToRefs } from 'pinia'
-import { useNotificationStore } from '@/stores/notifcation'
+import { useNotificationStore } from '@/stores/notification'
 export function useNotifier() {
   const store = useNotificationStore()
   const { type, message, id } = storeToRefs(store)

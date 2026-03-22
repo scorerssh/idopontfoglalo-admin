@@ -35,7 +35,7 @@ const router = createRouter({
           path: '/rooms',
           name: 'rooms',
           component: () => import('@/views/rooms.vue'),
-        },  
+        },
         {
           path: '/settings',
           name: 'settings',

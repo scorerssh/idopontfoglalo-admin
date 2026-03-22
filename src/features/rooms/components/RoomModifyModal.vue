@@ -1,45 +1,58 @@
 <script setup>
 import { reactive, watch } from 'vue'
-import { useApartmanStore } from '@/features/apartmans/stores/apartman.store'
+import { useRoomStore } from '@/features/rooms/stores/room.store'
 
 const emit = defineEmits(['close'])
 
 const props = defineProps({
     showModal: { type: Boolean, required: true },
-    apartmanData: { type: Object, default: null }
+    roomData: { type: Object, default: null },
 })
 
-const apartmanStore = useApartmanStore()
+const roomStore = useRoomStore()
 
 const formData = reactive({
     id: null,
     name: '',
+    minCapacity: 0,
+    maxCapacity: 0,
+    apartmanId: null,
 })
 
-watch(() => props.apartmanData, (newApartman) => {
-    if (newApartman) {
-        formData.id = newApartman.id
-        formData.name = newApartman.name ?? ''
-    }
-}, { immediate: true })
+watch(
+    () => props.roomData,
+    (newRoom) => {
+        if (newRoom) {
+            formData.id = newRoom.id
+            formData.name = newRoom.name ?? ''
+            formData.minCapacity = Number(newRoom.minCapacity ?? 0)
+            formData.maxCapacity = Number(newRoom.maxCapacity ?? 0)
+            formData.apartmanId = Number(newRoom.apartmanId ?? null)
+        }
+    },
+    { immediate: true },
+)
 
-const updateApartman = async () => {
+const updateRoom = async () => {
     if (!formData.id) return
 
     const payload = {
-        id: props.apartmanData.id,
+        roomId: formData.id,
         name: formData.name,
-
+        minCapacity: formData.minCapacity,
+        maxCapacity: formData.maxCapacity,
+        apartmanId: formData.apartmanId,
     }
-    await apartmanStore.update(payload)
+
+    await roomStore.update(payload)
     emit('close')
 }
 
-const deleteApartman = async () => {
+const deleteRoom = async () => {
     if (!formData.id) return
-    if (!confirm('Biztosan szeretnéd törölni ezt az apartmant?')) return
+    if (!confirm('Biztosan szeretnéd törölni ezt a szobát?')) return
 
-    await apartmanStore.delete(formData.id)
+    await roomStore.delete(formData.id)
     emit('close')
 }
 
@@ -50,7 +63,7 @@ const handleClose = () => {
 
 <template>
     <Teleport to="body">
-        <template v-if="showModal && apartmanData">
+        <template v-if="showModal && roomData">
             <div class="modal-backdrop fixed inset-0 bg-black/50 z-40" @click="handleClose" />
             <div
                 class="modal bg-white p-6 rounded-lg shadow-lg fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md z-50 max-h-[90vh] overflow-y-auto">
@@ -61,21 +74,39 @@ const handleClose = () => {
                 </button>
 
                 <div class="modal-content">
-                    <h2 class="text-lg font-semibold mb-4">Apartman módosítása</h2>
+                    <h2 class="text-lg font-semibold mb-4">Szoba módosítása</h2>
 
-                    <form @submit.prevent="updateApartman">
-                        <div class="form-group mb-3">
-                            <label for="name" class="block text-sm font-medium mb-1">
-                                Név:
-                            </label>
-                            <input v-model="formData.name" type="text" id="name"
-                                class="w-full border rounded px-3 py-2 text-sm" required />
+                    <form @submit.prevent="updateRoom">
+                        <div class="grid gap-3">
+                            <div class="form-group">
+                                <label for="name" class="block text-sm font-medium mb-1">Név</label>
+                                <input v-model="formData.name" type="text" id="name"
+                                    class="w-full border rounded px-3 py-2 text-sm" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="minCapacity" class="block text-sm font-medium mb-1">Min kapacitás</label>
+                                <input v-model.number="formData.minCapacity" type="number" id="minCapacity"
+                                    class="w-full border rounded px-3 py-2 text-sm" min="0" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="maxCapacity" class="block text-sm font-medium mb-1">Max kapacitás</label>
+                                <input v-model.number="formData.maxCapacity" type="number" id="maxCapacity"
+                                    class="w-full border rounded px-3 py-2 text-sm" min="0" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="apartmanId" class="block text-sm font-medium mb-1">Apartman ID</label>
+                                <input v-model.number="formData.apartmanId" type="number" id="apartmanId"
+                                    class="w-full border rounded px-3 py-2 text-sm" min="0" required />
+                            </div>
                         </div>
 
-                        <div class="form-actions flex gap-2 justify-end">
+                        <div class="form-actions flex gap-2 justify-end pt-4">
                             <button type="button"
                                 class="px-4 py-2 text-sm rounded border border-red-300 text-red-600 hover:bg-red-50"
-                                @click="deleteApartman">
+                                @click="deleteRoom">
                                 Törlés
                             </button>
                             <button type="button" class="px-4 py-2 text-sm rounded border hover:bg-gray-100"

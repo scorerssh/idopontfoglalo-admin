@@ -1,5 +1,5 @@
 <script setup>
-import { CalendarCheck,GlobeOff, Rss, ClockPlus , Plus} from 'lucide-vue-next'
+import { CalendarCheck, GlobeOff, Rss, ClockPlus, Plus } from 'lucide-vue-next'
 import MainTitle from '@shared/components/MainTitle.vue'
 import DashboardStatCard from '@shared/components/DashboardStatCard.vue'
 import MainButton from '@components/MainButton.vue'
@@ -35,9 +35,9 @@ function closeModifyModal() {
 
 
 const statCardContent = [
-    { title: 'Összes felhasználó', content: contactLenght, icon: CalendarCheck, additional: 'asdf', bgColor: '#f3fbff', iconBgColor: '#c8f1fb',},
-    { title: 'Aktív felhasználók', content: '15', icon: Rss, additional: 'asdf', bgColor: '#fef5f8', iconBgColor: '#fbc3d7',},
-    { title: 'Inaktív felhasználók', content: '8', icon: GlobeOff , additional: 'asdf', bgColor: '#fff0ec', iconBgColor: '#fdd1c5',},
+    { title: 'Összes felhasználó', content: contactLenght, icon: CalendarCheck, additional: 'asdf', bgColor: '#f3fbff', iconBgColor: '#c8f1fb', },
+    { title: 'Aktív felhasználók', content: '15', icon: Rss, additional: 'asdf', bgColor: '#fef5f8', iconBgColor: '#fbc3d7', },
+    { title: 'Inaktív felhasználók', content: '8', icon: GlobeOff, additional: 'asdf', bgColor: '#fff0ec', iconBgColor: '#fdd1c5', },
     { title: 'A hónapban létrehozottak', content: '42', icon: ClockPlus, additional: 'asdf', bgColor: '#fef3ff', iconBgColor: '#fbcffd', },
 ]
 
@@ -50,20 +50,25 @@ onMounted(() => {
     <div>
         <div class="top">
             <MainTitle title="Felhasználók" barColor="#fbcfc4" />
-            <div class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 w-full">
+            <TransitionGroup name="card" appear tag="div"
+                class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 w-full">
                 <DashboardStatCard v-for="(card, index) in statCardContent" :key="index" :title="card.title"
-                    :icon="card.icon" :content="card.content" :additional="card.additional" :bgColor="card.bgColor" :iconBgColor="card.iconBgColor"  />
-            </div>
+                    :icon="card.icon" :content="card.content" :additional="card.additional" :bgColor="card.bgColor"
+                    :iconBgColor="card.iconBgColor" :style="{ animationDelay: `${index * 0.2}s` }" />
+            </TransitionGroup>
         </div>
 
         <div class="title-and-actions flex items-center justify-between mt-6">
             <span class="font-semibold text-base">Felhasználók</span>
             <span class="actions">
-                <MainButton @click="openCreateModal" :text="'Felhasználó hozzáadása'" :icon="Plus"  :buttonClass="'bg-blue-500 hover:bg-blue-600 text-white'"  />
+                <MainButton @click="openCreateModal" :text="'Felhasználó hozzáadása'" :icon="Plus"
+                    :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
             </span>
         </div>
         <div class="user-list w-full h-full mt-4  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <UserCard v-for="user in userStore.users" :key="user.id" :email="user.userEmail" :userName="user.userName" :role="user.role" :activityStatus="user.activityStatus" :cityName="user.cityName" :countryName="user.countryName" :region="user.region"  @openModifyModal="openModifyModal"/>
+            <UserCard v-for="user in userStore.users" :key="user.id" :email="user.userEmail" :userName="user.userName"
+                :role="user.role" :activityStatus="user.activityStatus" :cityName="user.cityName"
+                :countryName="user.countryName" :region="user.region" @openModifyModal="openModifyModal" />
         </div>
         <button @click="userStore.goToPage(userStore.pagination.page - 1)">
             Előző oldal
@@ -77,4 +82,24 @@ onMounted(() => {
     <UserModifyModal :showModal="showModifyModal" @close="closeModifyModal" :userData="selectedUser" />
 </template>
 
-<style scoped></style>
+<style scoped>
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-enter-active {
+    animation: slideUp 0.4s ease both;
+}
+
+.card-enter-from {
+    opacity: 0;
+}
+</style>

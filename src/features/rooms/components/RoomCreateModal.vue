@@ -1,42 +1,41 @@
 <script setup>
 import { reactive } from 'vue'
-import { useUserStore } from '@features/users/stores/user.store'
+import { useRoomStore } from '@/features/rooms/stores/room.store'
 
 const emit = defineEmits(['close'])
 
 const props = defineProps({
     showModal: {
         type: Boolean,
-        required: true
-    }
+        required: true,
+    },
 })
 
-const userStore = useUserStore()
+const roomStore = useRoomStore()
 
 const formData = reactive({
-    username: '',
-    email: '',
-    password: '',
-    role: 'User'
+    name: '',
+    minCapacity: 0,
+    maxCapacity: 0,
+    apartmanId: null,
 })
 
 const resetForm = () => {
-    formData.username = ''
-    formData.email = ''
-    formData.password = ''
-    formData.role = 'User'
-
+    formData.name = ''
+    formData.minCapacity = 0
+    formData.maxCapacity = 0
+    formData.apartmanId = null
 }
 
-const createUser = async () => {
+const createRoom = async () => {
     const payload = {
-        userName: formData.username,
-        userEmail: formData.email,
-        password: formData.password,
-        role: formData.role
+        name: formData.name,
+        minCapacity: formData.minCapacity,
+        maxCapacity: formData.maxCapacity,
+        apartmanId: formData.apartmanId,
     }
 
-    await userStore.create(payload)
+    await roomStore.create(payload)
     resetForm()
     emit('close')
 }
@@ -60,40 +59,36 @@ const handleClose = () => {
                 </button>
 
                 <div class="modal-content">
-                    <h2 class="text-lg font-semibold mb-4">Felhasználó létrehozása</h2>
+                    <h2 class="text-lg font-semibold mb-4">Szoba létrehozása</h2>
 
-                    <form @submit.prevent="createUser">
-                        <div class="form-group mb-3">
-                            <label for="username" class="block text-sm font-medium mb-1">
-                                Felhasználónév:
-                            </label>
-                            <input v-model="formData.username" type="text" id="username"
-                                class="w-full border rounded px-3 py-2 text-sm" required />
+                    <form @submit.prevent="createRoom">
+                        <div class="grid gap-3">
+                            <div class="form-group">
+                                <label for="name" class="block text-sm font-medium mb-1">Név</label>
+                                <input v-model="formData.name" type="text" id="name"
+                                    class="w-full border rounded px-3 py-2 text-sm" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="minCapacity" class="block text-sm font-medium mb-1">Min kapacitás</label>
+                                <input v-model.number="formData.minCapacity" type="number" id="minCapacity"
+                                    class="w-full border rounded px-3 py-2 text-sm" min="0" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="maxCapacity" class="block text-sm font-medium mb-1">Max kapacitás</label>
+                                <input v-model.number="formData.maxCapacity" type="number" id="maxCapacity"
+                                    class="w-full border rounded px-3 py-2 text-sm" min="0" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="apartmanId" class="block text-sm font-medium mb-1">Apartman ID</label>
+                                <input v-model.number="formData.apartmanId" type="number" id="apartmanId"
+                                    class="w-full border rounded px-3 py-2 text-sm" min="0" required />
+                            </div>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label for="email" class="block text-sm font-medium mb-1">
-                                Email:
-                            </label>
-                            <input v-model="formData.email" type="email" id="email"
-                                class="w-full border rounded px-3 py-2 text-sm" required />
-                        </div>
-
-                        <div class="form-group mb-5">
-                            <label for="password" class="block text-sm font-medium mb-1">
-                                Jelszó:
-                            </label>
-                            <input v-model="formData.password" type="password" id="password"
-                                class="w-full border rounded px-3 py-2 text-sm" required />
-                        </div>
-                        <div class="form-group mb-3">
-                            <select v-model="formData.role" class="w-full border rounded px-3 py-2 text-sm">
-                                <option value="User">User</option>
-                                <option value="Admin">Admin</option>
-                            </select>
-                        </div>
-
-                        <div class="form-actions flex gap-2 justify-end">
+                        <div class="form-actions flex gap-2 justify-end pt-4">
                             <button type="button" class="px-4 py-2 text-sm rounded border hover:bg-gray-100"
                                 @click="handleClose">
                                 Mégse

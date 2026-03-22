@@ -5,12 +5,24 @@ import MainButton from '@components/MainButton.vue'
 import RoomCreateModal from '@/features/rooms/components/RoomCreateModal.vue'
 import RoomModifyModal from '@/features/rooms/components/RoomModifyModal.vue'
 import { useRoomStore } from '@/features/rooms/stores/room.store'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, reactive, computed } from 'vue'
 
 const roomStore = useRoomStore()
 const showCreateModal = ref(false)
 const showModifyModal = ref(false)
 const selectedRoom = ref(null)
+
+const statCardContent = computed(() => [
+    { title: 'Összes szoba', text: String(roomStore.rooms.length), additional: '' },
+    { title: 'Oldal', text: String(roomStore.pagination.page), additional: '' },
+    { title: 'Szűrők', text: 'name/max/min', additional: '' },
+])
+
+const filterModel = reactive({
+    name: '',
+    minCapacity: '',
+    maxCapacity: '',
+})
 
 function openCreateModal() {
     showCreateModal.value = true
@@ -30,6 +42,21 @@ function closeModifyModal() {
     selectedRoom.value = null
 }
 
+function applyRoomFilters() {
+    roomStore.applyFilters({
+        name: filterModel.name || '',
+        minCapacity: filterModel.minCapacity === '' ? null : Number(filterModel.minCapacity),
+        maxCapacity: filterModel.maxCapacity === '' ? null : Number(filterModel.maxCapacity),
+    })
+}
+
+function clearRoomFilters() {
+    filterModel.name = ''
+    filterModel.minCapacity = ''
+    filterModel.maxCapacity = ''
+    roomStore.applyFilters({ name: '', minCapacity: null, maxCapacity: null })
+}
+
 onMounted(() => {
     roomStore.getAll()
 })
@@ -42,6 +69,29 @@ onMounted(() => {
             <div class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 w-full">
                 <DashboardStatCard v-for="(card, index) in statCardContent" :key="index" :title="card.title"
                     :text="card.text" :additional="card.additional" />
+            </div>
+        </div>
+
+        <div class="filters mt-6 p-4 bg-white rounded shadow-sm border border-gray-200">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Név</label>
+                    <input v-model="filterModel.name" type="text" class="w-full border rounded px-3 py-2 text-sm" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Min kapacitás</label>
+                    <input v-model="filterModel.minCapacity" type="number" min="1"
+                        class="w-full border rounded px-3 py-2 text-sm" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Max kapacitás</label>
+                    <input v-model="filterModel.maxCapacity" type="number" min="1"
+                        class="w-full border rounded px-3 py-2 text-sm" />
+                </div>
+                <div class="flex items-end gap-2">
+                    <button @click="applyRoomFilters" class="px-4 py-2 rounded bg-blue-600 text-white">Szűrés</button>
+                    <button @click="clearRoomFilters" class="px-4 py-2 rounded border">Törlés</button>
+                </div>
             </div>
         </div>
 

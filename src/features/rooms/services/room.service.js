@@ -1,20 +1,24 @@
 import { api } from '@/api/axios'
 
 export const roomService = {
-  async getAll() {
-    const { data } = await api.get('/api/rooms')
+  async getAll(payload) {
+    const { data } = await api.post('/api/Room/GetAll', payload)
+    return data
+  },
+  async getById(id) {
+    const { data } = await api.get(`/api/Room/${id}`)
     return data
   },
   async create(payload) {
-    const { data } = await api.post('/api/rooms', payload)
+    const { data } = await api.post('/api/Room/Create', payload)
     return data
   },
   async update(payload) {
-    const { data } = await api.patch('/api/rooms/', payload)
+    const { data } = await api.patch('/api/Room/Update', payload)
     return data
   },
   async delete(id) {
-    const { data } = await api.delete(`/api/rooms/${id}`)
+    const { data } = await api.delete(`/api/Room/${id}`)
     return data
   },
 }

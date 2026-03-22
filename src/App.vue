@@ -3,7 +3,7 @@ import { ref, watch, onBeforeUnmount } from 'vue'
 import { storeToRefs } from 'pinia'
 import { RouterView } from 'vue-router'
 import NotifierModal from '@components/NotifierModal.vue'
-import { useNotificationStore } from '@/stores/notifcation'
+import { useNotificationStore } from '@/stores/notification'
 
 const notificationStore = useNotificationStore()
 const { message, id } = storeToRefs(notificationStore)
