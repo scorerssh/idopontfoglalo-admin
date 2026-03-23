@@ -25,7 +25,7 @@ const componentType = computed(() => {
 
 <template>
     <component :is="componentType" :to="componentType === RouterLink ? to : undefined" @click="handleClick"
-        :class="[props.buttonClass, 'flex items-center gap-2 flex-row gap-x-2 p-2']">
+        :class="[props.buttonClass, 'flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow']">
         <span v-if="props.icon">
             <component :is="props.icon" :class="[props.iconClass]" />
         </span>

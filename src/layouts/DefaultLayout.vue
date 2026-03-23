@@ -55,7 +55,7 @@ const navbarLinks = [
             <button @click="toggleSidebar"
                 class="p-2 rounded-md hover:bg-gray-200 flex items-center justify-center mt-2 border border-gray-200">
                 <PanelRightClose :class="[
-                    isSidebarOpen ? 'text-blue-500 rotate-180' : 'text-gray-500',
+                    isSidebarOpen ? 'text-[#275bf6] rotate-180' : 'text-gray-500',
                     'w-4 h-4 transition-transform duration-300 ease-in-out'
                 ]" />
             </button>

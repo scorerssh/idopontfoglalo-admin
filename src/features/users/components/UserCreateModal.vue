@@ -2,6 +2,9 @@
 import { reactive } from 'vue'
 import { useUserStore } from '@features/users/stores/user.store'
 import userCreateSchema from '../schemas/userCreate.schema'
+import DefaultInput from '@components/DefaultInput.vue'
+import DefaultButton from '@/components/DefaultButton.vue'
+import MainTitle from '@/shared/components/MainTitle.vue'
 
 const emit = defineEmits(['close'])
 
@@ -35,7 +38,7 @@ const resetErrors = () => {
     errors.role = null
 }
 
-const resetForm = () => {
+function resetForm() {
     formData.username = ''
     formData.email = ''
     formData.password = ''
@@ -61,6 +64,14 @@ const handleClose = () => {
     resetForm()
     emit('close')
 }
+
+const formInputs = [
+    { inputName: 'username', labelText: 'Felahasználónév:', vModel: formData.username, type: 'text' },
+    { inputName: 'email', labelText: 'Email:', vModel: formData.email, type: 'email' },
+    { inputName: 'password', labelText: 'Jelszó:', vModel: formData.password, type: 'password' },
+    { inputName: 'role', labelText: 'Szerep:', vModel: formData.role, type: 'select', options: ['Admin', 'User'] },
+]
+
 </script>
 
 <template>
@@ -76,48 +87,19 @@ const handleClose = () => {
                 </button>
 
                 <div class="modal-content">
-                    <h2 class="text-lg font-semibold mb-4">Felhasználó létrehozása</h2>
-
-                    <form @submit.prevent="createUser">
-                        <div class="form-group mb-3">
-                            <label for="username" class="block text-sm font-medium mb-1">
-                                Felhasználónév:
-                            </label>
-                            <input v-model="formData.username" type="text" id="username"
-                                class="w-full border rounded px-3 py-2 text-sm" required />
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="email" class="block text-sm font-medium mb-1">
-                                Email:
-                            </label>
-                            <input v-model="formData.email" type="email" id="email"
-                                class="w-full border rounded px-3 py-2 text-sm" required />
-                        </div>
-
-                        <div class="form-group mb-5">
-                            <label for="password" class="block text-sm font-medium mb-1">
-                                Jelszó:
-                            </label>
-                            <input v-model="formData.password" type="password" id="password"
-                                class="w-full border rounded px-3 py-2 text-sm" required />
-                        </div>
-                        <div class="form-group mb-3">
-                            <select v-model="formData.role" class="w-full border rounded px-3 py-2 text-sm">
-                                <option value="User">User</option>
-                                <option value="Admin">Admin</option>
-                            </select>
+                    <MainTitle title="Új felhasználó létrehozása" barColor="#275bf6" :titleClass="'text-lg'" />
+                    <form @submit.prevent="createUser" class="mt-5">
+                        <div class="form-inputs flex flex-col gap-4 mb-6">
+                            <DefaultInput v-for="(input, index) in formInputs" :key="index" :inputName="input.inputName"
+                                :labelText="input.labelText" :type="input.type" v-model="input.vModel"
+                                :labelClass="'text-black/60'" />
                         </div>
 
                         <div class="form-actions flex gap-2 justify-end">
-                            <button type="button" class="px-4 py-2 text-sm rounded border hover:bg-gray-100"
-                                @click="handleClose">
-                                Mégse
-                            </button>
-                            <button type="submit"
-                                class="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700">
-                                Létrehozás
-                            </button>
+                            <DefaultButton text="Mégse" type="button" @click="resetForm"
+                                buttonClass="bg-gray-300 text-gray-700 hover:bg-gray-400" />
+                            <DefaultButton text="Létrehozás" type="submit"
+                                buttonClass="bg-blue-500 text-white hover:bg-blue-600" />
                         </div>
                     </form>
                 </div>

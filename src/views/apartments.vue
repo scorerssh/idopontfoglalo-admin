@@ -1,7 +1,7 @@
 <script setup>
 import MainTitle from '@shared/components/MainTitle.vue'
 import DashboardStatCard from '@shared/components/DashboardStatCard.vue'
-import MainButton from '@components/MainButton.vue'
+import DefaultButton from '@/components/DefaultButton.vue'
 import ApartmanCreateModal from '@/features/apartmans/components/ApartmanCreateModal.vue'
 import ApartmanModifyModal from '@/features/apartmans/components/ApartmanModifyModal.vue'
 import { useApartmanStore } from '@/features/apartmans/stores/apartman.store'
@@ -66,7 +66,7 @@ onMounted(() => {
         <div class="title-and-actions flex items-center justify-between mt-6">
             <span class="font-semibold text-base">Apartmanok listája</span>
             <span class="actions">
-                <MainButton @click="openCreateModal" :text="'Apartman hozzáadása'" />
+                <DefaultButton @click="openCreateModal" :text="'Apartman hozzáadása'" />
             </span>
         </div>
 

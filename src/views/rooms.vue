@@ -1,7 +1,7 @@
 <script setup>
 import MainTitle from '@shared/components/MainTitle.vue'
 import DashboardStatCard from '@shared/components/DashboardStatCard.vue'
-import MainButton from '@components/MainButton.vue'
+import DefaultButton from '@/components/DefaultButton.vue'
 import RoomCreateModal from '@/features/rooms/components/RoomCreateModal.vue'
 import RoomModifyModal from '@/features/rooms/components/RoomModifyModal.vue'
 import { useRoomStore } from '@/features/rooms/stores/room.store'
@@ -98,7 +98,7 @@ onMounted(() => {
         <div class="title-and-actions flex items-center justify-between mt-6">
             <span class="font-semibold text-base">Szobák listája</span>
             <span class="actions">
-                <MainButton @click="openCreateModal" :text="'Szoba hozzáadása'" />
+                <DefaultButton @click="openCreateModal" :text="'Szoba hozzáadása'" />
             </span>
         </div>
 

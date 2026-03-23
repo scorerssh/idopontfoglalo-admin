@@ -1,8 +1,8 @@
 <script setup>
-import { CalendarCheck, GlobeOff, Rss, ClockPlus, Plus } from 'lucide-vue-next'
+import { CalendarCheck, GlobeOff, Rss, ClockPlus, Plus, ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import MainTitle from '@shared/components/MainTitle.vue'
 import DashboardStatCard from '@shared/components/DashboardStatCard.vue'
-import MainButton from '@components/MainButton.vue'
+import DefaultButton from '@components/DefaultButton.vue'
 import UserCreateModal from '@features/users/components/UserCreateModal.vue'
 import UserModifyModal from '@features/users/components/UserModifyModal.vue'
 import UserCard from '@features/users/components/UserCard.vue'
@@ -32,8 +32,6 @@ function closeModifyModal() {
     selectedUser.value = null
 }
 
-
-
 const statCardContent = [
     { title: 'Összes felhasználó', content: contactLenght, icon: CalendarCheck, additional: 'asdf', bgColor: '#f3fbff', iconBgColor: '#c8f1fb', },
     { title: 'Aktív felhasználók', content: '15', icon: Rss, additional: 'asdf', bgColor: '#fef5f8', iconBgColor: '#fbc3d7', },
@@ -61,7 +59,7 @@ onMounted(() => {
         <div class="title-and-actions flex items-center justify-between mt-6">
             <span class="font-semibold text-base">Felhasználók</span>
             <span class="actions">
-                <MainButton @click="openCreateModal" :text="'Felhasználó hozzáadása'" :icon="Plus"
+                <DefaultButton @click="openCreateModal" :text="'Felhasználó hozzáadása'" :icon="Plus"
                     :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
             </span>
         </div>
@@ -70,12 +68,13 @@ onMounted(() => {
                 :role="user.role" :activityStatus="user.activityStatus" :cityName="user.cityName"
                 :countryName="user.countryName" :region="user.region" @openModifyModal="openModifyModal" />
         </div>
-        <button @click="userStore.goToPage(userStore.pagination.page - 1)">
-            Előző oldal
-        </button>
-        <button @click="userStore.goToPage(userStore.pagination.page + 1)">
-            Következő oldal
-        </button>
+        <div class="pagination flex flex-row gap-x-2 justify-end">
+            <DefaultButton @click="userStore.goToPage(userStore.pagination.page - 1)" :icon="ChevronLeft"
+                :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
+            <DefaultButton @click="userStore.goToPage(userStore.pagination.page + 1)" :icon="ChevronRight"
+                :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
+        </div>
+
     </div>
 
     <UserCreateModal :showModal="showCreateModal" @close="closeCreateModal" />

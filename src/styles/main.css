@@ -1,1 +1,11 @@
 @import 'tailwindcss';
+
+.system-blue-bg {
+  background-color: #275bf6;
+}
+.system-blue-bg-hover:hover {
+  background-color: #1a4ad5;
+}
+.system-blue-text {
+  color: #275bf6;
+}
