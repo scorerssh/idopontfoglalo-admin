@@ -63,18 +63,17 @@ onMounted(() => {
                     :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
             </span>
         </div>
-        <div class="user-list w-full h-full mt-4  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="user-list w-full h-full mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <UserCard v-for="user in userStore.users" :key="user.id" :email="user.userEmail" :userName="user.userName"
                 :role="user.role" :activityStatus="user.activityStatus" :cityName="user.cityName"
                 :countryName="user.countryName" :region="user.region" @openModifyModal="openModifyModal" />
         </div>
-        <div class="pagination flex flex-row gap-x-2 justify-end">
+        <div class="pagination flex flex-row gap-x-2 justify-center">
             <DefaultButton @click="userStore.goToPage(userStore.pagination.page - 1)" :icon="ChevronLeft"
                 :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
             <DefaultButton @click="userStore.goToPage(userStore.pagination.page + 1)" :icon="ChevronRight"
                 :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
         </div>
-
     </div>
 
     <UserCreateModal :showModal="showCreateModal" @close="closeCreateModal" />

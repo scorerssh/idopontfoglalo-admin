@@ -1,4 +1,5 @@
 <script setup>
+import { Plus } from 'lucide-vue-next'
 import MainTitle from '@shared/components/MainTitle.vue'
 import DashboardStatCard from '@shared/components/DashboardStatCard.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
@@ -66,7 +67,8 @@ onMounted(() => {
         <div class="title-and-actions flex items-center justify-between mt-6">
             <span class="font-semibold text-base">Apartmanok listája</span>
             <span class="actions">
-                <DefaultButton @click="openCreateModal" :text="'Apartman hozzáadása'" />
+                <DefaultButton @click="openCreateModal" :text="'Apartman hozzáadása'" :icon="Plus"
+                    :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
             </span>
         </div>
 

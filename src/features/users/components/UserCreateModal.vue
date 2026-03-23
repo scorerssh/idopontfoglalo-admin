@@ -31,7 +31,7 @@ const errors = reactive({
     role: null
 })
 
-const resetErrors = () => {
+function resetErrors() {
     errors.username = null
     errors.email = null
     errors.password = null
@@ -44,10 +44,28 @@ function resetForm() {
     formData.password = ''
     formData.role = 'User'
     resetErrors()
-
 }
 
-const createUser = async () => {
+async function createUser() {
+    resetErrors()
+    const result = userCreateSchema.safeParse({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role
+    })
+
+    console.log('result:', result)          // ← add hozzá ezt
+    console.log('result.error:', result.error)
+
+    if (!result.success) {
+        result.error.issues.forEach(err => {
+            const field = err.path[0]
+            errors[field] = err.message
+        })
+        return
+    }
+
     const payload = {
         userName: formData.username,
         userEmail: formData.email,
@@ -60,18 +78,18 @@ const createUser = async () => {
     emit('close')
 }
 
-const handleClose = () => {
+
+
+function handleClose() {
     resetForm()
     emit('close')
 }
 
 const formInputs = [
-    { inputName: 'username', labelText: 'Felahasználónév:', vModel: formData.username, type: 'text' },
-    { inputName: 'email', labelText: 'Email:', vModel: formData.email, type: 'email' },
-    { inputName: 'password', labelText: 'Jelszó:', vModel: formData.password, type: 'password' },
-    { inputName: 'role', labelText: 'Szerep:', vModel: formData.role, type: 'select', options: ['Admin', 'User'] },
+    { inputName: 'username', labelText: 'Felhasználónév:', type: 'text' },
+    { inputName: 'email', labelText: 'Email:', type: 'email' },
+    { inputName: 'password', labelText: 'Jelszó:', type: 'password' },
 ]
-
 </script>
 
 <template>
@@ -87,16 +105,36 @@ const formInputs = [
                 </button>
 
                 <div class="modal-content">
-                    <MainTitle title="Új felhasználó létrehozása" barColor="#275bf6" :titleClass="'text-lg'" />
+                    <MainTitle title="Új felhasználó létrehozása" barColor="#fbcfc4" :titleClass="'text-lg'" />
                     <form @submit.prevent="createUser" class="mt-5">
                         <div class="form-inputs flex flex-col gap-4 mb-6">
-                            <DefaultInput v-for="(input, index) in formInputs" :key="index" :inputName="input.inputName"
-                                :labelText="input.labelText" :type="input.type" v-model="input.vModel"
-                                :labelClass="'text-black/60'" />
+
+                            <!-- ✅ v-for csak szöveges inputokra -->
+                            <div v-for="input in formInputs" :key="input.inputName">
+                                <DefaultInput v-model="formData[input.inputName]" :inputName="input.inputName"
+                                    :labelText="input.labelText" :type="input.type" :labelClass="'text-black/60'" />
+                                <span v-if="errors[input.inputName]" class="text-red-500 text-xs mt-1">
+                                    {{ errors[input.inputName] }}
+                                </span>
+                            </div>
+
+                            <!-- ✅ Select külön kezelve, mert más HTML elem -->
+                            <div>
+                                <label class="text-black/60 text-sm">Szerep:</label>
+                                <select v-model="formData.role"
+                                    class="px-3 py-2 w-full bg-gray-100 focus-within:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100 mt-1">
+                                    <option value="Admin">Admin</option>
+                                    <option value="User">User</option>
+                                </select>
+                                <span v-if="errors.role" class="text-red-500 text-xs mt-1">
+                                    {{ errors.role }}
+                                </span>
+                            </div>
+
                         </div>
 
                         <div class="form-actions flex gap-2 justify-end">
-                            <DefaultButton text="Mégse" type="button" @click="resetForm"
+                            <DefaultButton text="Mégse" type="button" @click="handleClose"
                                 buttonClass="bg-gray-300 text-gray-700 hover:bg-gray-400" />
                             <DefaultButton text="Létrehozás" type="submit"
                                 buttonClass="bg-blue-500 text-white hover:bg-blue-600" />
@@ -107,5 +145,3 @@ const formInputs = [
         </template>
     </Teleport>
 </template>
-
-<style scoped></style>

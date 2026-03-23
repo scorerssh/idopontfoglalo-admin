@@ -78,12 +78,14 @@ function openModifyModal(selectedUser) {
 </script>
 
 <template>
-    <div class="user-card shadow rounded-lg flex flex-col gap-y-4 p-3">
+    <div
+        :class="[props.role === 'Admin' ? 'bg-blue-50' : 'bg-emerald-50', 'user-card shadow-sm rounded-lg flex flex-col gap-y-4 p-3']">
         <section class="top-section w-full flex flex-row justify-between items-center">
             <div class="user-personal w-full flex justify-start gap-x-3">
-                <div class="profile-pic">
+                <div
+                    :class="[props.role === 'Admin' ? 'bg-purple-600' : 'bg-emerald-600', 'profile-pic rounded-full p-1']">
                     <img :src="placeholderImage" alt="User placeholder image"
-                        class="rounded-full w-12 h-12 object-cover" />
+                        :class="['rounded-full', 'w-12', 'h-12', 'object-cover']" />
                 </div>
                 <div class="name-email flex flex-col justify-center">
                     <span class="text-black font-semibold">
@@ -108,7 +110,8 @@ function openModifyModal(selectedUser) {
             <div class="user-role flex flex-row items-center mt-3 w-full gap-x-2">
                 <div class="flex w-1/2 flex-col rounded-lg">
                     <span class="text-sm text-black/70">Jogosultság</span>
-                    <span :class="['text-lg font-semibold', props.role === 'Admin' ? 'text-red-600' : 'text-blue-600']">
+                    <span
+                        :class="['text-lg font-semibold', props.role === 'Admin' ? 'text-purple-600' : 'text-emerald-600']">
                         {{ role ?? 'Ismeretlen' }}
                     </span>
                 </div>

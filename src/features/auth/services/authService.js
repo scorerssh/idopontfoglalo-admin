@@ -18,8 +18,10 @@ export const authService = {
     } catch {}
     return res
   },
+  // authService.js
   async getWhoAmI() {
-    return api.get('/api/Auth/me')
+    const res = await api.get('/api/Auth/me')
+    return res.data // ← mindig clean objektumot ad vissza
   },
   hasSessionHint() {
     try {

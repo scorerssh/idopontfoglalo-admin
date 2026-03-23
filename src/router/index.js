@@ -24,6 +24,12 @@ const router = createRouter({
           meta: { requiresAuth: true, roles: ['Admin'] },
         },
         {
+          path: '/user-dashboard',
+          name: 'user-dashboard',
+          component: () => import('@views/dashboard/user-dashboard.vue'),
+          meta: { requiresAuth: true, roles: ['User'] },
+        },
+        {
           path: '/users',
           name: 'users',
           component: () => import('@views/users.vue'),
@@ -82,34 +88,41 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to) => {
-  if (import.meta.env.VITE_DEV_BYPASS_AUTH === 'true') {
-    return true
-  }
-
-  if (!to.meta.requiresAuth) {
-    return true
-  }
+router.beforeEach(async (to) => {
+  if (import.meta.env.VITE_DEV_BYPASS_AUTH === 'true') return true
+  if (!to.meta.requiresAuth) return true
 
   const authStore = useAuthStore()
-  const user = authStore.user
 
-  if (!user) {
-    return { name: 'login' }
-  }
+  console.log('🔒 GUARD INDUL | bootstrapStatus:', authStore.bootstrapStatus)
 
-  // 3. Ha nincs roles a meta-ban, bejelentkezés elég
-  if (!to.meta.roles || to.meta.roles.length === 0) {
-    return true
-  }
+  await authStore.ensureCheckedOnce()
 
-  // 4. Megvan a szükséges role?
-  if (to.meta.roles.includes(user.role)) {
-    return true
-  }
+  console.log(
+    '✅ GUARD UTÁN  | user:',
+    authStore.user,
+    '| role:',
+    authStore.role,
+    '| required:',
+    to.meta.roles,
+  )
 
-  // 5. Nincs jogosultság -> 403
-  return { name: 'forbidden' }
+  if (!authStore.user) return { name: 'login' }
+  if (!to.meta.roles?.length) return true
+
+  const userRole = authStore.role?.toLowerCase()
+  const allowed = to.meta.roles.map((r) => r.toLowerCase())
+
+  console.log(
+    '🎭 ROLE CHECK  | userRole:',
+    userRole,
+    '| allowed:',
+    allowed,
+    '| match:',
+    allowed.includes(userRole),
+  )
+
+  return allowed.includes(userRole) ? true : { name: 'forbidden' }
 })
 
 export default router

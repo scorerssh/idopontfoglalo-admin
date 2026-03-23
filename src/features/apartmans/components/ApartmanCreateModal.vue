@@ -1,6 +1,9 @@
 <script setup>
 import { reactive } from 'vue'
 import { useApartmanStore } from '@/features/apartmans/stores/apartman.store'
+import DefaultInput from '@/components/DefaultInput.vue'
+import DefaultButton from '@/components/DefaultButton.vue'
+import MainTitle from '@/shared/components/MainTitle.vue'
 
 const emit = defineEmits(['close'])
 
@@ -17,7 +20,7 @@ const formData = reactive({
     name: '',
 })
 
-const resetForm = () => {
+function resetForm() {
     formData.name = ''
 }
 
@@ -50,26 +53,18 @@ const handleClose = () => {
                 </button>
 
                 <div class="modal-content">
-                    <h2 class="text-lg font-semibold mb-4">Apartman létrehozása</h2>
-
+                    <MainTitle title="Apartman létrehozása" barColor="#fbcfc4" class="mb-4" />
                     <form @submit.prevent="createApartman">
                         <div class="form-group mb-3">
-                            <label for="name" class="block text-sm font-medium mb-1">
-                                Név:
-                            </label>
-                            <input v-model="formData.name" type="text" id="name"
-                                class="w-full border rounded px-3 py-2 text-sm" required />
+                            <DefaultInput v-model="formData.name" label="Név" placeholder="Apartman neve"
+                                labelText="Apartman neve:" labelClass="text-black/60" />
                         </div>
 
                         <div class="form-actions flex gap-2 justify-end">
-                            <button type="button" class="px-4 py-2 text-sm rounded border hover:bg-gray-100"
-                                @click="handleClose">
-                                Mégse
-                            </button>
-                            <button type="submit"
-                                class="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700">
-                                Létrehozás
-                            </button>
+                            <DefaultButton @click="resetForm" type="button" :text="'Mégse'"
+                                :buttonClass="'bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg transition duration-100'" />
+                            <DefaultButton type="submit" :text="'Létrehozás'"
+                                :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
                         </div>
                     </form>
                 </div>
