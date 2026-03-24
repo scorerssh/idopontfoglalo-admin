@@ -25,3 +25,4 @@ frontend/*.timestamp-*-*.mjs
 
 # OS files
 .DS_Store
+node_modules
