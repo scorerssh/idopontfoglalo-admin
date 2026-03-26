@@ -39,6 +39,7 @@ watch(() => props.userData, (newUser) => {
         formData.role = newUser.role ?? 'User'
         formData.id = props.userData.id ?? null
     }
+    console.log('User data updated in modal:', formData) // Debug log
 }, { immediate: true })
 
 const updateUser = async () => {

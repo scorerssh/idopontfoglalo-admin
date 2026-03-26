@@ -1,5 +1,5 @@
 <script setup>
-import { Plus, ChevronLeft, ChevronRight, CalendarCheck, Rss, GlobeOff } from 'lucide-vue-next'
+import { Plus, ChevronLeft, ChevronRight, CalendarCheck, Rss, CalendarX, GalleryHorizontalEnd } from 'lucide-vue-next'
 import MainTitle from '@shared/components/MainTitle.vue'
 import DashboardStatCard from '@shared/components/DashboardStatCard.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
@@ -38,7 +38,7 @@ const statCardContent = computed(() => [
     {
         title: 'Összes apartman',
         text: apartmanStore.apartmans.length.toString(),
-        icon: CalendarCheck, additional: 'asdf', bgColor: '#f3fbff', iconBgColor: '#c8f1fb',
+        icon: GalleryHorizontalEnd, additional: 'asdf', bgColor: '#f3fbff', iconBgColor: '#c8f1fb',
     },
     {
         title: 'Elérhető',
@@ -48,7 +48,7 @@ const statCardContent = computed(() => [
     {
         title: 'Nem elérhető',
         text: apartmanStore.apartmans.filter(a => !a.isAvailable).length.toString(),
-        icon: GlobeOff, additional: 'asdf', bgColor: '#fef5f8', iconBgColor: '#fbc3d7'
+        icon: CalendarX, additional: 'asdf', bgColor: '#fef5f8', iconBgColor: '#fbc3d7'
     },
 ])
 
@@ -61,11 +61,12 @@ onMounted(() => {
     <div>
         <div class="top">
             <MainTitle title="Apartmanok" barColor="#fbcfc4" />
-            <div class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 w-full">
+            <TransitionGroup name="card" appear tag="div"
+                class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 w-full">
                 <DashboardStatCard v-for="(card, index) in statCardContent" :key="index" :title="card.title"
                     :content="card.text" :additional="card.additional" :icon="card.icon" :bgColor="card.bgColor"
-                    :iconBgColor="card.iconBgColor" />
-            </div>
+                    :iconBgColor="card.iconBgColor" :style="{ animationDelay: `${index * 0.2}s` }" />
+            </TransitionGroup>
         </div>
 
         <div class="title-and-actions flex items-center justify-between mt-6">
@@ -101,4 +102,24 @@ onMounted(() => {
         @apartmanUpdated="selectedApartman = $event" :apartmanData="selectedApartman" />
 </template>
 
-<style scoped></style>
+<style scoped>
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-enter-active {
+    animation: slideUp 0.4s ease both;
+}
+
+.card-enter-from {
+    opacity: 0;
+}
+</style>

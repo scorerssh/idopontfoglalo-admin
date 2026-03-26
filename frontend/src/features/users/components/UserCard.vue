@@ -1,147 +1,120 @@
 <script setup>
-import { EllipsisVertical, House } from 'lucide-vue-next'
-import placeholderImage from '@assets/pictures/profile_pic_placeholder.webp'
+import { EllipsisVertical, House, UserRound, Mail, MapPin, ShieldCheck } from 'lucide-vue-next'
 import { computed } from 'vue'
 
 const emits = defineEmits(['openModifyModal'])
 
 const props = defineProps({
-    email: {
-        type: String,
-        required: true,
-    },
-    userName: {
-        type: String,
-        required: true,
-    },
-    role: {
-        type: String,
-        required: true,
-    },
-    activityStatus: {
-        type: String,
-        required: true,
-    },
-    cityName: {
-        type: String,
-        required: false,
-    },
-    countryName: {
-        type: String,
-        required: false,
-    },
-    region: {
-        type: String,
-        required: false,
-    },
-
+    user: {
+        type: Object,
+        required: true
+    }
 })
 
 const calculatedActivityStatus = computed(() => {
-    if (props.activityStatus === 'active')
+    if (props.user.activityStatus === 'active')
         return {
             label: 'Aktív',
             bgClass: 'bg-green-100',
-            textClass: 'text-green-600',
-            iconClass: 'bg-green-500',
+            textClass: 'text-green-700',
+            dotClass: 'bg-green-500',
         }
-    if (props.activityStatus === 'inactive')
+    if (props.user.activityStatus === 'inactive')
         return {
             label: 'Inaktív',
             bgClass: 'bg-gray-100',
             textClass: 'text-gray-600',
-            iconClass: 'bg-gray-500',
+            dotClass: 'bg-gray-500',
         }
     return {
         label: 'Ismeretlen',
         bgClass: 'bg-yellow-100',
-        textClass: 'text-yellow-600',
-        iconClass: 'bg-yellow-500',
+        textClass: 'text-yellow-700',
+        dotClass: 'bg-yellow-500',
     }
 })
 
 const selectedUser = computed(() => {
     return {
-        email: props.email,
-        userName: props.userName,
-        role: props.role,
-        activityStatus: props.activityStatus,
-        cityName: props.cityName,
-        countryName: props.countryName,
-        region: props.region,
+        id: props.user.id,
+        userEmail: props.user.userEmail,
+        userName: props.user.userName,
+        role: props.user.role,
+        activityStatus: props.user.activityStatus,
+        cityName: props.user.cityName,
+        countryName: props.user.countryName,
+        region: props.user.region,
     }
 })
 
-function openModifyModal(selectedUser) {
-    emits('openModifyModal', selectedUser)
+function openModifyModal(user) {
+    emits('openModifyModal', user)
 }
 </script>
 
 <template>
-    <div
-        :class="[props.role === 'Admin' ? 'bg-purple-50' : 'bg-emerald-50', 'user-card shadow-sm rounded-lg flex flex-col gap-y-4 p-3']">
-        <section class="top-section w-full flex flex-row justify-between items-center">
-            <div class="user-personal w-full flex justify-start gap-x-3">
-                <div
-                    :class="[props.role === 'Admin' ? 'bg-purple-600' : 'bg-emerald-600', 'profile-pic rounded-full p-1']">
-                    <img :src="placeholderImage" alt="User placeholder image"
-                        :class="['rounded-full', 'w-12', 'h-12', 'object-cover']" />
+    <div class="user-card bg-white shadow-sm border border-gray-100 rounded-xl flex flex-col p-4">
+
+        <section class="flex justify-between items-start mb-4">
+            <div class="flex gap-x-3 items-center min-w-0">
+                <div :class="[
+                    props.user.role === 'Admin' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600',
+                    'p-3 rounded-full shrink-0'
+                ]">
+                    <UserRound class="h-6 w-6" />
                 </div>
-                <div class="name-email flex flex-col justify-center">
-                    <span class="text-black font-semibold">
-                        {{ userName }}
-                    </span>
-                    <span class="text-black/70">
-                        {{ email }}
-                    </span>
+                <div class="flex flex-col min-w-0">
+                    <span class="font-bold text-gray-900 leading-tight truncate">{{ props.user.userName }}</span>
+                    <div class="flex items-center gap-1 text-gray-400">
+                        <Mail class="h-3 w-3" />
+                        <span class="text-xs truncate">{{ props.user.userEmail }}</span>
+                    </div>
                 </div>
             </div>
             <div :class="[
                 calculatedActivityStatus.bgClass,
-                'text-sm rounded-full flex flex-row gap-x-1 items-center px-2 py-1 h-8',
+                calculatedActivityStatus.textClass,
+                'text-[11px] px-2.5 py-1 rounded-full flex items-center gap-1.5 font-bold shrink-0'
             ]">
-                <span :class="[calculatedActivityStatus.iconClass, 'h-2.75 w-2.75 rounded-full inline-block']"></span>
-                <span :class="calculatedActivityStatus.textClass">
-                    {{ calculatedActivityStatus.label }}
-                </span>
+                <span :class="[calculatedActivityStatus.dotClass, 'h-2 w-2 rounded-full']"></span>
+                {{ calculatedActivityStatus.label }}
             </div>
         </section>
-        <section class="middle-section flex flex-col gap-y-2">
-            <div class="user-role flex flex-row items-center mt-3 w-full gap-x-2">
-                <div class="flex w-1/2 flex-col rounded-lg">
-                    <span class="text-sm text-black/70">Jogosultság</span>
-                    <span
-                        :class="['text-lg font-semibold', props.role === 'Admin' ? 'text-purple-600' : 'text-emerald-600']">
-                        {{ role ?? 'Ismeretlen' }}
+
+        <section class="grid grid-cols-2 gap-3 mb-4">
+            <div class="bg-gray-50 p-2.5 rounded-lg flex flex-col gap-y-0.5">
+                <span class="text-[10px] text-gray-400 uppercase font-bold tracking-tight">Jogosultság</span>
+                <div class="flex items-center gap-1.5 font-bold text-sm">
+                    <ShieldCheck
+                        :class="[props.user.role === 'Admin' ? 'text-purple-500' : 'text-blue-500', 'h-3.5 w-3.5']" />
+                    <span :class="props.user.role === 'Admin' ? 'text-purple-700' : 'text-blue-700'">
+                        {{ props.user.role ?? 'User' }}
                     </span>
                 </div>
-                <div class="flex flex-col  w-1/2">
-                    <span class="text-sm text-black/70">Város</span>
-                    <span class="text-lg text-black font-semibold">{{ cityName ?? 'Ismeretlen' }}</span>
-                </div>
             </div>
-
-            <div class="user-destination flex flex-row justify-between items-center mt-3 w-full gap-x-2">
-                <div class="flex flex-col w-1/2">
-                    <span class="text-sm text-black/70">Ország</span>
-                    <span class="text-lg font-semibold">{{ countryName ?? 'Ismeretlen' }}</span>
-                </div>
-                <div class="flex flex-col  w-1/2">
-                    <span class="text-sm text-black/70">Régió</span>
-                    <span class="text-lg font-semibold">{{ region ?? 'Ismeretlen' }}</span>
+            <div class="bg-gray-50 p-2.5 rounded-lg flex flex-col gap-y-0.5">
+                <span class="text-[10px] text-gray-400 uppercase font-bold tracking-tight">Helyszín</span>
+                <div class="flex items-center gap-1.5 text-gray-700 font-bold text-sm truncate">
+                    <MapPin class="h-3.5 w-3.5 text-gray-400" />
+                    <span class="truncate">{{ props.user.cityName ?? 'Ismeretlen' }}</span>
                 </div>
             </div>
         </section>
-        <section class="bottom-section flex flex-row justify-between items-center mt-3">
-            <div class="room-counter">
-                <House class="h-5 w-5" />
+
+        <section class="flex justify-between items-center pt-3 border-t border-gray-50 mt-auto">
+            <div class="flex items-center gap-1.5 text-xs text-gray-500 font-medium">
+                <House class="h-4 w-4 text-gray-400" />
+                <span>Hozzárendelt ingatlanok: <span class="text-gray-900 font-bold">2</span></span>
             </div>
+
             <button @click="openModifyModal(selectedUser)"
-                class="actions p-2 rounded-full hover:bg-gray-200 transition-colors">
+                class="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
                 <EllipsisVertical class="h-5 w-5" />
             </button>
         </section>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* A kártya alapvető stílusai a Tailwind-en keresztül vannak kezelve */
+</style>

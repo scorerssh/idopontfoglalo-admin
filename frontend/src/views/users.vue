@@ -1,5 +1,5 @@
 <script setup>
-import { CalendarCheck, GlobeOff, Rss, ClockPlus, Plus, ChevronLeft, ChevronRight } from 'lucide-vue-next'
+import { GalleryHorizontalEnd, GlobeOff, Rss, ClockPlus, Plus, ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import MainTitle from '@shared/components/MainTitle.vue'
 import DashboardStatCard from '@shared/components/DashboardStatCard.vue'
 import DefaultButton from '@components/DefaultButton.vue'
@@ -33,7 +33,7 @@ function closeModifyModal() {
 }
 
 const statCardContent = [
-    { title: 'Összes felhasználó', content: contactLenght, icon: CalendarCheck, additional: 'asdf', bgColor: '#f3fbff', iconBgColor: '#c8f1fb', },
+    { title: 'Összes felhasználó', content: contactLenght, icon: GalleryHorizontalEnd, additional: 'asdf', bgColor: '#f3fbff', iconBgColor: '#c8f1fb', },
     { title: 'Aktív felhasználók', content: '15', icon: Rss, additional: 'asdf', bgColor: '#fef5f8', iconBgColor: '#fbc3d7', },
     { title: 'Inaktív felhasználók', content: '8', icon: GlobeOff, additional: 'asdf', bgColor: '#fff0ec', iconBgColor: '#fdd1c5', },
     { title: 'A hónapban létrehozottak', content: '42', icon: ClockPlus, additional: 'asdf', bgColor: '#fef3ff', iconBgColor: '#fbcffd', },
@@ -47,7 +47,7 @@ onMounted(() => {
 <template>
     <div>
         <div class="top">
-            <MainTitle title="Felhasználók" barColor="#fbcfc4" />
+            <MainTitle title="Áttekintés" barColor="#fbcfc4" />
             <TransitionGroup name="card" appear tag="div"
                 class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 w-full">
                 <DashboardStatCard v-for="(card, index) in statCardContent" :key="index" :title="card.title"
@@ -57,16 +57,14 @@ onMounted(() => {
         </div>
 
         <div class="title-and-actions flex items-center justify-between mt-6">
-            <span class="font-semibold text-base">Felhasználók</span>
+            <MainTitle title="Felhasználók" barColor="#c8f1fb" />
             <span class="actions">
                 <DefaultButton @click="openCreateModal" :text="'Felhasználó hozzáadása'" :icon="Plus"
                     :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
             </span>
         </div>
         <div class="user-list w-full h-full mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <UserCard v-for="user in userStore.users" :key="user.id" :email="user.userEmail" :userName="user.userName"
-                :role="user.role" :activityStatus="user.activityStatus" :cityName="user.cityName"
-                :countryName="user.countryName" :region="user.region" @openModifyModal="openModifyModal" />
+            <UserCard v-for="user in userStore.users" :key="user.id" :user="user" @openModifyModal="openModifyModal" />
         </div>
         <div class="pagination flex flex-row gap-x-2 justify-center">
             <DefaultButton @click="userStore.goToPage(userStore.pagination.page - 1)" :icon="ChevronLeft"
