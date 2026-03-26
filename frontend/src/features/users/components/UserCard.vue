@@ -79,7 +79,7 @@ function openModifyModal(selectedUser) {
 
 <template>
     <div
-        :class="[props.role === 'Admin' ? 'bg-blue-50' : 'bg-emerald-50', 'user-card shadow-sm rounded-lg flex flex-col gap-y-4 p-3']">
+        :class="[props.role === 'Admin' ? 'bg-purple-50' : 'bg-emerald-50', 'user-card shadow-sm rounded-lg flex flex-col gap-y-4 p-3']">
         <section class="top-section w-full flex flex-row justify-between items-center">
             <div class="user-personal w-full flex justify-start gap-x-3">
                 <div

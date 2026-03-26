@@ -1,5 +1,5 @@
 <script setup>
-import { Plus } from 'lucide-vue-next'
+import { Plus, ChevronLeft, ChevronRight, CalendarCheck, Rss, GlobeOff } from 'lucide-vue-next'
 import MainTitle from '@shared/components/MainTitle.vue'
 import DashboardStatCard from '@shared/components/DashboardStatCard.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
@@ -24,10 +24,9 @@ function closeCreateModal() {
 }
 
 async function handleOpenModifyModal(id) {
-    showModifyModal.value = true
     const res = await apartmanStore.getWithRooms(id)
     selectedApartman.value = res
-
+    showModifyModal.value = true  // ← csak akkor nyílik ki, ha már van adat
 }
 
 function closeModifyModal() {
@@ -39,17 +38,17 @@ const statCardContent = computed(() => [
     {
         title: 'Összes apartman',
         text: apartmanStore.apartmans.length.toString(),
-        additional: ''
+        icon: CalendarCheck, additional: 'asdf', bgColor: '#f3fbff', iconBgColor: '#c8f1fb',
     },
     {
         title: 'Elérhető',
         text: apartmanStore.apartmans.filter(a => a.isAvailable).length.toString(),
-        additional: ''
+        icon: Rss, additional: 'asdf', bgColor: '#fff0ec', iconBgColor: '#fdd1c5',
     },
     {
         title: 'Nem elérhető',
         text: apartmanStore.apartmans.filter(a => !a.isAvailable).length.toString(),
-        additional: ''
+        icon: GlobeOff, additional: 'asdf', bgColor: '#fef5f8', iconBgColor: '#fbc3d7'
     },
 ])
 
@@ -64,7 +63,8 @@ onMounted(() => {
             <MainTitle title="Apartmanok" barColor="#fbcfc4" />
             <div class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 w-full">
                 <DashboardStatCard v-for="(card, index) in statCardContent" :key="index" :title="card.title"
-                    :text="card.text" :additional="card.additional" />
+                    :content="card.text" :additional="card.additional" :icon="card.icon" :bgColor="card.bgColor"
+                    :iconBgColor="card.iconBgColor" />
             </div>
         </div>
 
@@ -88,24 +88,17 @@ onMounted(() => {
             </div>
         </div>
 
-        <div class="pagination flex justify-center gap-2 mt-6">
-            <button @click="apartmanStore.goToPage(apartmanStore.pagination.page - 1)"
-                :disabled="apartmanStore.pagination.page === 1"
-                class="px-4 py-2 border rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
-                Előző oldal
-            </button>
-            <span class="px-4 py-2 text-gray-600">
-                Oldal {{ apartmanStore.pagination.page }}
-            </span>
-            <button @click="apartmanStore.goToPage(apartmanStore.pagination.page + 1)"
-                class="px-4 py-2 border rounded hover:bg-gray-100">
-                Következő oldal
-            </button>
+        <div class="pagination flex flex-row gap-x-2 justify-center">
+            <DefaultButton @click="apartmanStore.goToPage(apartmanStore.pagination.page - 1)" :icon="ChevronLeft"
+                :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
+            <DefaultButton @click="apartmanStore.goToPage(apartmanStore.pagination.page + 1)" :icon="ChevronRight"
+                :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
         </div>
     </div>
 
     <ApartmanCreateModal :showModal="showCreateModal" @close="closeCreateModal" />
-    <ApartmanModifyModal :showModal="showModifyModal" @close="closeModifyModal" :apartmanData="selectedApartman" />
+    <ApartmanModifyModal :showModal="showModifyModal" @close="closeModifyModal"
+        @apartmanUpdated="selectedApartman = $event" :apartmanData="selectedApartman" />
 </template>
 
 <style scoped></style>

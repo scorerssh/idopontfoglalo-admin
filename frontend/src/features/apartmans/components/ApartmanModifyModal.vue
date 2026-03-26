@@ -8,7 +8,7 @@ import MainTitle from '@/shared/components/MainTitle.vue'
 import BindedUsers from './BindedUsers.vue'
 import AvailableUsers from './AvailableUsers.vue'
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'apartmanUpdated'])
 
 const props = defineProps({
     showModal: { type: Boolean, required: true },
@@ -16,12 +16,22 @@ const props = defineProps({
 })
 
 const apartmanStore = useApartmanStore()
-const currentUserList = ref(BindedUsers)
+
+// --- Toggle logika ---
+const currentUserList = ref('binded')
+
+const activeComponent = computed(() =>
+    currentUserList.value === 'binded' ? BindedUsers : AvailableUsers
+)
+
 function toggleUserComponent() {
-    currentUserList.value = currentUserList.value === BindedUsers ? AvailableUsers : BindedUsers
+    currentUserList.value = currentUserList.value === 'binded' ? 'available' : 'binded'
 }
+
+// --- Adatok ---
 const bindedUsersToApartman = computed(() => props.apartmanData?.users)
 const bindedRoomsToApartman = computed(() => props.apartmanData?.rooms)
+
 const formData = reactive({
     id: null,
     name: '',
@@ -34,13 +44,20 @@ watch(() => props.apartmanData, (newApartman) => {
     }
 }, { immediate: true })
 
+// --- Frissítés user változás után ---
+// Újratölti az apartman adatait (users tömb frissül), hogy a BindedUsers mindig aktuális legyen
+async function refreshApartman() {
+    const newData = await apartmanStore.getWithRooms(props.apartmanData.id)
+    emit('apartmanUpdated', newData)
+}
+
+// --- Akciók ---
 const updateApartman = async () => {
     if (!formData.id) return
 
     const payload = {
         id: props.apartmanData.id,
         name: formData.name,
-
     }
     await apartmanStore.update(payload)
     emit('close')
@@ -64,17 +81,19 @@ const handleClose = () => {
         <template v-if="showModal && apartmanData">
             <div class="modal-backdrop fixed inset-0 bg-black/50 z-40" @click="handleClose" />
             <div
-                class="modal bg-white p-6 rounded-lg shadow-lg fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  w-[60%] z-50 max-h-[90vh] overflow-y-auto">
+                class="modal bg-white p-6 rounded-lg shadow-lg fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] z-50 max-h-[90vh] overflow-y-auto">
                 <button
                     class="close-button absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl leading-none"
                     @click="handleClose">
                     &times;
                 </button>
 
-                <div class="modal-content flex flex-col gap-y-3  w-full justify-center">
+                <div class="modal-content flex flex-col gap-y-3 w-full justify-center">
                     <MainTitle title="Apartman módosítása" barColor="#fbcfc4" :class="'text-lg text-black mb-4'" />
                     <div class="list-container flex flex-row gap-x-4 w-full">
-                        <div class="users-list-and-title flex flex-col gap-y-3 w-1/2 ">
+
+                        <!-- Bal oldal: form + toggle + felhasználók -->
+                        <div class="users-list-and-title flex flex-col gap-y-3 w-1/2">
                             <form @submit.prevent="updateApartman">
                                 <div class="form-group mb-3">
                                     <DefaultInput v-model="formData.name" label="Név" id="name" labelText="Név:"
@@ -87,30 +106,41 @@ const handleClose = () => {
                                     <DefaultButton @click="updateApartman" :text="'Mentés'"
                                         :buttonClass="'px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700'" />
                                     <DefaultButton @click="deleteApartman" :text="'Törlés'"
-                                        :buttonClass="'px-4 py-2 text-sm rounded  border-red-300 text-white bg-red-500 hover:bg-red-600'" />
+                                        :buttonClass="'px-4 py-2 text-sm rounded border-red-300 text-white bg-red-500 hover:bg-red-600'" />
                                 </div>
                             </form>
-                            <div class="relative users-list flex flex-col gap-y-1">
-                                <div class="toggle-button-container absolute top-0 right-0">
-                                    <div class="toggle-button relative p-0.5 bg-white h-5 w-20 ">
-                                        <div
-                                            :class="[currentUserList === BindedUsers ? 'left-0' : 'right-0', 'circle absolute h-5 w-5 rounded-full system-blue-bg flex items-center justify-center p-1']">
-                                            <component @click="toggleUserComponent"
-                                                :is="currentUserList === BindedUsers ? Pencil : Plus"
-                                                class="text-black">
-                                            </component>
-                                        </div>
+
+                            <div class="users-list flex flex-col gap-y-1">
+                                <!-- Toggle switch -->
+                                <div class="toggle-button relative p-0.5 bg-gray-200 h-6 w-12 rounded-full cursor-pointer"
+                                    @click="toggleUserComponent">
+                                    <div :style="{ left: currentUserList === 'binded' ? '2px' : '26px' }"
+                                        class="circle absolute h-5 w-5 rounded-full bg-blue-500 flex items-center justify-center p-1 transition-all duration-200">
+                                        <component :is="currentUserList === 'binded' ? Pencil : Plus"
+                                            class="text-white pointer-events-none" />
                                     </div>
                                 </div>
 
-                                <component :is="currentUserList" :bindedUsersToApartman="bindedUsersToApartman"
-                                    :bindedRoomsToApartman="bindedRoomsToApartman">
-                                </component>
+                                <!-- Dinamikus komponens -->
+                                <component :is="activeComponent" :key="currentUserList"
+                                    :bindedUsersToApartman="bindedUsersToApartman" :apartmanId="apartmanData?.id"
+                                    @userAdded="refreshApartman" @userRemoved="refreshApartman" />
                             </div>
                         </div>
-                        <div class="rooms-list border border-yellow-400 w-1/2">
 
+                        <!-- Jobb oldal: szobák -->
+                        <div class="room-list-container w-1/2">
+                            <h3 class="text-sm text-black/60 mb-2">Szobák:</h3>
+                            <div class="rooms-list rounded-lg bg-gray-100 h-full p-2 ">
+                                <ul class="list-disc list-inside">
+                                    <li v-for="room in bindedRoomsToApartman" :key="room.id" class="text-gray-700">
+                                        {{ room.name }} - {{ room.maxCapacity }} fő
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
+
+
                     </div>
                 </div>
             </div>
