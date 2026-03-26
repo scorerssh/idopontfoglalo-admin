@@ -1,6 +1,9 @@
 <script setup>
 import { reactive, watch } from 'vue'
 import { useUserStore } from '@features/users/stores/user.store'
+import MainTitle from '@/shared/components/MainTitle.vue'
+import DefaultInput from '@/components/DefaultInput.vue'
+import DefaultButton from '@/components/DefaultButton.vue'
 
 const emit = defineEmits(['close'])
 
@@ -18,6 +21,16 @@ const formData = reactive({
     id: null
 
 })
+
+const inputs = [
+    { name: 'userName', label: 'Felhasználónév', labelClass: 'mt-0 text-black/60' },
+    { name: 'userEmail', label: 'Email', labelClass: 'mt-0 text-black/60' },
+]
+
+const actions = [
+    { text: 'Mégse', action: 'cancel', buttonClass: 'px-4 py-2 text-sm rounded bg-gray-300 hover:bg-gray-400' },
+    { text: 'Mentés', action: 'save', buttonClass: 'px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700' }
+]
 
 watch(() => props.userData, (newUser) => {
     if (newUser) {
@@ -51,40 +64,24 @@ const handleClose = () => {
                 </button>
 
                 <div class="modal-content">
-                    <h2 class="text-lg font-semibold mb-4">Felhasználó módosítása</h2>
+                    <MainTitle bar-color="#fbcfc4" title="Felhasználó módosítása" class="mb-4" />
 
-                    <form @submit.prevent="updateUser">
-                        <div class="form-group mb-3">
-                            <label for="username" class="block text-sm font-medium mb-1">
-                                Felhasználónév:
-                            </label>
-                            <input v-model="formData.userName" type="text" id="username"
-                                class="w-full border rounded px-3 py-2 text-sm" required />
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="email" class="block text-sm font-medium mb-1">
-                                Email:
-                            </label>
-                            <input v-model="formData.userEmail" type="email" id="email"
-                                class="w-full border rounded px-3 py-2 text-sm" required />
-                        </div>
-                        <div class="form-group mb-3">
-                            <select v-model="formData.role" class="w-full border rounded px-3 py-2 text-sm">
-                                <option value="User">User</option>
+                    <form @submit.prevent="updateUser" class="flex flex-col gap-y-3">
+                        <DefaultInput v-for="input in inputs" :key="input.name" v-model="formData[input.name]"
+                            :label-text="input.label" :label-class="input.labelClass" />
+                        <div>
+                            <label class="text-black/60 text-sm">Szerep:</label>
+                            <select v-model="formData.role"
+                                class="px-3 py-2 w-full bg-gray-100 focus-within:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100 mt-1">
                                 <option value="Admin">Admin</option>
+                                <option value="User">User</option>
                             </select>
                         </div>
 
                         <div class="form-actions flex gap-2 justify-end">
-                            <button type="button" class="px-4 py-2 text-sm rounded border hover:bg-gray-100"
-                                @click="handleClose">
-                                Mégse
-                            </button>
-                            <button type="submit"
-                                class="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700">
-                                Mentés
-                            </button>
+                            <DefaultButton v-for="value in actions" :key="value.action" :text="value.text"
+                                :buttonClass="value.buttonClass"
+                                @click="value.action === 'cancel' ? handleClose() : updateUser()" />
                         </div>
                     </form>
                 </div>

@@ -55,9 +55,6 @@ async function createUser() {
         role: formData.role
     })
 
-    console.log('result:', result)          // ← add hozzá ezt
-    console.log('result.error:', result.error)
-
     if (!result.success) {
         result.error.issues.forEach(err => {
             const field = err.path[0]
@@ -112,13 +109,13 @@ const formInputs = [
                             <!-- ✅ v-for csak szöveges inputokra -->
                             <div v-for="input in formInputs" :key="input.inputName">
                                 <DefaultInput v-model="formData[input.inputName]" :inputName="input.inputName"
-                                    :labelText="input.labelText" :type="input.type" :labelClass="'text-black/60'" />
+                                    :labelText="input.labelText" :type="input.type" :labelClass="'text-black/60'"
+                                    autocomplete="off" />
                                 <span v-if="errors[input.inputName]" class="text-red-500 text-xs mt-1">
                                     {{ errors[input.inputName] }}
                                 </span>
                             </div>
 
-                            <!-- ✅ Select külön kezelve, mert más HTML elem -->
                             <div>
                                 <label class="text-black/60 text-sm">Szerep:</label>
                                 <select v-model="formData.role"

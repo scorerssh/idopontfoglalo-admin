@@ -57,7 +57,7 @@ async function addSelectedUsers() {
 
         <div v-else class="flex flex-col gap-y-2">
             <div v-for="user in availableUsers" :key="user.id"
-                class="flex items-center justify-between px-3 py-2 rounded-lg shadow hover:bg-gray-50 transition-colors">
+                class="flex items-center justify-between px-3 py-2 rounded-lg shadow ">
                 <div class="flex items-center gap-2">
                     <input type="checkbox" :value="user.id" v-model="selectedUsers"
                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" />

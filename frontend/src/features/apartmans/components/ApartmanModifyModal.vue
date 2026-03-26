@@ -81,7 +81,7 @@ const handleClose = () => {
         <template v-if="showModal && apartmanData">
             <div class="modal-backdrop fixed inset-0 bg-black/50 z-40" @click="handleClose" />
             <div
-                class="modal bg-white p-6 rounded-lg shadow-lg fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] z-50 max-h-[90vh] overflow-y-auto">
+                class="modal bg-white p-6 rounded-lg shadow-lg fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] z-50 h-[60vh] overflow-y-auto scrollable">
                 <button
                     class="close-button absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl leading-none"
                     @click="handleClose">
@@ -112,10 +112,10 @@ const handleClose = () => {
 
                             <div class="users-list flex flex-col gap-y-1">
                                 <!-- Toggle switch -->
-                                <div class="toggle-button relative p-0.5 bg-gray-200 h-6 w-12 rounded-full cursor-pointer"
+                                <div class="toggle-button relative p-0.5 bg-gray-200 h-7 w-13 rounded-full cursor-pointer"
                                     @click="toggleUserComponent">
                                     <div :style="{ left: currentUserList === 'binded' ? '2px' : '26px' }"
-                                        class="circle absolute h-5 w-5 rounded-full bg-blue-500 flex items-center justify-center p-1 transition-all duration-200">
+                                        class="circle absolute h-6 w-6 rounded-full bg-blue-500 flex items-center justify-center p-1 transition-all duration-200">
                                         <component :is="currentUserList === 'binded' ? Pencil : Plus"
                                             class="text-white pointer-events-none" />
                                     </div>
