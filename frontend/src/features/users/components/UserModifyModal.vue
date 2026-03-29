@@ -28,8 +28,9 @@ const inputs = [
 ]
 
 const actions = [
+    { text: 'Mentés', action: 'save', buttonClass: 'px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700' },
     { text: 'Mégse', action: 'cancel', buttonClass: 'px-4 py-2 text-sm rounded bg-gray-300 hover:bg-gray-400' },
-    { text: 'Mentés', action: 'save', buttonClass: 'px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700' }
+    { text: 'Törlés', action: 'delete', buttonClass: 'px-4 py-2 text-sm rounded bg-red-600 text-white hover:bg-red-700' },
 ]
 
 watch(() => props.userData, (newUser) => {
@@ -45,6 +46,13 @@ watch(() => props.userData, (newUser) => {
 const updateUser = async () => {
     await userStore.update(formData)
     emit('close')
+}
+
+const deleteUser = async () => {
+    if (formData.id) {
+        await userStore.delete(formData.id)
+        emit('close')
+    }
 }
 
 const handleClose = () => {
@@ -80,9 +88,14 @@ const handleClose = () => {
                         </div>
 
                         <div class="form-actions flex gap-2 justify-end">
-                            <DefaultButton v-for="value in actions" :key="value.action" :text="value.text"
-                                :buttonClass="value.buttonClass"
-                                @click="value.action === 'cancel' ? handleClose() : updateUser()" />
+                            <DefaultButton type="button" text="Törlés" @click="deleteUser"
+                                button-class="px-4 py-2 text-sm rounded bg-red-600 text-white hover:bg-red-700">
+                            </DefaultButton>
+                            <DefaultButton type="button" text="Mégse" @click="handleClose"
+                                button-class="px-4 py-2 text-sm rounded bg-gray-300 hover:bg-gray-400"></DefaultButton>
+                            <DefaultButton type="submit" text="Mentés"
+                                button-class="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700">
+                            </DefaultButton>
                         </div>
                     </form>
                 </div>

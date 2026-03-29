@@ -1,6 +1,9 @@
 <script setup>
 import { reactive, watch } from 'vue'
 import { useRoomStore } from '@/features/rooms/stores/room.store'
+import DefaultInput from '@/components/DefaultInput.vue'
+import DefaultButton from '@/components/DefaultButton.vue'
+import MainTitle from '@/shared/components/MainTitle.vue'
 
 const emit = defineEmits(['close'])
 
@@ -8,6 +11,13 @@ const props = defineProps({
     showModal: { type: Boolean, required: true },
     roomData: { type: Object, default: null },
 })
+
+const inputs = [
+    { type: 'text', labelText: 'Név', inputName: 'name' },
+    { type: 'number', labelText: 'Min. Kapacitás', inputName: 'minCapacity' },
+    { type: 'number', labelText: 'Max. Kapacitás', inputName: 'maxCapacity' },
+]
+
 
 const roomStore = useRoomStore()
 
@@ -74,27 +84,12 @@ const handleClose = () => {
                 </button>
 
                 <div class="modal-content">
-                    <h2 class="text-lg font-semibold mb-4">Szoba módosítása</h2>
+                    <MainTitle :title="`Szoba módosítása: ${formData.name}`" bar-color="#fbcfc4" class="mb-4" />
 
                     <form @submit.prevent="updateRoom">
                         <div class="grid gap-3">
-                            <div class="form-group">
-                                <label for="name" class="block text-sm font-medium mb-1">Név</label>
-                                <input v-model="formData.name" type="text" id="name"
-                                    class="w-full border rounded px-3 py-2 text-sm" required />
-                            </div>
-
-                            <div class="form-group">
-                                <label for="minCapacity" class="block text-sm font-medium mb-1">Min kapacitás</label>
-                                <input v-model.number="formData.minCapacity" type="number" id="minCapacity"
-                                    class="w-full border rounded px-3 py-2 text-sm" min="0" required />
-                            </div>
-
-                            <div class="form-group">
-                                <label for="maxCapacity" class="block text-sm font-medium mb-1">Max kapacitás</label>
-                                <input v-model.number="formData.maxCapacity" type="number" id="maxCapacity"
-                                    class="w-full border rounded px-3 py-2 text-sm" min="0" required />
-                            </div>
+                            <DefaultInput v-for="input in inputs" :key="input.inputName" :input-name="input.inputName"
+                                v-model="formData[input.inputName]" :type="input.type" :label-text="input.labelText" />
 
                             <div class="form-group">
                                 <label for="apartmanId" class="block text-sm font-medium mb-1">Apartman ID</label>
@@ -104,19 +99,14 @@ const handleClose = () => {
                         </div>
 
                         <div class="form-actions flex gap-2 justify-end pt-4">
-                            <button type="button"
-                                class="px-4 py-2 text-sm rounded border border-red-300 text-red-600 hover:bg-red-50"
-                                @click="deleteRoom">
-                                Törlés
-                            </button>
-                            <button type="button" class="px-4 py-2 text-sm rounded border hover:bg-gray-100"
-                                @click="handleClose">
-                                Mégse
-                            </button>
-                            <button type="submit"
-                                class="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700">
-                                Mentés
-                            </button>
+                            <DefaultButton type="button" text="Törlés" @click="deleteRoom"
+                                button-class="px-4 py-2 text-sm rounded bg-red-600 text-white hover:bg-red-700">
+                            </DefaultButton>
+                            <DefaultButton type="button" text="Mégse" @click="handleClose"
+                                button-class="px-4 py-2 text-sm rounded bg-gray-100  hover:bg-gray-200"></DefaultButton>
+                            <DefaultButton type="submit" text="Mentés"
+                                button-class="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700">
+                            </DefaultButton>
                         </div>
                     </form>
                 </div>

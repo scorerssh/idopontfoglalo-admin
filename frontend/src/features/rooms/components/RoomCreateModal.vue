@@ -1,6 +1,9 @@
 <script setup>
 import { reactive } from 'vue'
 import { useRoomStore } from '@/features/rooms/stores/room.store'
+import DefaultInput from '@/components/DefaultInput.vue'
+import DefaultButton from '@/components/DefaultButton.vue'
+import MainTitle from '@/shared/components/MainTitle.vue'
 
 const emit = defineEmits(['close'])
 
@@ -10,6 +13,12 @@ const props = defineProps({
         required: true,
     },
 })
+
+const inputs = [
+    { type: 'text', labelText: 'Név', inputName: 'name' },
+    { type: 'number', labelText: 'Min. Kapacitás', inputName: 'min' },
+    { type: 'number', labelText: 'Max. Kapacitás', inputName: 'max' },
+]
 
 const roomStore = useRoomStore()
 
@@ -59,27 +68,12 @@ const handleClose = () => {
                 </button>
 
                 <div class="modal-content">
-                    <h2 class="text-lg font-semibold mb-4">Szoba létrehozása</h2>
-
+                    <MainTitle title="Szoba létrehozása" bar-color="#fbcfc4" class="mb-4" />
                     <form @submit.prevent="createRoom">
                         <div class="grid gap-3">
-                            <div class="form-group">
-                                <label for="name" class="block text-sm font-medium mb-1">Név</label>
-                                <input v-model="formData.name" type="text" id="name"
-                                    class="w-full border rounded px-3 py-2 text-sm" required />
-                            </div>
-
-                            <div class="form-group">
-                                <label for="minCapacity" class="block text-sm font-medium mb-1">Min kapacitás</label>
-                                <input v-model.number="formData.minCapacity" type="number" id="minCapacity"
-                                    class="w-full border rounded px-3 py-2 text-sm" min="0" required />
-                            </div>
-
-                            <div class="form-group">
-                                <label for="maxCapacity" class="block text-sm font-medium mb-1">Max kapacitás</label>
-                                <input v-model.number="formData.maxCapacity" type="number" id="maxCapacity"
-                                    class="w-full border rounded px-3 py-2 text-sm" min="0" required />
-                            </div>
+                            <DefaultInput v-for="input in inputs" :key="input.inputName" :input-name="input.inputName"
+                                :label-text="input.labelText" :type="input.type" label-class="text-sm text-black/60"
+                                v-model="formData[input.inputName]" />
 
                             <div class="form-group">
                                 <label for="apartmanId" class="block text-sm font-medium mb-1">Apartman ID</label>
@@ -89,14 +83,11 @@ const handleClose = () => {
                         </div>
 
                         <div class="form-actions flex gap-2 justify-end pt-4">
-                            <button type="button" class="px-4 py-2 text-sm rounded border hover:bg-gray-100"
-                                @click="handleClose">
-                                Mégse
-                            </button>
-                            <button type="submit"
-                                class="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700">
-                                Létrehozás
-                            </button>
+                            <DefaultButton text="Mégse" type="button"
+                                button-class="px-4 py-2 text-sm rounded border hover:bg-gray-100"
+                                @click="handleClose" />
+                            <DefaultButton text="Létrehozás" type="submit"
+                                button-class="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700" />
                         </div>
                     </form>
                 </div>

@@ -75,8 +75,6 @@ async function createUser() {
     emit('close')
 }
 
-
-
 function handleClose() {
     resetForm()
     emit('close')
@@ -100,22 +98,17 @@ const formInputs = [
                     @click="handleClose">
                     &times;
                 </button>
-
                 <div class="modal-content">
                     <MainTitle title="Új felhasználó létrehozása" barColor="#fbcfc4" :titleClass="'text-lg'" />
                     <form @submit.prevent="createUser" class="mt-5">
                         <div class="form-inputs flex flex-col gap-4 mb-6">
-
-                            <!-- ✅ v-for csak szöveges inputokra -->
                             <div v-for="input in formInputs" :key="input.inputName">
                                 <DefaultInput v-model="formData[input.inputName]" :inputName="input.inputName"
-                                    :labelText="input.labelText" :type="input.type" :labelClass="'text-black/60'"
-                                    autocomplete="off" />
+                                    :labelText="input.labelText" :type="input.type" :labelClass="'text-black/60'" />
                                 <span v-if="errors[input.inputName]" class="text-red-500 text-xs mt-1">
                                     {{ errors[input.inputName] }}
                                 </span>
                             </div>
-
                             <div>
                                 <label class="text-black/60 text-sm">Szerep:</label>
                                 <select v-model="formData.role"
@@ -127,9 +120,7 @@ const formInputs = [
                                     {{ errors.role }}
                                 </span>
                             </div>
-
                         </div>
-
                         <div class="form-actions flex gap-2 justify-end">
                             <DefaultButton text="Mégse" type="button" @click="handleClose"
                                 buttonClass="bg-gray-300 text-gray-700 hover:bg-gray-400" />
