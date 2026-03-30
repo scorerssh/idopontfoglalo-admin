@@ -1,9 +1,11 @@
 <script setup>
+import { CalendarX, Rss, GalleryHorizontalEnd, Plus, ChevronLeft, ChevronRight, Search, RotateCcw } from 'lucide-vue-next'
 import MainTitle from '@shared/components/MainTitle.vue'
 import DashboardStatCard from '@shared/components/DashboardStatCard.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
 import RoomCreateModal from '@/features/rooms/components/RoomCreateModal.vue'
 import RoomModifyModal from '@/features/rooms/components/RoomModifyModal.vue'
+import RoomCard from '@/features/rooms/components/RoomCard.vue' // Az új child
 import { useRoomStore } from '@/features/rooms/stores/room.store'
 import { ref, onMounted, reactive, computed } from 'vue'
 
@@ -13,9 +15,9 @@ const showModifyModal = ref(false)
 const selectedRoom = ref(null)
 
 const statCardContent = computed(() => [
-    { title: 'Összes szoba', text: String(roomStore.rooms.length), additional: '' },
-    { title: 'Oldal', text: String(roomStore.pagination.page), additional: '' },
-    { title: 'Szűrők', text: 'name/max/min', additional: '' },
+    { title: 'Összes szoba', content: String(roomStore.rooms.length), icon: GalleryHorizontalEnd, additional: 'Összesen', bgColor: '#f3fbff', iconBgColor: '#c8f1fb' },
+    { title: 'Jelenleg aktív', content: '1', icon: Rss, additional: 'Foglalható', bgColor: '#fef5f8', iconBgColor: '#fbc3d7' },
+    { title: 'Nem elérhetők', content: '2', icon: CalendarX, additional: 'Karbantartás', bgColor: '#fff0ec', iconBgColor: '#fdd1c5' },
 ])
 
 const filterModel = reactive({
@@ -24,19 +26,13 @@ const filterModel = reactive({
     maxCapacity: '',
 })
 
-function openCreateModal() {
-    showCreateModal.value = true
-}
-
-function closeCreateModal() {
-    showCreateModal.value = false
-}
+function openCreateModal() { showCreateModal.value = true }
+function closeCreateModal() { showCreateModal.value = false }
 
 function openModifyModal(room) {
     showModifyModal.value = true
     selectedRoom.value = room
 }
-
 function closeModifyModal() {
     showModifyModal.value = false
     selectedRoom.value = null
@@ -63,105 +59,76 @@ onMounted(() => {
 </script>
 
 <template>
-    <div>
+    <div class="space-y-6">
         <div class="top">
-            <MainTitle title="Apartmanok" barColor="#fbcfc4" />
-            <div class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4 w-full">
+            <MainTitle title="Általános" barColor="#fbcfc4" />
+            <TransitionGroup name="card" appear tag="div"
+                class="stats-grid grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 w-full">
                 <DashboardStatCard v-for="(card, index) in statCardContent" :key="index" :title="card.title"
-                    :text="card.text" :additional="card.additional" />
-            </div>
+                    :content="card.content" :icon="card.icon" :additional="card.additional" :bgColor="card.bgColor"
+                    :iconBgColor="card.iconBgColor" :style="{ animationDelay: `${index * 0.1}s` }" />
+            </TransitionGroup>
         </div>
 
-        <div class="filters mt-6 p-4 bg-white rounded shadow-sm border border-gray-200">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-                <div>
-                    <label class="block text-sm font-medium mb-1">Név</label>
-                    <input v-model="filterModel.name" type="text" class="w-full border rounded px-3 py-2 text-sm" />
+        <div class="filters p-5 bg-white rounded-xl shadow-sm border border-gray-100">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-gray-500 uppercase ml-1">Keresés</label>
+                    <input v-model="filterModel.name" type="text" placeholder="Szoba neve..."
+                        class="w-full border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none border transition-all" />
                 </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Min kapacitás</label>
-                    <input v-model="filterModel.minCapacity" type="number" min="1"
-                        class="w-full border rounded px-3 py-2 text-sm" />
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-gray-500 uppercase ml-1">Min. Kapacitás</label>
+                    <input v-model="filterModel.minCapacity" type="number"
+                        class="w-full border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none border transition-all" />
                 </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1">Max kapacitás</label>
-                    <input v-model="filterModel.maxCapacity" type="number" min="1"
-                        class="w-full border rounded px-3 py-2 text-sm" />
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-gray-500 uppercase ml-1">Max. Kapacitás</label>
+                    <input v-model="filterModel.maxCapacity" type="number"
+                        class="w-full border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none border transition-all" />
                 </div>
                 <div class="flex items-end gap-2">
-                    <button @click="applyRoomFilters" class="px-4 py-2 rounded bg-blue-600 text-white">Szűrés</button>
-                    <button @click="clearRoomFilters" class="px-4 py-2 rounded border">Törlés</button>
+                    <button @click="applyRoomFilters"
+                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2 text-sm font-medium transition flex items-center justify-center gap-2">
+                        <Search class="h-4 w-4" /> Szűrés
+                    </button>
+                    <button @click="clearRoomFilters"
+                        class="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+                        <RotateCcw class="h-5 w-5 text-gray-500" />
+                    </button>
                 </div>
             </div>
         </div>
 
-        <div class="title-and-actions flex items-center justify-between mt-6">
-            <span class="font-semibold text-base">Szobák listája</span>
-            <span class="actions">
-                <DefaultButton @click="openCreateModal" :text="'Szoba hozzáadása'" />
-            </span>
+        <div class="flex items-center justify-between">
+            <MainTitle title="Szobák listája" barColor="#c8f1fb" />
+            <DefaultButton @click="openCreateModal" :text="'Szoba hozzáadása'" :icon="Plus"
+                :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
         </div>
 
-        <div class="apartman-list w-full mt-4">
-            <div v-if="roomStore.rooms.length === 0" class="text-center py-8 text-gray-500">
-                Nincsenek szobák
+        <div class="room-list-container">
+            <div v-if="roomStore.rooms.length === 0"
+                class="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+                <GalleryHorizontalEnd class="h-12 w-12 text-gray-300 mx-auto mb-3" />
+                <p class="text-gray-500 font-medium">Jelenleg nincsenek megjeleníthető szobák.</p>
             </div>
-            <div v-else class="overflow-x-auto">
-                <table class="w-full border-collapse">
-                    <thead>
-                        <tr class="bg-gray-100 border-b-2 border-gray-300">
-                            <th class="text-left px-4 py-3 font-semibold">Cím</th>
-                            <th class="text-left px-4 py-3 font-semibold">Leírás</th>
-                            <th class="text-right px-4 py-3 font-semibold">Ár (HUF)</th>
-                            <th class="text-center px-4 py-3 font-semibold">Szobák</th>
-                            <th class="text-center px-4 py-3 font-semibold">Státusz</th>
-                            <th class="text-center px-4 py-3 font-semibold">Műveletek</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="room in roomStore.rooms" :key="room.id"
-                            class="border-b border-gray-200 hover:bg-gray-50">
-                            <td class="px-4 py-3">{{ room.name || room.name || '-' }}</td>
-                            <td class="px-4 py-3 text-gray-600">{{ room.description || '-' }}</td>
-                            <td class="px-4 py-3 text-right font-medium">
-                                {{ room.price?.toLocaleString('hu-HU') || '-' }}
-                            </td>
-                            <td class="px-4 py-3 text-center">{{ room.roomCount || '-' }}</td>
-                            <td class="px-4 py-3 text-center">
-                                <span :class="[
-                                    'px-3 py-1 rounded-full text-sm font-medium',
-                                    room.isAvailable
-                                        ? 'bg-green-100 text-green-700'
-                                        : 'bg-red-100 text-red-700'
-                                ]">
-                                    {{ room.isAvailable ? 'Elérhető' : 'Nem elérhető' }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 text-center">
-                                <button @click="openModifyModal(room)"
-                                    class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition">
-                                    Módosítás
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <RoomCard v-for="room in roomStore.rooms" :key="room.id" :room="room"
+                    @openModifyModal="openModifyModal" />
             </div>
         </div>
 
-        <div class="pagination flex justify-center gap-2 mt-6">
-            <button @click="roomStore.goToPage(roomStore.pagination.page - 1)"
-                :disabled="roomStore.pagination.page === 1"
-                class="px-4 py-2 border rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
-                Előző oldal
-            </button>
-            <span class="px-4 py-2 text-gray-600">
-                Oldal {{ roomStore.pagination.page }}
+        <div class="pagination flex items-center justify-center gap-x-4 mt-8 pb-10">
+            <DefaultButton @click="roomStore.goToPage(roomStore.pagination.page - 1)" :icon="ChevronLeft"
+                :buttonClass="'bg-white hover:bg-gray-100 text-black shadow-sm border border-gray-200 rounded-lg px-4'" />
+
+            <span class="text-sm font-semibold text-gray-700 bg-gray-100 px-4 py-2 rounded-full">
+                {{ roomStore.pagination.page }}. oldal
             </span>
-            <button @click="roomStore.goToPage(roomStore.pagination.page + 1)"
-                class="px-4 py-2 border rounded hover:bg-gray-100">
-                Következő oldal
-            </button>
+
+            <DefaultButton @click="roomStore.goToPage(roomStore.pagination.page + 1)" :icon="ChevronRight"
+                :buttonClass="'bg-white hover:bg-gray-100 text-black shadow-sm border border-gray-200 rounded-lg px-4'" />
         </div>
     </div>
 
@@ -169,4 +136,24 @@ onMounted(() => {
     <RoomModifyModal :showModal="showModifyModal" @close="closeModifyModal" :roomData="selectedRoom" />
 </template>
 
-<style scoped></style>
+<style scoped>
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-enter-active {
+    animation: slideUp 0.4s ease both;
+}
+
+.card-enter-from {
+    opacity: 0;
+}
+</style>

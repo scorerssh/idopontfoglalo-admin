@@ -9,3 +9,24 @@
 .system-blue-text {
   color: #275bf6;
 }
+.scrollable {
+  /* Firefox + Chrome 121+ */
+  scrollbar-width: thin;
+  scrollbar-color: #888888 #e0e0e0;
+
+  /* WebKit (Chrome, Safari, Edge) */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #fff;
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #fff;
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555555;
+  }
+}
