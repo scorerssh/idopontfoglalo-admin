@@ -5,4 +5,4 @@ export const STATUS = Object.freeze({
   success: 'success',
 })
 
-export const STATUSES = Object.values(STATUS)
+export const STATUS_VALUES = Object.values(STATUS)

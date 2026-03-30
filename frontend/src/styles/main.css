@@ -1,20 +1,15 @@
 @import 'tailwindcss';
 
-.system-blue-bg {
-  background-color: #275bf6;
-}
-.system-blue-bg-hover {
-  background-color: #1a4ad5;
-}
-.system-blue-text {
-  color: #275bf6;
+@theme {
+  --color-system-blue: #275bf6;
+  --color-system-blue-dark: #1a4ad5;
+  --color-system-orange: #fbcfc4;
+  --color-system-orange-dark: #a0c9d1;
 }
 .scrollable {
-  /* Firefox + Chrome 121+ */
   scrollbar-width: thin;
   scrollbar-color: #888888 #e0e0e0;
 
-  /* WebKit (Chrome, Safari, Edge) */
   &::-webkit-scrollbar {
     width: 8px;
   }

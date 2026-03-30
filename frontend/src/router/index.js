@@ -39,19 +39,19 @@ const router = createRouter({
           path: '/bookings',
           name: 'bookings',
           component: () => import('@/views/bookings.vue'),
-          meta: { requiresAuth: true, roles: ['Admin'] },
+          meta: { requiresAuth: true, roles: ['Admin', 'User'] },
         },
         {
           path: '/rooms',
           name: 'rooms',
           component: () => import('@/views/rooms.vue'),
-          meta: { requiresAuth: true, roles: ['Admin'] },
+          meta: { requiresAuth: true, roles: ['Admin', 'User'] },
         },
         {
           path: '/settings',
           name: 'settings',
           component: () => import('@/views/settings.vue'),
-          meta: { requiresAuth: true, roles: ['Admin'] },
+          meta: { requiresAuth: true, roles: ['Admin', 'User'] },
         },
         {
           path: '/apartments',
@@ -63,13 +63,13 @@ const router = createRouter({
           path: '/videos',
           name: 'videos',
           component: () => import('@views/videos.vue'),
-          meta: { requiresAuth: true, roles: ['Admin'] },
+          meta: { requiresAuth: true, roles: ['Admin', 'User'] },
         },
         {
           path: '/calendar',
           name: 'calendar',
           component: () => import('@views/calendar.vue'),
-          meta: { requiresAuth: true, roles: ['Admin'] },
+          meta: { requiresAuth: true, roles: ['Admin', 'User'] },
         },
 
         {
@@ -94,33 +94,13 @@ router.beforeEach(async (to) => {
 
   const authStore = useAuthStore()
 
-  console.log('🔒 GUARD INDUL | bootstrapStatus:', authStore.bootstrapStatus)
-
   await authStore.ensureCheckedOnce()
-
-  console.log(
-    '✅ GUARD UTÁN  | user:',
-    authStore.user,
-    '| role:',
-    authStore.role,
-    '| required:',
-    to.meta.roles,
-  )
 
   if (!authStore.user) return { name: 'login' }
   if (!to.meta.roles?.length) return true
 
   const userRole = authStore.role?.toLowerCase()
   const allowed = to.meta.roles.map((r) => r.toLowerCase())
-
-  console.log(
-    '🎭 ROLE CHECK  | userRole:',
-    userRole,
-    '| allowed:',
-    allowed,
-    '| match:',
-    allowed.includes(userRole),
-  )
 
   return allowed.includes(userRole) ? true : { name: 'forbidden' }
 })

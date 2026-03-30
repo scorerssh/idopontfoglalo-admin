@@ -1,10 +1,10 @@
 // src/utils/opsHelper.js
-import { STATUSES } from '@/constants/status'
+import { STATUS } from '@/constants/status'
 import { extractError } from './errorHelper'
 
 export function defaultOp() {
   return {
-    status: STATUSES.idle,
+    status: STATUS.idle,
     error: null,
     devError: null,
     message: '',
@@ -12,14 +12,14 @@ export function defaultOp() {
 }
 
 export function startOp(op) {
-  op.status = STATUSES.loading
+  op.status = STATUS.loading
   op.error = null
   op.devError = null
   op.message = ''
 }
 
 export function successOp(op, message = '') {
-  op.status = STATUSES.success
+  op.status = STATUS.success
   op.error = null
   op.devError = null
   op.message = message
@@ -34,7 +34,7 @@ export function errorOp(op, e, fallbackUserMessage, fallbackDevMessage = '') {
     } catch {}
   }
 
-  op.status = STATUSES.error
+  op.status = STATUS.error
   op.error = userMessage
   op.devError = fallbackDevMessage || devMessage
   op.message = userMessage
