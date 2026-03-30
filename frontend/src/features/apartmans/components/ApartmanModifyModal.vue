@@ -103,7 +103,7 @@ const handleClose = () => {
                                 <div class="form-actions flex gap-2 justify-end">
                                     <DefaultButton @click="handleClose" :text="'Mégse'"
                                         :buttonClass="'px-4 py-2 text-sm rounded bg-gray-300 hover:bg-gray-400'" />
-                                    <DefaultButton @click="updateApartman" :text="'Mentés'"
+                                    <DefaultButton type="submit" :text="'Mentés'"
                                         :buttonClass="'px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700'" />
                                     <DefaultButton @click="deleteApartman" :text="'Törlés'"
                                         :buttonClass="'px-4 py-2 text-sm rounded border-red-300 text-white bg-red-500 hover:bg-red-600'" />

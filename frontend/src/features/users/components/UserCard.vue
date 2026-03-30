@@ -58,7 +58,7 @@ function openModifyModal(user) {
         <section class="flex justify-between items-start mb-4">
             <div class="flex gap-x-3 items-center min-w-0">
                 <div :class="[
-                    props.user.role === 'Admin' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600',
+                    props.user.role === 'Admin' ? 'bg-purple-100 text-purple-600' : 'bg-green-100 text-green-600',
                     'p-3 rounded-full shrink-0'
                 ]">
                     <UserRound class="h-6 w-6" />
@@ -86,8 +86,8 @@ function openModifyModal(user) {
                 <span class="text-[10px] text-gray-400 uppercase font-bold tracking-tight">Jogosultság</span>
                 <div class="flex items-center gap-1.5 font-bold text-sm">
                     <ShieldCheck
-                        :class="[props.user.role === 'Admin' ? 'text-purple-500' : 'text-blue-500', 'h-3.5 w-3.5']" />
-                    <span :class="props.user.role === 'Admin' ? 'text-purple-700' : 'text-blue-700'">
+                        :class="[props.user.role === 'Admin' ? 'text-purple-500' : 'text-green-500', 'h-3.5 w-3.5']" />
+                    <span :class="props.user.role === 'Admin' ? 'text-purple-700' : 'text-green-700'">
                         {{ props.user.role ?? 'User' }}
                     </span>
                 </div>
@@ -115,6 +115,4 @@ function openModifyModal(user) {
     </div>
 </template>
 
-<style scoped>
-/* A kártya alapvető stílusai a Tailwind-en keresztül vannak kezelve */
-</style>
+<style scoped></style>

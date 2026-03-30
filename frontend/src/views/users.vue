@@ -55,22 +55,25 @@ onMounted(() => {
                     :iconBgColor="card.iconBgColor" :style="{ animationDelay: `${index * 0.2}s` }" />
             </TransitionGroup>
         </div>
+        <div class="nav-and-titles my-6 w-full flex flex-row items-center justify-between">
+            <div class="title-and-actions flex items-center justify-between ">
+                <MainTitle title="Felhasználók" barColor="#c8f1fb" />
 
-        <div class="title-and-actions flex items-center justify-between mt-6">
-            <MainTitle title="Felhasználók" barColor="#c8f1fb" />
+            </div>
+            <div class="pagination flex flex-row gap-x-2 justify-center">
+                <DefaultButton @click="userStore.goToPage(userStore.pagination.page - 1)" :icon="ChevronLeft"
+                    :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
+                <DefaultButton @click="userStore.goToPage(userStore.pagination.page + 1)" :icon="ChevronRight"
+                    :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
+            </div>
             <span class="actions">
                 <DefaultButton @click="openCreateModal" :text="'Felhasználó hozzáadása'" :icon="Plus"
                     :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
             </span>
+
         </div>
-        <div class="user-list w-full h-full mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="user-list w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <UserCard v-for="user in userStore.users" :key="user.id" :user="user" @openModifyModal="openModifyModal" />
-        </div>
-        <div class="pagination flex flex-row gap-x-2 justify-center">
-            <DefaultButton @click="userStore.goToPage(userStore.pagination.page - 1)" :icon="ChevronLeft"
-                :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
-            <DefaultButton @click="userStore.goToPage(userStore.pagination.page + 1)" :icon="ChevronRight"
-                :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
         </div>
     </div>
 

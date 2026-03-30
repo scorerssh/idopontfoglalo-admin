@@ -1,6 +1,6 @@
 <script setup>
 import { useAuthStore } from '@/features/auth/stores/auth'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import {
     PanelRightClose,
     LayoutGrid,
@@ -26,7 +26,17 @@ function toggleSidebar() {
     isSidebarOpen.value = !isSidebarOpen.value
 }
 
-const navbarLinks = [
+const navbarLinks = computed(() => {
+    if (authStore.role === 'Admin') {
+        return adminNavbarLinks
+    } else if (authStore.role === 'User') {
+        return userNavbarLinks
+    } else {
+        return []
+    }
+})
+
+const adminNavbarLinks = [
     { title: 'Vezérlőpult', icon: LayoutGrid, route: '/admin-dashboard' },
     { title: 'Felhasználók', icon: UsersRound, route: '/users' },
     { title: 'Naptár', icon: Calendar, route: '/calendar' },
@@ -34,6 +44,14 @@ const navbarLinks = [
     { title: 'Foglalások', icon: BookMarked, route: '/bookings' },
     { title: 'Szobák', icon: BedDouble, route: '/rooms' },
     { title: 'Apartmanok', icon: House, route: '/apartments' }
+]
+
+const userNavbarLinks = [
+    { title: 'Vezérlőpult', icon: LayoutGrid, route: '/user-dashboard' },
+    { title: 'Naptár', icon: Calendar, route: '/calendar' },
+    { title: 'Videók', icon: FilePlay, route: '/videos' },
+    { title: 'Foglalások', icon: BookMarked, route: '/bookings' },
+    { title: 'Szobák', icon: BedDouble, route: '/rooms' },
 ]
 </script>
 
