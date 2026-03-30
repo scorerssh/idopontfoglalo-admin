@@ -1,12 +1,207 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\D\u00E1vid\\OneDrive\\DevCorner\\idopontfoglalo-admin\\backend\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|c:\\users\\avp28_thuzjht\\onedrive\\asztali g\u00E9p\\apartman\\idopontfoglalo-admin\\backend\\services\\reservationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|solutionrelative:services\\reservationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|c:\\users\\avp28_thuzjht\\onedrive\\asztali g\u00E9p\\apartman\\idopontfoglalo-admin\\backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Migrations\\20260330200347_ReservationAdded.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20260330200347_ReservationAdded.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|c:\\users\\avp28_thuzjht\\onedrive\\asztali g\u00E9p\\apartman\\idopontfoglalo-admin\\backend\\controllers\\reservationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|solutionrelative:controllers\\reservationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|c:\\users\\avp28_thuzjht\\onedrive\\asztali g\u00E9p\\apartman\\idopontfoglalo-admin\\backend\\models\\mappers\\reservationmapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|solutionrelative:models\\mappers\\reservationmapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|c:\\users\\avp28_thuzjht\\onedrive\\asztali g\u00E9p\\apartman\\idopontfoglalo-admin\\backend\\requestmodels\\reservation\\reservationcreaterequestvalidation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|solutionrelative:requestmodels\\reservation\\reservationcreaterequestvalidation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|c:\\users\\avp28_thuzjht\\onedrive\\asztali g\u00E9p\\apartman\\idopontfoglalo-admin\\backend\\requestmodels\\reservation\\reservationcreaterequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|solutionrelative:requestmodels\\reservation\\reservationcreaterequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|c:\\users\\avp28_thuzjht\\onedrive\\asztali g\u00E9p\\apartman\\idopontfoglalo-admin\\backend\\models\\dbmodels\\models\\reservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|solutionrelative:models\\dbmodels\\models\\reservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|c:\\users\\avp28_thuzjht\\onedrive\\asztali g\u00E9p\\apartman\\idopontfoglalo-admin\\backend\\models\\dbmodels\\models\\room.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|solutionrelative:models\\dbmodels\\models\\room.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|c:\\users\\avp28_thuzjht\\onedrive\\asztali g\u00E9p\\apartman\\idopontfoglalo-admin\\backend\\repository\\apartmandbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|solutionrelative:repository\\apartmandbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|c:\\users\\avp28_thuzjht\\onedrive\\asztali g\u00E9p\\apartman\\idopontfoglalo-admin\\backend\\models\\dbmodels\\configurations\\roomconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8260486-E95A-DE97-B113-7B5589034F36}|ApartManBackend.csproj|solutionrelative:models\\dbmodels\\configurations\\roomconfiguration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-30T20:05:02.063Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "20260330200347_ReservationAdded.cs",
+              "DocumentMoniker": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Migrations\\20260330200347_ReservationAdded.cs",
+              "RelativeDocumentMoniker": "Migrations\\20260330200347_ReservationAdded.cs",
+              "ToolTip": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Migrations\\20260330200347_ReservationAdded.cs",
+              "RelativeToolTip": "Migrations\\20260330200347_ReservationAdded.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T20:03:48.023Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ReservationController.cs",
+              "DocumentMoniker": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Controllers\\ReservationController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ReservationController.cs",
+              "ToolTip": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Controllers\\ReservationController.cs",
+              "RelativeToolTip": "Controllers\\ReservationController.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAkwBkAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T20:00:48.437Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ReservationMapper.cs",
+              "DocumentMoniker": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Models\\Mappers\\ReservationMapper.cs",
+              "RelativeDocumentMoniker": "Models\\Mappers\\ReservationMapper.cs",
+              "ToolTip": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Models\\Mappers\\ReservationMapper.cs",
+              "RelativeToolTip": "Models\\Mappers\\ReservationMapper.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T19:58:58.025Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ReservationService.cs",
+              "DocumentMoniker": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Services\\ReservationService.cs",
+              "RelativeDocumentMoniker": "Services\\ReservationService.cs",
+              "ToolTip": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Services\\ReservationService.cs",
+              "RelativeToolTip": "Services\\ReservationService.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAwwAwAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T14:34:15.497Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ReservationCreateRequestValidation.cs",
+              "DocumentMoniker": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\RequestModels\\Reservation\\ReservationCreateRequestValidation.cs",
+              "RelativeDocumentMoniker": "RequestModels\\Reservation\\ReservationCreateRequestValidation.cs",
+              "ToolTip": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\RequestModels\\Reservation\\ReservationCreateRequestValidation.cs",
+              "RelativeToolTip": "RequestModels\\Reservation\\ReservationCreateRequestValidation.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAgwD0AAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T14:31:42.432Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Reservation.cs",
+              "DocumentMoniker": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Models\\DbModels\\Models\\Reservation.cs",
+              "RelativeDocumentMoniker": "Models\\DbModels\\Models\\Reservation.cs",
+              "ToolTip": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Models\\DbModels\\Models\\Reservation.cs",
+              "RelativeToolTip": "Models\\DbModels\\Models\\Reservation.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T13:55:20.615Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ReservationCreateRequest.cs",
+              "DocumentMoniker": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\RequestModels\\Reservation\\ReservationCreateRequest.cs",
+              "RelativeDocumentMoniker": "RequestModels\\Reservation\\ReservationCreateRequest.cs",
+              "ToolTip": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\RequestModels\\Reservation\\ReservationCreateRequest.cs",
+              "RelativeToolTip": "RequestModels\\Reservation\\ReservationCreateRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T13:39:29.595Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ApartmanDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Repository\\ApartmanDbContext.cs",
+              "RelativeDocumentMoniker": "Repository\\ApartmanDbContext.cs",
+              "ToolTip": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Repository\\ApartmanDbContext.cs",
+              "RelativeToolTip": "Repository\\ApartmanDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T11:00:36.355Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Room.cs",
+              "DocumentMoniker": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Models\\DbModels\\Models\\Room.cs",
+              "RelativeDocumentMoniker": "Models\\DbModels\\Models\\Room.cs",
+              "ToolTip": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Models\\DbModels\\Models\\Room.cs",
+              "RelativeToolTip": "Models\\DbModels\\Models\\Room.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T10:59:48.968Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "RoomConfiguration.cs",
+              "DocumentMoniker": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Models\\DbModels\\Configurations\\RoomConfiguration.cs",
+              "RelativeDocumentMoniker": "Models\\DbModels\\Configurations\\RoomConfiguration.cs",
+              "ToolTip": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali g\u00E9p\\Apartman\\idopontfoglalo-admin\\backend\\Models\\DbModels\\Configurations\\RoomConfiguration.cs",
+              "RelativeToolTip": "Models\\DbModels\\Configurations\\RoomConfiguration.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-30T10:59:39.608Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

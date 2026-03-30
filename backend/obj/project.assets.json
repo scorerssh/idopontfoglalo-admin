@@ -3441,23 +3441,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Dávid\\.nuget\\packages\\": {},
+    "C:\\Users\\avp28_thuzjht\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Dávid\\OneDrive\\DevCorner\\idopontfoglalo-admin\\backend\\ApartManBackend.csproj",
+      "projectUniqueName": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali gép\\Apartman\\idopontfoglalo-admin\\backend\\ApartManBackend.csproj",
       "projectName": "ApartManBackend",
-      "projectPath": "C:\\Users\\Dávid\\OneDrive\\DevCorner\\idopontfoglalo-admin\\backend\\ApartManBackend.csproj",
-      "packagesPath": "C:\\Users\\Dávid\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Dávid\\OneDrive\\DevCorner\\idopontfoglalo-admin\\backend\\obj\\",
+      "projectPath": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali gép\\Apartman\\idopontfoglalo-admin\\backend\\ApartManBackend.csproj",
+      "packagesPath": "C:\\Users\\avp28_thuzjht\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\avp28_thuzjht\\OneDrive\\Asztali gép\\Apartman\\idopontfoglalo-admin\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Dávid\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\avp28_thuzjht\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],

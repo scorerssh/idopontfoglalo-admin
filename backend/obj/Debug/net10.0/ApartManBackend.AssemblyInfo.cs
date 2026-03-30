@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ApartManBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+58d8a329b5e86b9dcf4ed70adb4ec6495c95d5aa")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d280abf70fa2e01875bd898eee1260a559c940ad")]
 [assembly: System.Reflection.AssemblyProductAttribute("ApartManBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ApartManBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
