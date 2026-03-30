@@ -5,6 +5,7 @@ using ApartManBackend.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
@@ -45,6 +46,7 @@ builder.Services.AddScoped<ApartmanService>();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ResourceAuthService>();
+builder.Services.AddScoped<ReservationService>();
 builder.Services.AddScoped<RoomSercie>();
 builder.Services.AddScoped<UserService>();
 
@@ -132,6 +134,23 @@ builder.Services.AddControllers(options =>
     opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     opt.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 });
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(entry => entry.Value?.Errors.Count > 0)
+            .SelectMany(entry => entry.Value!.Errors.Select(error => new
+            {
+                field = NormalizeFieldName(entry.Key),
+                error = TranslateModelBindingError(entry.Key, error.ErrorMessage)
+            }))
+            .ToList();
+
+        return new BadRequestObjectResult(errors);
+    };
+});
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
@@ -166,3 +185,36 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+static string NormalizeFieldName(string fieldName)
+{
+    if (string.Equals(fieldName, "request", StringComparison.OrdinalIgnoreCase))
+    {
+        return "request";
+    }
+
+    if (fieldName.StartsWith("$.", StringComparison.Ordinal))
+    {
+        return fieldName[2..];
+    }
+
+    return fieldName;
+}
+
+static string TranslateModelBindingError(string fieldName, string errorMessage)
+{
+    var normalizedFieldName = NormalizeFieldName(fieldName);
+
+    if (string.Equals(normalizedFieldName, "request", StringComparison.OrdinalIgnoreCase))
+    {
+        return "A kérés törzse hiányzik vagy nem feldolgozható.";
+    }
+
+    if (errorMessage.Contains("could not be converted to System.Nullable`1[System.DateOnly]", StringComparison.OrdinalIgnoreCase) ||
+        errorMessage.Contains("could not be converted to System.DateOnly", StringComparison.OrdinalIgnoreCase))
+    {
+        return $"A(z) '{normalizedFieldName}' mező érvénytelen dátum. Használd a 'yyyy-MM-dd' formátumot.";
+    }
+
+    return errorMessage;
+}

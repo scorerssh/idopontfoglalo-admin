@@ -11,6 +11,12 @@ namespace ApartManBackend.Models.DbModels.Configurations
             builder.ToTable("rooms");
             builder.HasKey(x => x.Id);
 
+            builder.HasIndex(x => x.GuidId)
+                .IsUnique();
+
+            builder.Property(x => x.GuidId)
+                .IsRequired();
+
             builder.Property(x => x.Name)
                 .IsRequired()
                 .HasMaxLength(100);

@@ -12,6 +12,7 @@ namespace ApartManBackend.Repository
         public DbSet<User> Users => Set<User>();
         public DbSet<Apartman> Apartmans => Set<Apartman>();
         public DbSet<Room> Rooms => Set<Room>();
+        public DbSet<Reservation> Reservations => Set<Reservation>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
