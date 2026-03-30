@@ -148,6 +148,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ApartManBackend.Controllers.ReservationController",
+    "Method": "Create",
+    "RelativePath": "api/Reservation/Create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "ApartManBackend.RequestModels.Reservation.ReservationCreateRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ApartManBackend.Controllers.RoomController",
     "Method": "Get",
     "RelativePath": "api/Room/{roomId}",

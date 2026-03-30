@@ -251,6 +251,37 @@
         }
       }
     },
+    "/api/Reservation/Create": {
+      "post": {
+        "tags": [
+          "Reservation"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationCreateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationCreateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Room/Create": {
       "post": {
         "tags": [
@@ -610,6 +641,48 @@
         },
         "additionalProperties": false
       },
+      "ReservationCreateRequest": {
+        "type": "object",
+        "properties": {
+          "startTIme": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "pearsonCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "roomGUid": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "RoomCreateRequest": {
         "type": "object",
         "properties": {
@@ -849,6 +922,9 @@
     },
     {
       "name": "Auth"
+    },
+    {
+      "name": "Reservation"
     },
     {
       "name": "Room"
