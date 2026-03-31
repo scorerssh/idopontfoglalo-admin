@@ -12,6 +12,7 @@
         {
             Apartman,
             Room,
+            Reservation,
         }
 
     }
