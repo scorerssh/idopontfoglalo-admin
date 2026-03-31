@@ -16,8 +16,8 @@ const props = defineProps({
 
 const inputs = [
     { type: 'text', labelText: 'Név', inputName: 'name' },
-    { type: 'number', labelText: 'Min. Kapacitás', inputName: 'min' },
-    { type: 'number', labelText: 'Max. Kapacitás', inputName: 'max' },
+    { type: 'number', labelText: 'Min. Kapacitás', inputName: 'minCapacity' },
+    { type: 'number', labelText: 'Max. Kapacitás', inputName: 'maxCapacity' },
 ]
 
 const roomStore = useRoomStore()
@@ -39,8 +39,8 @@ const resetForm = () => {
 const createRoom = async () => {
     const payload = {
         name: formData.name,
-        minCapacity: formData.minCapacity,
-        maxCapacity: formData.maxCapacity,
+        MinCapacity: formData.minCapacity,
+        MaxCapacity: formData.maxCapacity,
         apartmanId: formData.apartmanId,
     }
 

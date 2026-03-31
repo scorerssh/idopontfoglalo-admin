@@ -1,7 +1,11 @@
 <script setup>
 import DefaultInput from '@/components/DefaultInput.vue';
 import BookingFormInput from './BookingFormInput.vue'
-import bookingShecmas from '../schemas/booking.schema';
+import { bookingCreateSchema } from '../schemas/booking.schema';
+import { useBookingStore } from '../stores/booking.store';
+import { reactive } from 'vue';
+
+const bookingStore = useBookingStore()
 
 const bookingInputs = [
     {
@@ -20,14 +24,14 @@ const bookingInputs = [
         type: 'tel'
     },
     {
-        name: 'date',
-        label: 'Date',
+        name: 'startDate',
+        label: 'Start Date',
         type: 'date'
     },
     {
-        name: 'time',
-        label: 'Time',
-        type: 'time'
+        name: 'endDate',
+        label: 'End Date',
+        type: 'date'
     },
     {
         name: 'guests',
@@ -40,18 +44,17 @@ const errors = reactive({
     name: null,
     email: null,
     phone: null,
-    date: null,
-    time: null,
+    startDate: null,
+    endDate: null,
     guests: null,
-    paymentMethod: null
 })
 
 function resetErrors() {
     errors.name = null;
     errors.email = null;
     errors.phone = null;
-    errors.date = null;
-    errors.time = null;
+    errors.startDate = null;
+    errors.endDate = null;
     errors.guests = null;
     errors.paymentMethod = null;
 }
@@ -60,29 +63,32 @@ const bookingForm = reactive({
     name: '',
     email: '',
     phone: '',
-    date: '',
-    time: '',
-    guests: ''
+    startDate: '',
+    endDate: '',
+    guests: '',
+    description: ''
 })
 
 function resetForm() {
     bookingForm.name = '';
     bookingForm.email = '';
     bookingForm.phone = '';
-    bookingForm.date = '';
-    bookingForm.time = '';
+    bookingForm.startDate = '';
+    bookingForm.endDate = '';
     bookingForm.guests = '';
+    bookingForm.description = '';
 }
 
-function submitForm() {
+async function submitForm() {
     resetErrors()
-    const result = bookingShecmas.bookingCreateShecma.safeParse({
+    const result = bookingCreateSchema.safeParse({
         name: bookingForm.name,
         email: bookingForm.email,
         phone: bookingForm.phone,
-        date: bookingForm.date,
-        time: bookingForm.time,
-        guests: bookingForm.guests
+        startDate: bookingForm.startDate,
+        endDate: bookingForm.endDate,
+        guests: Number(bookingForm.guests),
+        description: bookingForm.description
     })
 
     if (!result.success) {
@@ -92,14 +98,32 @@ function submitForm() {
         })
         return
     }
+
+    const payload = {
+        name: bookingForm.name,
+        email: bookingForm.email,
+        phoneNumber: bookingForm.phone,
+        startTIme: bookingForm.startDate,
+        endTime: bookingForm.endDate,
+        pearsonCount: bookingForm.guests,
+        description: bookingForm.description,
+        roomGUid: '89a40ec6-0bac-426a-ad74-c04174631cc8'
+    }
+
+    await bookingStore.createBooking(payload)
+    resetForm()
 }
 </script>
 
 <template>
     <div class="grid grid-cols-2 p-3">
         <form @submit.prevent="submitForm">
-            <DefaultInput v-for="input in bookingInputs" :key="input.name" :input-name="input.name"
-                :type="input.type" />
+            <BookingFormInput v-for="input in bookingInputs" :key="input.name" :input-name="input.name"
+                :type="input.type" v-model="bookingForm[input.name]" :labelText="input.label" />
+            <button type="submit"
+                class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                Create Booking
+            </button>
         </form>
     </div>
 </template>
