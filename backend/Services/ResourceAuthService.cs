@@ -1,3 +1,4 @@
+using ApartManBackend.Models.DbModels.Models;
 using ApartManBackend.Repository;
 using ApartManBackend.StaticMambers.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +43,7 @@ namespace ApartManBackend.Services
             {
                 ResourceObjectType.Apartman => await IsUserOwnApartmanAsync(resourceId, userId.Value, ct),
                 ResourceObjectType.Room => await IsUserOwnRoomAsync(resourceId, userId.Value, ct),
+                ResourceObjectType.Reservation => await IsUserOwnReservationAsync(resourceId, userId.Value, ct),
                 _ => false
             };
         }
@@ -63,6 +65,18 @@ namespace ApartManBackend.Services
                 .SelectMany(u => u.Apartmans)
                 .SelectMany(a => a.Rooms)
                 .AnyAsync(r => r.Id == roomId, ct);
+        }
+
+
+        private Task<bool> IsUserOwnReservationAsync(int resId, int userId, CancellationToken ct)
+        {
+            return _db.Users
+                .AsNoTracking()
+                .Where(u => u.Id == userId)
+                .SelectMany(u => u.Apartmans)
+                .SelectMany(a => a.Rooms)
+                .SelectMany(r => r.Reservations)
+                .AnyAsync(r => r.Id == resId, ct);
         }
     }
 }
