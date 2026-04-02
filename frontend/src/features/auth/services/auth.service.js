@@ -3,7 +3,6 @@ import { api } from '@api/axios'
 const EVER_LOGGED = 'dc.auth.everLogged'
 
 export const authService = {
-  // 👈 const objektum, nem function
   async login(credentials) {
     const res = await api.post('/api/Auth/login', credentials)
     try {
@@ -18,7 +17,6 @@ export const authService = {
     } catch {}
     return res
   },
-  // authService.js
   async getWhoAmI() {
     const res = await api.get('/api/Auth/me')
     return res.data // ← mindig clean objektumot ad vissza
