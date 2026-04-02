@@ -28,6 +28,33 @@ namespace ApartManBackend.Controllers
             return Ok();
         }
 
+        [HttpPatch]
+        [Route("Update")]
+        [Authorize]
+        public async Task<IActionResult> Update([FromBody] ReservationUpdateRequest request, CancellationToken ct)
+        {
+            if (!await _resourceAuthService.CheckUserAccessForResourceAsync(request.ReservationId!.Value, StaticMambers.Enums.ResourceObjectType.Reservation, ct))
+            {
+                return Forbid();
+            }
+
+            if (request.RoomId.HasValue)
+            {
+                if (!await _resourceAuthService.CheckUserAccessForResourceAsync(request.RoomId.Value, StaticMambers.Enums.ResourceObjectType.Room, ct))
+                {
+                    return Forbid();
+                }
+            }
+
+            var result = await _reservationService.UpdateAsync(request, ct);
+            if (!result)
+            {
+                return NotFound("Nincs ilyen foglalás");
+            }
+
+            return Ok("Foglalás frissítve");
+        }
+
         [HttpPost]
         [Route("GetAllAdmin")]
         [Authorize(Roles = "Admin")]
@@ -70,6 +97,25 @@ namespace ApartManBackend.Controllers
 
             return Ok(resault);
 
+        }
+
+        [HttpDelete]
+        [Route("{reservationId:int}")]
+        [Authorize]
+        public async Task<IActionResult> Delete(int reservationId, CancellationToken ct)
+        {
+            if (!await _resourceAuthService.CheckUserAccessForResourceAsync(reservationId, StaticMambers.Enums.ResourceObjectType.Reservation, ct))
+            {
+                return Forbid();
+            }
+
+            var result = await _reservationService.DeleteAsync(reservationId, ct);
+            if (!result)
+            {
+                return NotFound("Nincs ilyen foglalás");
+            }
+
+            return Ok("Foglalás törölve");
         }
     }
 }

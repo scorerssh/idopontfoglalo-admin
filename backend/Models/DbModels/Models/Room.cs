@@ -8,6 +8,8 @@ namespace ApartManBackend.Models.DbModels.Models
         public Apartman Apartman { get; set; } = null!;
         public int ApartmanId { get; set; }
         public Guid GuidId { get; set; } =Guid.NewGuid();
+        public string? BookingConnectionUrl { get; set; }
+        public string? SzallasHuConnectionUrl { get; set; }
         public List<Reservation> Reservations { get; set; } = new();
     }
 }

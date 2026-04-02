@@ -3,6 +3,8 @@ using ApartManBackend.Models.Mappers;
 using ApartManBackend.Repository;
 using ApartManBackend.Services;
 using FluentValidation;
+using Hangfire;
+using Hangfire.InMemory;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -42,13 +44,22 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.LicenseKey = autoMapperLicenseKey;
 }, typeof(UserMapper).Assembly);
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient(nameof(RoomCalendarService));
 builder.Services.AddScoped<ApartmanService>();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ResourceAuthService>();
 builder.Services.AddScoped<ReservationService>();
 builder.Services.AddScoped<RoomSercie>();
+builder.Services.AddScoped<RoomCalendarService>();
+builder.Services.AddScoped<RoomCalendarRefreshJob>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseInMemoryStorage());
+builder.Services.AddHangfireServer();
 
 
 builder.Services.AddAuthentication(CookieAuthScheme)
@@ -181,8 +192,17 @@ if (!app.Environment.IsDevelopment())
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = [new HangfireAdminAuthorizationFilter()]
+});
 
 app.MapControllers();
+
+RecurringJob.AddOrUpdate<RoomCalendarRefreshJob>(
+    "refresh-room-calendars",
+    job => job.RefreshAllCalendarsAsync(),
+    "*/10 * * * *");
 
 app.Run();
 

@@ -43,7 +43,21 @@ namespace ApartManBackend.RequestModels.Room
                 .MustAsync(async (id, ct) => await apartmanService.CheckApartmanExists(id!.Value, ct));
             });
 
+            RuleFor(x => x.BookingConnectionUrl)
+                .Must(BeValidOptionalUrl)
+                .WithMessage("A Booking connection URL nem ervenyes.");
 
+            RuleFor(x => x.SzallasHuConnectionUrl)
+                .Must(BeValidOptionalUrl)
+                .WithMessage("A Szallas.hu connection URL nem ervenyes.");
+
+
+        }
+
+        private static bool BeValidOptionalUrl(string? url)
+        {
+            return string.IsNullOrWhiteSpace(url) ||
+                   Uri.TryCreate(url, UriKind.Absolute, out var parsedUri);
         }
     }
 }

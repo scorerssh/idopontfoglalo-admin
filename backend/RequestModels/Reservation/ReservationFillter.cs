@@ -16,6 +16,10 @@ namespace ApartManBackend.RequestModels.Reservation
 
         public int? RoomId { get; set; }
 
+        [CompareTo(nameof(RoomId))]
+        [OperatorComparison(OperatorType.NotEqual)]
+        public int? NotInRoomId { get; set; }
+
         [CompareTo(nameof(ApartManBackend.Models.DbModels.Models.Reservation.Room))]
         [ReservationInApartmanById]
         public int? ApartmanId { get; set; }

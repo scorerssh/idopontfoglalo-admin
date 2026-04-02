@@ -37,6 +37,33 @@ namespace ApartManBackend.Services
             return await  _db.Reservations.Where(x=>x.Id== id).ProjectTo<ReservationResponse>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(ct);
         }
 
+        public Task<bool> CheckReservationExistsAsync(int reservationId, CancellationToken ct)
+        {
+            return _db.Reservations.AnyAsync(x => x.Id == reservationId, ct);
+        }
+
+        public async Task<bool> UpdateAsync(ReservationUpdateRequest request, CancellationToken ct)
+        {
+            var reservation = await _db.Reservations.FirstOrDefaultAsync(x => x.Id == request.ReservationId, ct);
+            if (reservation == null)
+            {
+                return false;
+            }
+
+            _mapper.Map(request, reservation);
+            await _db.SaveChangesAsync(ct);
+            return true;
+        }
+
+        public async Task<bool> DeleteAsync(int reservationId, CancellationToken ct)
+        {
+            var affectedRows = await _db.Reservations
+                .Where(x => x.Id == reservationId)
+                .ExecuteDeleteAsync(ct);
+
+            return affectedRows > 0;
+        }
+
 
         public async Task<List<ReservationResponse>> GetAllAsync(ReservationFillter fillter, CancellationToken ct)
         {

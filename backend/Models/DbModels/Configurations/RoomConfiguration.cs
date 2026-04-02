@@ -21,6 +21,12 @@ namespace ApartManBackend.Models.DbModels.Configurations
                 .IsRequired()
                 .HasMaxLength(100);
 
+            builder.Property(x => x.BookingConnectionUrl)
+                .HasMaxLength(2048);
+
+            builder.Property(x => x.SzallasHuConnectionUrl)
+                .HasMaxLength(2048);
+
             builder.Property(x => x.MaxCapacity)
                 .IsRequired();
         }
