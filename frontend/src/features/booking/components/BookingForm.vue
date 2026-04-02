@@ -1,5 +1,4 @@
 <script setup>
-import DefaultInput from '@/components/DefaultInput.vue';
 import BookingFormInput from './BookingFormInput.vue'
 import { bookingCreateSchema } from '../schemas/booking.schema';
 import { useBookingStore } from '../stores/booking.store';
