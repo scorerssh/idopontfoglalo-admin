@@ -123,8 +123,8 @@ onMounted(async () => {
 
 <template>
     <div :class="[
-        'filters p-5 bg-white rounded-xl shadow-xl border border-gray-100 absolute top-16 right-0 flex flex-col justify-start items-start z-50',
-        isCalendarView ? 'w-auto' : 'w-full'
+        'filters p-5 bg-white rounded-xl shadow-2xl border border-gray-100 absolute top-16 right-0 flex flex-col justify-start items-start z-50',
+        isCalendarView ? 'w-auto' : 'w-auto'
     ]">
         <button type="button" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 transition"
             @click="closeFilter">
@@ -134,8 +134,8 @@ onMounted(async () => {
         <MainTitle title="Szűrő" barColor="#fbcfc4" class="mb-4" />
 
         <div :class="[
-            'grid md:grid-cols-2 grid-cols-2 gap-4 w-full',
-            isCalendarView ? 'lg:grid-cols-4' : 'lg:grid-cols-6'
+            'grid md:grid-cols-2 grid-cols-2 gap-4 ',
+            isCalendarView ? 'lg:grid-cols-4' : 'lg:grid-cols-2'
         ]">
             <DefaultInput v-for="(field, index) in selectedFields" :key="index" :label-text="field.label"
                 :type="field.type" v-model="filterModel[field.model]" />
