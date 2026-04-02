@@ -1,7 +1,7 @@
 <script setup>
-import { CalendarX, Rss, GalleryHorizontalEnd, Plus, ChevronLeft, ChevronRight, Search, RotateCcw } from 'lucide-vue-next'
-import MainTitle from '@shared/components/MainTitle.vue'
-import DashboardStatCard from '@shared/components/DashboardStatCard.vue'
+import { CalendarX, Rss, GalleryHorizontalEnd, Plus, ChevronLeft, ChevronRight, Search, RotateCcw, SlidersHorizontal } from 'lucide-vue-next'
+import MainTitle from '@/components/MainTitle.vue'
+import DashboardStatCard from '@/features/shared/DashboardStatCard.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
 import RoomCreateModal from '@/features/rooms/components/RoomCreateModal.vue'
 import RoomModifyModal from '@/features/rooms/components/RoomModifyModal.vue'
@@ -13,6 +13,7 @@ const roomStore = useRoomStore()
 const showCreateModal = ref(false)
 const showModifyModal = ref(false)
 const selectedRoom = ref(null)
+const showFilters = ref(false)
 
 const statCardContent = computed(() => [
     { title: 'Összes szoba', content: String(roomStore.rooms.length), icon: GalleryHorizontalEnd, additional: 'Összesen', bgColor: '#f3fbff', iconBgColor: '#c8f1fb' },
@@ -28,7 +29,8 @@ const filterModel = reactive({
 
 function openCreateModal() { showCreateModal.value = true }
 function closeCreateModal() { showCreateModal.value = false }
-
+function openFilters() { showFilters.value = true }
+function closeFilters() { showFilters.value = false }
 function openModifyModal(room) {
     showModifyModal.value = true
     selectedRoom.value = room
@@ -66,44 +68,31 @@ onMounted(() => {
                 class="stats-grid grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 w-full">
                 <DashboardStatCard v-for="(card, index) in statCardContent" :key="index" :title="card.title"
                     :content="card.content" :icon="card.icon" :additional="card.additional" :bgColor="card.bgColor"
-                    :iconBgColor="card.iconBgColor" :style="{ animationDelay: `${index * 0.1}s` }" />
+                    :iconBgColor="card.iconBgColor" :style="{ animationDelay: `${index * 0.2}s` }" />
             </TransitionGroup>
         </div>
 
-        <div class="filters p-5 bg-white rounded-xl shadow-sm border border-gray-100">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="space-y-1">
-                    <label class="text-xs font-bold text-gray-500 uppercase ml-1">Keresés</label>
-                    <input v-model="filterModel.name" type="text" placeholder="Szoba neve..."
-                        class="w-full border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none border transition-all" />
-                </div>
-                <div class="space-y-1">
-                    <label class="text-xs font-bold text-gray-500 uppercase ml-1">Min. Kapacitás</label>
-                    <input v-model="filterModel.minCapacity" type="number"
-                        class="w-full border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none border transition-all" />
-                </div>
-                <div class="space-y-1">
-                    <label class="text-xs font-bold text-gray-500 uppercase ml-1">Max. Kapacitás</label>
-                    <input v-model="filterModel.maxCapacity" type="number"
-                        class="w-full border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none border transition-all" />
-                </div>
-                <div class="flex items-end gap-2">
-                    <button @click="applyRoomFilters"
-                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2 text-sm font-medium transition flex items-center justify-center gap-2">
-                        <Search class="h-4 w-4" /> Szűrés
-                    </button>
-                    <button @click="clearRoomFilters"
-                        class="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
-                        <RotateCcw class="h-5 w-5 text-gray-500" />
-                    </button>
-                </div>
-            </div>
-        </div>
-
         <div class="flex items-center justify-between">
-            <MainTitle title="Szobák listája" barColor="#c8f1fb" />
-            <DefaultButton @click="openCreateModal" :text="'Szoba hozzáadása'" :icon="Plus"
-                :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
+            <div class="title">
+                <MainTitle title="Szobák listája" barColor="#c8f1fb" />
+            </div>
+            <div class="buttons flex flex-row items-center gap-x-2">
+                <DefaultButton @click="openCreateModal" :text="'Szoba hozzáadása'" :icon="Plus"
+                    :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
+                <span v-if="roomStore.rooms.length > 0"
+                    class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow ring-1 bg-green-100 ring-green-300 text-black font-medium">
+                    <span class="font-base">Találatok:</span> {{ roomStore.rooms.length }} szoba
+                </span>
+                <span v-else
+                    class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow bg-gray-100 text-black font-medium">
+                    Nincsenek találatok
+                </span>
+
+
+                <DefaultButton @click="openFilters" :icon="SlidersHorizontal"
+                    :button-class="`${showFilters ? 'bg-gray-200' : 'bg-white hover:bg-gray-200'} ml-2 text-black shadow rounded-lg transition duration-100`" />
+
+            </div>
         </div>
 
         <div class="room-list-container">

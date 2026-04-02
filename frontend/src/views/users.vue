@@ -1,7 +1,7 @@
 <script setup>
 import { GalleryHorizontalEnd, GlobeOff, Rss, ClockPlus, Plus, ChevronLeft, ChevronRight } from 'lucide-vue-next'
-import MainTitle from '@shared/components/MainTitle.vue'
-import DashboardStatCard from '@shared/components/DashboardStatCard.vue'
+import MainTitle from '@/components/MainTitle.vue'
+import DashboardStatCard from '@/features/shared/DashboardStatCard.vue'
 import DefaultButton from '@components/DefaultButton.vue'
 import UserCreateModal from '@features/users/components/UserCreateModal.vue'
 import UserModifyModal from '@features/users/components/UserModifyModal.vue'
@@ -47,7 +47,7 @@ onMounted(() => {
 <template>
     <div>
         <div class="top">
-            <MainTitle title="Áttekintés" barColor="#fbcfc4" />
+            <MainTitle title="Felhasználók áttekintése" barColor="#fbcfc4" />
             <TransitionGroup name="card" appear tag="div"
                 class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 w-full">
                 <DashboardStatCard v-for="(card, index) in statCardContent" :key="index" :title="card.title"

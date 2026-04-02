@@ -1,7 +1,7 @@
 <script setup>
-import { Plus, ChevronLeft, ChevronRight, CalendarCheck, Rss, CalendarX, GalleryHorizontalEnd } from 'lucide-vue-next'
-import MainTitle from '@shared/components/MainTitle.vue'
-import DashboardStatCard from '@shared/components/DashboardStatCard.vue'
+import { Plus, ChevronLeft, ChevronRight, Rss, CalendarX, GalleryHorizontalEnd } from 'lucide-vue-next'
+import MainTitle from '@/components/MainTitle.vue'
+import DashboardStatCard from '@/features/shared/DashboardStatCard.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
 import ApartmanCreateModal from '@/features/apartmans/components/ApartmanCreateModal.vue'
 import ApartmanModifyModal from '@/features/apartmans/components/ApartmanModifyModal.vue'

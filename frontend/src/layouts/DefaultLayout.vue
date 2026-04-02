@@ -1,6 +1,6 @@
 <script setup>
-import { useAuthStore } from '@/features/auth/stores/auth'
 import { ref, computed } from 'vue'
+import { useRole } from '@/composables/useRole'
 import {
     PanelRightClose,
     LayoutGrid,
@@ -16,7 +16,7 @@ import {
 } from 'lucide-vue-next'
 import { RouterView, useRoute } from 'vue-router'
 
-const authStore = useAuthStore()
+const { isAdmin, isUser } = useRole()
 const route = useRoute()
 const isSidebarOpen = ref(true)
 const handleLogout = () => {
@@ -27,9 +27,9 @@ function toggleSidebar() {
 }
 
 const navbarLinks = computed(() => {
-    if (authStore.role === 'Admin') {
+    if (isAdmin.value) {
         return adminNavbarLinks
-    } else if (authStore.role === 'User') {
+    } else if (isUser.value) {
         return userNavbarLinks
     } else {
         return []

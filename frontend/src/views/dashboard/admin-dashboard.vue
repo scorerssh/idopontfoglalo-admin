@@ -1,7 +1,7 @@
 <script setup>
-import MainTitle from '@shared/components/MainTitle.vue'
+import MainTitle from '@/components/MainTitle.vue'
+import DashboardStatCard from '@/features/shared/DashboardStatCard.vue'
 import { BookMarked, Rss, CalendarCheck, GalleryHorizontalEnd, MapPinHouse } from 'lucide-vue-next';
-import DashboardStatCard from '@shared/components/DashboardStatCard.vue';
 
 const statCardContent = [
     {
@@ -24,19 +24,12 @@ const statCardContent = [
 
 <template>
     <div class="listing-overview-continer w-full pb-4 gap-4 flex flex-col">
-        <MainTitle title="Áttekintés" barColor="#fbcfc4" />
-        <TransitionGroup name="card" appear tag="div" class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            <DashboardStatCard
-                v-for="(card, index) in statCardContent"
-                :key="index"
-                :title="card.title"
-                :icon="card.icon"
-                :additional="card.additional"
-                :bgColor="card.bgColor"
-                :iconBgColor="card.iconBgColor"
-                :content="card.content"
-                :style="{ animationDelay: `${index * 0.2}s` }"
-            />
+        <MainTitle title="Vezérlőpult áttekintése" barColor="#fbcfc4" />
+        <TransitionGroup name="card" appear tag="div"
+            class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <DashboardStatCard v-for="(card, index) in statCardContent" :key="index" :title="card.title"
+                :icon="card.icon" :additional="card.additional" :bgColor="card.bgColor" :iconBgColor="card.iconBgColor"
+                :content="card.content" :style="{ animationDelay: `${index * 0.2}s` }" />
         </TransitionGroup>
     </div>
 
@@ -62,6 +55,7 @@ const statCardContent = [
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);

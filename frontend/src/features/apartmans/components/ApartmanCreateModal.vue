@@ -3,7 +3,7 @@ import { reactive } from 'vue'
 import { useApartmanStore } from '@/features/apartmans/stores/apartman.store'
 import DefaultInput from '@/components/DefaultInput.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
-import MainTitle from '@/shared/components/MainTitle.vue'
+import MainTitle from '@/components/MainTitle.vue'
 
 const emit = defineEmits(['close'])
 

@@ -3,7 +3,7 @@ import { reactive } from 'vue'
 import { useRoomStore } from '@/features/rooms/stores/room.store'
 import DefaultInput from '@/components/DefaultInput.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
-import MainTitle from '@/shared/components/MainTitle.vue'
+import MainTitle from '@/components/MainTitle.vue'
 
 const emit = defineEmits(['close'])
 
@@ -16,8 +16,8 @@ const props = defineProps({
 
 const inputs = [
     { type: 'text', labelText: 'Név', inputName: 'name' },
-    { type: 'number', labelText: 'Min. Kapacitás', inputName: 'min' },
-    { type: 'number', labelText: 'Max. Kapacitás', inputName: 'max' },
+    { type: 'number', labelText: 'Min. Kapacitás', inputName: 'minCapacity' },
+    { type: 'number', labelText: 'Max. Kapacitás', inputName: 'maxCapacity' },
 ]
 
 const roomStore = useRoomStore()
@@ -39,8 +39,8 @@ const resetForm = () => {
 const createRoom = async () => {
     const payload = {
         name: formData.name,
-        minCapacity: formData.minCapacity,
-        maxCapacity: formData.maxCapacity,
+        MinCapacity: formData.minCapacity,
+        MaxCapacity: formData.maxCapacity,
         apartmanId: formData.apartmanId,
     }
 

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { authService } from '@features/auth/services/authService'
+import { authService } from '@features/auth/services/auth.service'
 import { STATUS } from '@constants/status'
 import router from '@/router'
 

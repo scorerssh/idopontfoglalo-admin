@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@features/auth/stores/auth'
+import { useRole } from '@/composables/useRole'
+import { useAuthStore } from '@/features/auth/stores/auth.store'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -71,7 +72,12 @@ const router = createRouter({
           component: () => import('@views/calendar.vue'),
           meta: { requiresAuth: true, roles: ['Admin', 'User'] },
         },
-
+        {
+          path: '/booking-detailed',
+          name: 'booking-detailed',
+          component: () => import('@/views/booking-detailed.vue'),
+          meta: { requiresAuth: true, roles: ['Admin', 'User'] },
+        },
         {
           path: '/403',
           name: 'forbidden',
@@ -93,13 +99,13 @@ router.beforeEach(async (to) => {
   if (!to.meta.requiresAuth) return true
 
   const authStore = useAuthStore()
-
+  const { role } = useRole()
   await authStore.ensureCheckedOnce()
 
   if (!authStore.user) return { name: 'login' }
   if (!to.meta.roles?.length) return true
 
-  const userRole = authStore.role?.toLowerCase()
+  const userRole = role.value?.toLowerCase()
   const allowed = to.meta.roles.map((r) => r.toLowerCase())
 
   return allowed.includes(userRole) ? true : { name: 'forbidden' }
