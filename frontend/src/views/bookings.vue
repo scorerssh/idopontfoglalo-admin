@@ -8,7 +8,7 @@ import BookingCreateModal from '@/features/booking/components/BookingCreateModal
 import BookingFiltersBar from '@/features/booking/components/BookingFiltersBar.vue'
 import BookingModifyModal from '@/features/booking/components/BookingModifyModal.vue'
 import { useBookingStore } from '@/features/booking/stores/booking.store'
-import { useRole } from '@/composables/userRole'
+import { useRole } from '@/composables/useRole'
 import { ref, onMounted, computed } from 'vue'
 
 const bookingStore = useBookingStore()
@@ -81,7 +81,8 @@ onMounted(() => {
                     :button-class="`${showFilters ? 'bg-gray-200' : 'bg-white hover:bg-gray-200'} ml-2 text-black shadow rounded-lg transition duration-100`" />
             </span>
             <Transition name="fade-in">
-                <BookingFiltersBar v-if="showFilters" :show="showFilters" @close="closeFilters" />
+                <BookingFiltersBar v-if="showFilters" :show="showFilters" @close="closeFilters"
+                    :is-open="showFilters" />
             </Transition>
         </section>
 

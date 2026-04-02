@@ -5,7 +5,7 @@ import DefaultButton from '@/components/DefaultButton.vue'
 import { useCalendar } from '@/features/calendar/composables/useCalendar.js'
 import { useBookingStore } from '@/features/booking/stores/booking.store'
 import BookingFiltersBar from '@/features/booking/components/BookingFiltersBar.vue'
-import { useRole } from '@/composables/userRole'
+import { useRole } from '@/composables/useRole'
 
 const bookingStore = useBookingStore()
 const { isAdmin } = useRole()

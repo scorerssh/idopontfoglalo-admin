@@ -2,7 +2,7 @@
 const props = defineProps({
     inputName: { type: String, default: '' },
     hasLabel: { type: Boolean, default: true },
-    modelValue: { type: String, default: '' },
+    modelValue: { type: [String, Number, null], default: '' },
     labelText: { type: String, default: '' },
     type: { type: String, default: 'text' },
     inputClass: { type: String, default: '' },
@@ -17,8 +17,15 @@ const emit = defineEmits(['update:modelValue'])
         <label v-if="hasLabel" :for="inputName" :class="[labelClass, 'text-sm']">
             {{ props.labelText }}
         </label>
-        <input :value="props.modelValue" @input="emit('update:modelValue', $event.target.value)" :type="type"
+
+        <select v-if="type === 'select'" :value="props.modelValue"
+            @change="emit('update:modelValue', $event.target.value)" :name="inputName"
+            :class="[inputClass, 'px-3 py-2 w-full bg-gray-200 focus:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100']">
+            <slot />
+        </select>
+
+        <input v-else :value="props.modelValue" @input="emit('update:modelValue', $event.target.value)" :type="type"
             :name="inputName"
-            :class="[inputClass, 'px-3 py-2 w-full bg-gray-200 focus-within:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100']" />
+            :class="[inputClass, 'px-3 py-2 w-full bg-gray-200 focus:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100']" />
     </div>
 </template>

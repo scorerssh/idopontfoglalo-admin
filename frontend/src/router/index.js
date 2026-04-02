@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useRole } from '@/composables/userRole'
-import { useAuthStore } from '@/features/auth/stores/auth'
+import { useRole } from '@/composables/useRole'
+import { useAuthStore } from '@/features/auth/stores/auth.store'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
