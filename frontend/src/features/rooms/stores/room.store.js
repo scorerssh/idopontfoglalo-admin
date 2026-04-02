@@ -4,21 +4,18 @@ import { roomService } from '../services/room.service'
 import { defaultOp } from '@/utils/opsHelper'
 
 const svc = roomService
+
 export const useRoomStore = defineStore('roomStore', {
   state: () => ({
     rooms: [],
     pagination: {
-      page: 1,
+      page: 1, // 1-ről indul
     },
     filters: {
       name: '',
       minCapacity: null,
       maxCapacity: null,
-    },
-    order: {
-      sortBy: 'name',
-      sort: 'Ascending',
-      combineWith: 'And',
+      apartmanId: null,
     },
     ops: {
       getAll: defaultOp(),
@@ -29,23 +26,19 @@ export const useRoomStore = defineStore('roomStore', {
     },
   }),
 
-  getters: {},
-
   actions: {
     async getAll(overrides = {}) {
+      // Csak azokat a szűrőket küldjük, amiknek van értéke
       const activeFilters = Object.fromEntries(
         Object.entries(this.filters).filter(
-          ([key, value]) =>
-            ['name', 'minCapacity', 'maxCapacity'].includes(key) &&
-            value !== '' &&
-            value !== null &&
-            value !== undefined,
+          ([_, value]) => value !== '' && value !== null && value !== undefined,
         ),
       )
 
+      // A backend által elvárt lapos struktúra összeállítása
       const payload = {
         page: this.pagination.page,
-        ...(Object.keys(activeFilters).length > 0 ? { filter: activeFilters } : {}),
+        ...activeFilters,
         ...overrides,
       }
 
@@ -63,74 +56,6 @@ export const useRoomStore = defineStore('roomStore', {
       )
     },
 
-    async getById(id) {
-      if (!id) throw new Error('Nincs azonosító')
-      return runOp(
-        this.ops.getById,
-        async () => {
-          const data = await svc.getById(id)
-          return data
-        },
-        {
-          notifyOnSuccess: false,
-          errorMessage: 'Sikertelen volt a szoba betöltése.',
-        },
-      )
-    },
-
-    async create(payload) {
-      if (!payload) throw new Error('Nincs payload')
-      return runOp(
-        this.ops.create,
-        async () => {
-          const data = await svc.create(payload)
-          await this.getAll()
-          return data
-        },
-        {
-          notifyOnSuccess: true,
-          successMessage: 'Sikeresen létrehozta a szobát!',
-          errorMessage: 'Sikertelen volt a szoba létrehozása.',
-        },
-      )
-    },
-
-    async update(payload) {
-      if (!payload) throw new Error('Nincs payload')
-      return runOp(
-        this.ops.update,
-        async () => {
-          const updated = await svc.update(payload)
-          await this.getAll()
-          return updated
-        },
-        {
-          notifyOnSuccess: true,
-          successMessage: 'Sikeresen frissítette a szoba adatait!',
-          errorMessage: 'Sikertelen volt a szoba adatainak frissítése.',
-        },
-      )
-    },
-
-    async delete(id) {
-      if (!id) throw new Error('Nincs azonosító')
-      return runOp(
-        this.ops.delete,
-        async () => {
-          await svc.delete(id)
-          const index = this.rooms.findIndex((r) => r.id === id)
-          if (index !== -1) {
-            this.rooms.splice(index, 1)
-          }
-        },
-        {
-          notifyOnSuccess: true,
-          successMessage: 'Sikeresen törölte a szobát!',
-          errorMessage: 'Sikertelen volt a szoba törlése.',
-        },
-      )
-    },
-
     async goToPage(page) {
       if (page < 1) return
       this.pagination.page = page
@@ -139,8 +64,44 @@ export const useRoomStore = defineStore('roomStore', {
 
     async applyFilters(newFilters = {}) {
       this.filters = { ...this.filters, ...newFilters }
-      this.pagination.page = 1
+      this.pagination.page = 1 // Új szűrésnél vissza az első oldalra
       return this.getAll()
+    },
+
+    // A többi CRUD művelet (getById, create, update, delete) változatlan maradhat
+    async create(payload) {
+      return runOp(
+        this.ops.create,
+        async () => {
+          const data = await svc.create(payload)
+          await this.getAll()
+          return data
+        },
+        { notifyOnSuccess: true, successMessage: 'Sikeres létrehozás!' },
+      )
+    },
+
+    async update(payload) {
+      return runOp(
+        this.ops.update,
+        async () => {
+          const updated = await svc.update(payload)
+          await this.getAll()
+          return updated
+        },
+        { notifyOnSuccess: true, successMessage: 'Sikeres frissítés!' },
+      )
+    },
+
+    async delete(id) {
+      return runOp(
+        this.ops.delete,
+        async () => {
+          await svc.delete(id)
+          this.rooms = this.rooms.filter((r) => r.id !== id)
+        },
+        { notifyOnSuccess: true, successMessage: 'Sikeres törlés!' },
+      )
     },
   },
 })

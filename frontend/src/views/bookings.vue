@@ -65,16 +65,13 @@ onMounted(() => {
         </section>
 
         <section class="relative my-6 w-full flex flex-row items-center justify-between">
-            <div class="flex items-center justify-between">
+            <div class="flex w-1/3 items-center justify-between">
                 <MainTitle title="Foglalások" barColor="#c8f1fb" />
             </div>
-            <div class="flex flex-row gap-x-2 justify-center">
-                <DefaultButton @click="bookingStore.goToPage(bookingStore.pagination.page - 1)" :icon="ChevronLeft"
-                    :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
-                <DefaultButton @click="bookingStore.goToPage(bookingStore.pagination.page + 1)" :icon="ChevronRight"
-                    :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
-            </div>
-            <span class="flex flex-row items-center gap-x-2">
+
+
+
+            <span class="flex w-1/3 flex-row justify-end items-center gap-x-2">
                 <DefaultButton @click="openCreateModal" :text="'Foglalás hozzáadása'" :icon="Plus"
                     :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
                 <div class="filter-results">
@@ -94,13 +91,22 @@ onMounted(() => {
                 <BookingFiltersBar v-if="showFilters" :show="showFilters" @close="closeFilters"
                     :is-open="showFilters" />
             </Transition>
+
         </section>
 
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <BookingCard v-for="booking in bookingStore.bookings" :key="booking.startTIme + booking.name"
                 :booking="booking" @openModifyModal="openModifyModal" />
         </section>
-
+        <div class="flex flex-row items-center w-full mt-8 pagination justify-center gap-x-4 ">
+            <DefaultButton @click="bookingStore.goToPage(bookingStore.pagination.page - 1)" :icon="ChevronLeft"
+                :buttonClass="'bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
+            <span class="text-md font-semibold text-gray-700 px-1  ">
+                {{ bookingStore.pagination.page }}. oldal
+            </span>
+            <DefaultButton @click="bookingStore.goToPage(bookingStore.pagination.page + 1)" :icon="ChevronRight"
+                :buttonClass="' bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
+        </div>
         <BookingCreateModal v-if="showCreateModal" :showModal="showCreateModal" @close="closeCreateModal" />
         <BookingModifyModal v-if="showModifyModal" :showModal="showModifyModal" :booking="selectedBooking"
             @close="closeModifyModal" />

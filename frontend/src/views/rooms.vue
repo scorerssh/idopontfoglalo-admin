@@ -1,13 +1,14 @@
 <script setup>
-import { CalendarX, Rss, GalleryHorizontalEnd, Plus, ChevronLeft, ChevronRight, Search, RotateCcw, SlidersHorizontal } from 'lucide-vue-next'
+import { ref, onMounted, computed } from 'vue'
+import { CalendarX, Rss, GalleryHorizontalEnd, Plus, ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-vue-next'
 import MainTitle from '@/components/MainTitle.vue'
 import DashboardStatCard from '@/features/shared/DashboardStatCard.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
 import RoomCreateModal from '@/features/rooms/components/RoomCreateModal.vue'
 import RoomModifyModal from '@/features/rooms/components/RoomModifyModal.vue'
-import RoomCard from '@/features/rooms/components/RoomCard.vue' // Az új child
+import RoomCard from '@/features/rooms/components/RoomCard.vue'
+import RoomFiltersModal from '@/features/rooms/components/RoomFiltersModal.vue'
 import { useRoomStore } from '@/features/rooms/stores/room.store'
-import { ref, onMounted, reactive, computed } from 'vue'
 
 const roomStore = useRoomStore()
 const showCreateModal = ref(false)
@@ -21,16 +22,11 @@ const statCardContent = computed(() => [
     { title: 'Nem elérhetők', content: '2', icon: CalendarX, additional: 'Karbantartás', bgColor: '#fff0ec', iconBgColor: '#fdd1c5' },
 ])
 
-const filterModel = reactive({
-    name: '',
-    minCapacity: '',
-    maxCapacity: '',
-})
-
 function openCreateModal() { showCreateModal.value = true }
 function closeCreateModal() { showCreateModal.value = false }
-function openFilters() { showFilters.value = true }
+function openFilters() { showFilters.value = !showFilters.value }
 function closeFilters() { showFilters.value = false }
+
 function openModifyModal(room) {
     showModifyModal.value = true
     selectedRoom.value = room
@@ -38,21 +34,6 @@ function openModifyModal(room) {
 function closeModifyModal() {
     showModifyModal.value = false
     selectedRoom.value = null
-}
-
-function applyRoomFilters() {
-    roomStore.applyFilters({
-        name: filterModel.name || '',
-        minCapacity: filterModel.minCapacity === '' ? null : Number(filterModel.minCapacity),
-        maxCapacity: filterModel.maxCapacity === '' ? null : Number(filterModel.maxCapacity),
-    })
-}
-
-function clearRoomFilters() {
-    filterModel.name = ''
-    filterModel.minCapacity = ''
-    filterModel.maxCapacity = ''
-    roomStore.applyFilters({ name: '', minCapacity: null, maxCapacity: null })
 }
 
 onMounted(() => {
@@ -72,13 +53,14 @@ onMounted(() => {
             </TransitionGroup>
         </div>
 
-        <div class="flex items-center justify-between">
+        <div class="relative flex items-center justify-between">
             <div class="title">
                 <MainTitle title="Szobák listája" barColor="#c8f1fb" />
             </div>
             <div class="buttons flex flex-row items-center gap-x-2">
                 <DefaultButton @click="openCreateModal" :text="'Szoba hozzáadása'" :icon="Plus"
                     :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
+
                 <span v-if="roomStore.rooms.length > 0"
                     class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow ring-1 bg-green-100 ring-green-300 text-black font-medium">
                     <span class="font-base">Találatok:</span> {{ roomStore.rooms.length }} szoba
@@ -88,11 +70,13 @@ onMounted(() => {
                     Nincsenek találatok
                 </span>
 
-
                 <DefaultButton @click="openFilters" :icon="SlidersHorizontal"
                     :button-class="`${showFilters ? 'bg-gray-200' : 'bg-white hover:bg-gray-200'} ml-2 text-black shadow rounded-lg transition duration-100`" />
-
             </div>
+
+            <Transition name="fade-in">
+                <RoomFiltersModal v-if="showFilters" @close="closeFilters" />
+            </Transition>
         </div>
 
         <div class="room-list-container">
@@ -110,14 +94,14 @@ onMounted(() => {
 
         <div class="pagination flex items-center justify-center gap-x-4 mt-8 pb-10">
             <DefaultButton @click="roomStore.goToPage(roomStore.pagination.page - 1)" :icon="ChevronLeft"
-                :buttonClass="'bg-white hover:bg-gray-100 text-black shadow-sm border border-gray-200 rounded-lg px-4'" />
+                :buttonClass="'bg-white hover:bg-gray-100 text-black shadow-sm border border-gray-200 rounded-lg px-2'" />
 
-            <span class="text-sm font-semibold text-gray-700 bg-gray-100 px-4 py-2 rounded-full">
+            <span class="text-md font-semibold text-gray-700 px-1 py-2 rounded-full">
                 {{ roomStore.pagination.page }}. oldal
             </span>
 
             <DefaultButton @click="roomStore.goToPage(roomStore.pagination.page + 1)" :icon="ChevronRight"
-                :buttonClass="'bg-white hover:bg-gray-100 text-black shadow-sm border border-gray-200 rounded-lg px-4'" />
+                :buttonClass="'bg-white hover:bg-gray-100 text-black shadow-sm border border-gray-200 rounded-lg px-2'" />
         </div>
     </div>
 
@@ -144,5 +128,22 @@ onMounted(() => {
 
 .card-enter-from {
     opacity: 0;
+}
+
+.fade-in-enter-active,
+.fade-in-leave-active {
+    transition: all 0.2s ease;
+}
+
+.fade-in-enter-from,
+.fade-in-leave-to {
+    transform: translateY(-15px);
+    opacity: 0;
+}
+
+.fade-in-enter-to,
+.fade-in-leave-from {
+    transform: translateY(0px);
+    opacity: 1;
 }
 </style>
