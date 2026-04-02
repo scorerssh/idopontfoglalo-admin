@@ -2,10 +2,12 @@
 import BookingFormInput from './BookingFormInput.vue'
 import { bookingCreateSchema } from '../schemas/booking.schema';
 import { useBookingStore } from '../stores/booking.store';
-import { reactive } from 'vue';
+import { useRoomStore } from '@/features/rooms/stores/room.store';
+import { onMounted, reactive } from 'vue';
 
 const bookingStore = useBookingStore()
-
+const roomStore = useRoomStore()
+const selectedRoomId = ref(null)
 const bookingInputs = [
     {
         name: 'name',
@@ -36,7 +38,12 @@ const bookingInputs = [
         name: 'guests',
         label: 'Number of Guests',
         type: 'number'
-    }
+    },
+    {
+        name: 'description',
+        label: 'Description',
+        type: 'text'
+    },
 ]
 
 const errors = reactive({
@@ -55,7 +62,6 @@ function resetErrors() {
     errors.startDate = null;
     errors.endDate = null;
     errors.guests = null;
-    errors.paymentMethod = null;
 }
 
 const bookingForm = reactive({
@@ -65,7 +71,7 @@ const bookingForm = reactive({
     startDate: '',
     endDate: '',
     guests: '',
-    description: ''
+    description: '',
 })
 
 function resetForm() {
@@ -76,6 +82,7 @@ function resetForm() {
     bookingForm.endDate = '';
     bookingForm.guests = '';
     bookingForm.description = '';
+    bookingForm.room = '';
 }
 
 async function submitForm() {
@@ -97,28 +104,37 @@ async function submitForm() {
         })
         return
     }
-
     const payload = {
         name: bookingForm.name,
         email: bookingForm.email,
         phoneNumber: bookingForm.phone,
-        startTIme: bookingForm.startDate,
+        startTIme: bookingForm.startDate, // igen, így...
         endTime: bookingForm.endDate,
-        pearsonCount: bookingForm.guests,
+        pearsonCount: Number(bookingForm.guests),
         description: bookingForm.description,
-        roomGUid: ''
+        roomGUid: selectedRoomId.value
     }
 
     await bookingStore.createBooking(payload)
     resetForm()
 }
+onMounted(async () => {
+    if (!roomStore.rooms || roomStore.rooms.length === 0)
+        await roomStore.getAll()
+})
 </script>
 
 <template>
-    <div class="grid grid-cols-2 p-3">
+    <div class="grid">
         <form @submit.prevent="submitForm">
             <BookingFormInput v-for="input in bookingInputs" :key="input.name" :input-name="input.name"
-                :type="input.type" v-model="bookingForm[input.name]" :labelText="input.label" />
+                :type="input.type" v-model="bookingForm[input.name]" :labelText="input.label"
+                label-class="text-black/60" class="mb-3" />
+            <select name="roomGuidId" id="" v-model="selectedRoomId">
+                <option :value="selectedRoomId" disabled selected>Válassz szobát</option>
+                <option v-for="room in roomStore.rooms" :key="room.id" :value="room.guidId">{{
+                    room.name }}</option>
+            </select>
             <button type="submit"
                 class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
                 Create Booking

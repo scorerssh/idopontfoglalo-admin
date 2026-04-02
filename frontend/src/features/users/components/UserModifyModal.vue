@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, watch } from 'vue'
 import { useUserStore } from '@features/users/stores/user.store'
-import MainTitle from '@/shared/components/MainTitle.vue'
+import MainTitle from '@/components/MainTitle.vue'
 import DefaultInput from '@/components/DefaultInput.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
 

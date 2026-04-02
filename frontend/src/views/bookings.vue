@@ -1,8 +1,8 @@
 <script setup>
 import { GalleryHorizontalEnd, Check, ClockPlus, Plus, ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-vue-next'
-import MainTitle from '@shared/components/MainTitle.vue'
+import MainTitle from '@/components/MainTitle.vue'
 import BookingCard from '@/features/booking/components/BookingCard.vue'
-import DashboardStatCard from '@shared/components/DashboardStatCard.vue'
+import DashboardStatCard from '@/features/shared/DashboardStatCard.vue'
 import DefaultButton from '@components/DefaultButton.vue'
 import BookingCreateModal from '@/features/booking/components/BookingCreateModal.vue'
 import BookingFiltersBar from '@/features/booking/components/BookingFiltersBar.vue'
@@ -77,6 +77,16 @@ onMounted(() => {
             <span class="flex flex-row items-center gap-x-2">
                 <DefaultButton @click="openCreateModal" :text="'Foglalás hozzáadása'" :icon="Plus"
                     :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
+                <div class="filter-results">
+                    <span v-if="bookingStore.bookings.length > 0"
+                        class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow ring-1 bg-green-100 ring-green-300 text-black font-medium">
+                        <span class="font-base">Találatok:</span> {{ bookingStore.bookings.length }} foglalás
+                    </span>
+                    <span v-else
+                        class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow bg-gray-100 text-black font-medium">
+                        Nincsenek találatok
+                    </span>
+                </div>
                 <DefaultButton @click="openFilters" :icon="SlidersHorizontal"
                     :button-class="`${showFilters ? 'bg-gray-200' : 'bg-white hover:bg-gray-200'} ml-2 text-black shadow rounded-lg transition duration-100`" />
             </span>

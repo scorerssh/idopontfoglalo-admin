@@ -1,7 +1,7 @@
 <script setup>
 import DefaultInput from '@/components/DefaultInput.vue';
 import DefaultButton from '@/components/DefaultButton.vue';
-import MainTitle from '@/shared/components/MainTitle.vue';
+import MainTitle from '@/components/MainTitle.vue'
 import { storeToRefs } from 'pinia';
 import { Search, RotateCcw, X } from 'lucide-vue-next';
 import { useBookingStore } from '@/features/booking/stores/booking.store';

@@ -1,7 +1,7 @@
 <script setup>
 import { GalleryHorizontalEnd, GlobeOff, Rss, ClockPlus, Plus, ChevronLeft, ChevronRight } from 'lucide-vue-next'
-import MainTitle from '@shared/components/MainTitle.vue'
-import DashboardStatCard from '@shared/components/DashboardStatCard.vue'
+import MainTitle from '@/components/MainTitle.vue'
+import DashboardStatCard from '@/features/shared/DashboardStatCard.vue'
 import DefaultButton from '@components/DefaultButton.vue'
 import UserCreateModal from '@features/users/components/UserCreateModal.vue'
 import UserModifyModal from '@features/users/components/UserModifyModal.vue'

@@ -3,7 +3,7 @@ import { reactive, watch } from 'vue'
 import { useRoomStore } from '@/features/rooms/stores/room.store'
 import DefaultInput from '@/components/DefaultInput.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
-import MainTitle from '@/shared/components/MainTitle.vue'
+import MainTitle from '@/components/MainTitle.vue'
 
 const emit = defineEmits(['close'])
 

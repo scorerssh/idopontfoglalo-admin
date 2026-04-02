@@ -4,7 +4,7 @@ import { useUserStore } from '@features/users/stores/user.store'
 import userCreateSchema from '../schemas/userCreate.schema'
 import DefaultInput from '@components/DefaultInput.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
-import MainTitle from '@/shared/components/MainTitle.vue'
+import MainTitle from '@/components/MainTitle.vue'
 
 const emit = defineEmits(['close'])
 

@@ -1,6 +1,6 @@
 <script setup>
 import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-vue-next'
-import MainTitle from '@/shared/components/MainTitle.vue'
+import MainTitle from '@/components/MainTitle.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
 import { useCalendar } from '@/features/calendar/composables/useCalendar.js'
 import { useBookingStore } from '@/features/booking/stores/booking.store'
@@ -93,7 +93,6 @@ function getCellKey(cell) {
     return `${cell.year}-${cell.month}-${cell.day}`
 }
 
-// A script setup-on belül bárhová
 function formatShortDate(dateStr) {
     const d = new Date(dateStr);
     return `${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
@@ -116,6 +115,16 @@ function formatShortDate(dateStr) {
                     :buttonClass="'bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
             </div>
             <div class="w-1/3 flex flex-row justify-end gap-x-2">
+                <div class="filter-results">
+                    <span v-if="bookingStore.bookings.length > 0"
+                        class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow ring-1 bg-green-100 ring-green-300 text-black font-medium">
+                        <span class="font-base">Találatok:</span> {{ bookingStore.bookings.length }} foglalás
+                    </span>
+                    <span v-else
+                        class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow bg-gray-100 text-black font-medium">
+                        Nincsenek találatok
+                    </span>
+                </div>
                 <DefaultButton @click="openFilters" :icon="SlidersHorizontal"
                     :button-class="`${showFilters ? 'bg-gray-200' : 'bg-white hover:bg-gray-200'} ml-2 text-black shadow rounded-lg transition duration-100`" />
             </div>

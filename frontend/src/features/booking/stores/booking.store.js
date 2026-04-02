@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { runOp } from '@/utils/storeUtils'
 import { bookingService } from '../services/booking.service'
 import { defaultOp } from '@/utils/opsHelper'
+import { useRole } from '@/composables/useRole'
 
 const svc = bookingService
 
@@ -114,6 +115,8 @@ export const useBookingStore = defineStore('bookingStore', {
     },
 
     async createBooking(bookingData) {
+      const { isAdmin } = useRole()
+
       return runOp(
         this.ops.createBooking,
         async () => {
@@ -122,6 +125,12 @@ export const useBookingStore = defineStore('bookingStore', {
           if (response?.data) {
             this.bookings.push(response.data)
           }
+          if (isAdmin.value) {
+            await this.getAllAdmin()
+          } else {
+            await this.getAllUser()
+          }
+
           return response?.data
         },
         {

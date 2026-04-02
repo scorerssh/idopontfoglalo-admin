@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, computed, watch } from 'vue'
 import { CalendarDays, Users, Phone, Mail, FileText, X } from 'lucide-vue-next'
-import MainTitle from '@/shared/components/MainTitle.vue'
+import MainTitle from '@/components/MainTitle.vue'
 import DefaultInput from '@/components/DefaultInput.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
 
