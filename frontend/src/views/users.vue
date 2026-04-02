@@ -47,7 +47,7 @@ onMounted(() => {
 <template>
     <div>
         <div class="top">
-            <MainTitle title="Áttekintés" barColor="#fbcfc4" />
+            <MainTitle title="Felhasználók áttekintése" barColor="#fbcfc4" />
             <TransitionGroup name="card" appear tag="div"
                 class="stats-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 w-full">
                 <DashboardStatCard v-for="(card, index) in statCardContent" :key="index" :title="card.title"

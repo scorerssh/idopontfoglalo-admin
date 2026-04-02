@@ -66,7 +66,7 @@ onMounted(() => {
                 class="stats-grid grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 w-full">
                 <DashboardStatCard v-for="(card, index) in statCardContent" :key="index" :title="card.title"
                     :content="card.content" :icon="card.icon" :additional="card.additional" :bgColor="card.bgColor"
-                    :iconBgColor="card.iconBgColor" :style="{ animationDelay: `${index * 0.1}s` }" />
+                    :iconBgColor="card.iconBgColor" :style="{ animationDelay: `${index * 0.2}s` }" />
             </TransitionGroup>
         </div>
 

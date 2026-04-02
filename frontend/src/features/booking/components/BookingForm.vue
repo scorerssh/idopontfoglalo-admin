@@ -107,7 +107,7 @@ async function submitForm() {
         endTime: bookingForm.endDate,
         pearsonCount: bookingForm.guests,
         description: bookingForm.description,
-        roomGUid: '89a40ec6-0bac-426a-ad74-c04174631cc8'
+        roomGUid: ''
     }
 
     await bookingStore.createBooking(payload)

@@ -9,7 +9,6 @@ export const useRoomStore = defineStore('roomStore', {
     rooms: [],
     pagination: {
       page: 1,
-      perPage: 10,
     },
     filters: {
       name: '',

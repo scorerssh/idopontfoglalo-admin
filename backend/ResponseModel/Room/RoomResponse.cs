@@ -8,6 +8,7 @@ namespace ApartManBackend.ResponseModel.Room
         public string Name { get; set; } = null!;
         public int MaxCapacity { get; set; }
         public string? BindedApartmanName { get; set; }
+        public Guid GuidId { get; set; }
         public int ApartmanId { get; set; }
     }
 }

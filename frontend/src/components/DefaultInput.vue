@@ -19,6 +19,6 @@ const emit = defineEmits(['update:modelValue'])
         </label>
         <input :value="props.modelValue" @input="emit('update:modelValue', $event.target.value)" :type="type"
             :name="inputName"
-            :class="[inputClass, 'px-3 py-2 w-full bg-gray-100 focus-within:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100']" />
+            :class="[inputClass, 'px-3 py-2 w-full bg-gray-200 focus-within:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100']" />
     </div>
 </template>

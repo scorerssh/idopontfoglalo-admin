@@ -1,5 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import { useRole } from '@/composables/userRole'
 import { useAuthStore } from '@/features/auth/stores/auth'
 import { ref, onMounted, onUnmounted, reactive, nextTick } from 'vue'
 import login_1 from '@/assets/pictures/login-bg.webp'
@@ -13,6 +14,8 @@ import login_8 from '@/assets/pictures/login-bg-8.webp'
 import login_9 from '@/assets/pictures/login-bg-9.webp'
 import login_10 from '@/assets/pictures/login-bg-10.webp'
 
+const authStore = useAuthStore()
+const { role } = useRole()
 const router = useRouter()
 const images = [login_1, login_2, login_3, login_4, login_5, login_6, login_7, login_8, login_9, login_10]
 const currentBg = ref(0)
@@ -21,7 +24,6 @@ const loginError = ref(null)
 const isSubmitting = ref(false)  // ← CSAK ez vezérli a gombot, semmi más
 let interval = null
 
-const authStore = useAuthStore()
 
 const form = reactive({
     email: '',
@@ -37,7 +39,7 @@ const submitLogin = async () => {
         await authStore.login(form)
         await nextTick()
 
-        if (authStore.role?.toLowerCase() === 'admin') {
+        if (role.value?.toLowerCase() === 'admin') {
             router.push('/admin-dashboard')
         } else {
             router.push('/user-dashboard')
