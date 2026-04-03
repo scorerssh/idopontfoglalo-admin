@@ -51,6 +51,13 @@ namespace ApartManBackend.RequestModels.Room
                 .Must(BeValidOptionalUrl)
                 .WithMessage("A Szallas.hu connection URL nem ervenyes.");
 
+            When(x => x.Price.HasValue, () =>
+            {
+                RuleFor(x => x.Price)
+                .GreaterThan(0)
+                .WithMessage("Az ár nem lehet 0");
+            });
+
 
         }
 

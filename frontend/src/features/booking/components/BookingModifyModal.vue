@@ -6,13 +6,16 @@ import DefaultInput from '@/components/DefaultInput.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
 import { useBookingStore } from '../stores/booking.store'
 
-const emit = defineEmits(['close'])
-const bookingStore = useBookingStore()
-const selectedId = computed(() => props.booking?.id || props.booking?.Id)
+
 const props = defineProps({
     showModal: { type: Boolean, required: true },
     booking: { type: Object, default: null }
 })
+
+const selectedBookingId = computed(() => props.booking.id)
+const emit = defineEmits(['close'])
+const bookingStore = useBookingStore()
+
 
 const formData = reactive({
     startTIme: '',
@@ -81,7 +84,7 @@ function handleReset() {
 }
 
 function handleDelete() {
-    bookingStore.deleteBooking(selectedId)
+    bookingStore.deleteBooking(selectedBookingId.value)
     console.log('Delete booking:', props.booking)
 }
 

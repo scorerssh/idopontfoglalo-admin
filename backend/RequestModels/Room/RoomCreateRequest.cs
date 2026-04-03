@@ -3,6 +3,7 @@ namespace ApartManBackend.RequestModels.Room
     public class RoomCreateRequest
     {
         public string Name { get; set; } = null!;
+        public int Price { get; set; }
         public int MaxCapacity { get; set; }
 
         public int MinCapacity { get; set; }

@@ -5,6 +5,7 @@ namespace ApartManBackend.RequestModels.Room
 
         public int? RoomId { get; set; }
         public string? Name { get; set; } = null!;
+        public int? Price { get; set; }
         public int? MaxCapacity { get; set; }
         public int? MinCapacity { get; set; }
         public int? ApartmanId { get; set; }
