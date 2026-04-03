@@ -16,6 +16,17 @@ export const bookingService = {
     return data
   },
 
+  async updateBoooking(payload) {
+    const { data } = await api.patch('/api/Reservation/Update', payload)
+    return data
+  },
+
+  async deleteBooking(id) {
+    const reservationId = id
+    const { data } = await api.delete(`/api/Reservation/${reservationId}`)
+    return data
+  },
+
   async getById(id) {
     const { data } = await api.get(`/api/Reservation/${id}`)
     return data

@@ -34,6 +34,8 @@ export const useBookingStore = defineStore('bookingStore', {
       getAllUser: defaultOp(),
       getById: defaultOp(),
       createBooking: defaultOp(),
+      deleteBooking: defaultOp(),
+      updateBooking: defaultOp(),
     },
   }),
 
@@ -137,6 +139,55 @@ export const useBookingStore = defineStore('bookingStore', {
           notifyOnSuccess: true,
           successMessage: 'Foglalás sikeresen létrehozva',
           errorMessage: 'Hiba a foglalás létrehozásakor',
+        },
+      )
+    },
+
+    async deleteBooking(id) {
+      const { isAdmin } = useRole()
+      return runOp(
+        this.ops.deleteBooking,
+        async () => {
+          const response = await svc.deleteBooking(id)
+          if (response?.success) {
+            this.bookings = this.bookings.filter((b) => b.id !== id)
+          }
+          if (isAdmin.value) {
+            await this.getAllAdmin()
+          } else {
+            await this.getAllUser()
+          }
+          return response
+        },
+        {
+          notifyOnSuccess: true,
+          successMessage: 'Foglalás sikeresen törölve',
+          errorMessage: 'Hiba a foglalás törlésekor',
+        },
+      )
+    },
+
+    async updateBooking(bookingData) {
+      const { isAdmin } = useRole()
+      return runOp(
+        this.ops.updateBooking,
+        async () => {
+          const response = await svc.updateBoooking(bookingData)
+          if (response?.success) {
+            // Frissítsük a helyi listát a módosított foglalással
+            this.bookings = this.bookings.map((b) => (b.id === bookingData.id ? response.data : b))
+          }
+          if (isAdmin.value) {
+            await this.getAllAdmin()
+          } else {
+            await this.getAllUser()
+          }
+          return response
+        },
+        {
+          notifyOnSuccess: true,
+          successMessage: 'Foglalás sikeresen frissítve',
+          errorMessage: 'Hiba a foglalás frissítésekor',
         },
       )
     },

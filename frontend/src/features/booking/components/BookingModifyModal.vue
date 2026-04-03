@@ -4,9 +4,11 @@ import { CalendarDays, Users, Phone, Mail, FileText, X } from 'lucide-vue-next'
 import MainTitle from '@/components/MainTitle.vue'
 import DefaultInput from '@/components/DefaultInput.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
+import { useBookingStore } from '../stores/booking.store'
 
 const emit = defineEmits(['close'])
-
+const bookingStore = useBookingStore()
+const selectedId = computed(() => props.booking?.id || props.booking?.Id)
 const props = defineProps({
     showModal: { type: Boolean, required: true },
     booking: { type: Object, default: null }
@@ -60,9 +62,9 @@ const modifiedPayload = computed(() => {
 
 const hasChanges = computed(() => Object.keys(modifiedPayload.value).length > 0)
 
-function handleSave() {
+async function handleSave() {
     if (!hasChanges.value) return
-    // TODO: store.update(modifiedPayload.value)
+    await bookingStore.updateBooking(modifiedPayload.value)
     console.log('Modified payload:', modifiedPayload.value)
     emit('close')
 }
@@ -79,7 +81,7 @@ function handleReset() {
 }
 
 function handleDelete() {
-    // TODO: store.delete(props.booking.id) - backend még nincs kész
+    bookingStore.deleteBooking(selectedId)
     console.log('Delete booking:', props.booking)
 }
 

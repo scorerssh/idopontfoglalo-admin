@@ -2,6 +2,7 @@ namespace ApartManBackend.ResponseModel.Reservation
 {
     public class ReservationResponse
     {
+        public int Id { get; set; }
         public DateOnly StartTIme { get; set; }
         public DateOnly EndTime { get; set; }
         public int PearsonCount { get; set; }

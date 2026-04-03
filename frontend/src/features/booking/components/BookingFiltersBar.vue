@@ -133,10 +133,7 @@ onMounted(async () => {
 
         <MainTitle title="Szűrő" barColor="#fbcfc4" class="mb-4" />
 
-        <div :class="[
-            'grid md:grid-cols-2 grid-cols-2 gap-4 ',
-            isCalendarView ? 'lg:grid-cols-4' : 'lg:grid-cols-2'
-        ]">
+        <div class="grid md:grid-cols-2 grid-cols-2 gap-4 ">
             <DefaultInput v-for="(field, index) in selectedFields" :key="index" :label-text="field.label"
                 :type="field.type" v-model="filterModel[field.model]" />
             <DefaultInput label-text="Apartmanok" type="select" v-model="filterModel.apartmanId">
