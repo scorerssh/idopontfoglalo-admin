@@ -1,5 +1,6 @@
 <script setup>
 import BookingFormInput from './BookingFormInput.vue'
+import DefaultButton from '@/components/DefaultButton.vue';
 import { bookingCreateSchema } from '../schemas/booking.schema';
 import { useBookingStore } from '../stores/booking.store';
 import { useRoomStore } from '@/features/rooms/stores/room.store';
@@ -53,6 +54,7 @@ const errors = reactive({
     startDate: null,
     endDate: null,
     guests: null,
+    description: null,
 })
 
 function resetErrors() {
@@ -62,6 +64,7 @@ function resetErrors() {
     errors.startDate = null;
     errors.endDate = null;
     errors.guests = null;
+    errors.description = null
 }
 
 const bookingForm = reactive({
@@ -87,14 +90,11 @@ function resetForm() {
 
 async function submitForm() {
     resetErrors()
+
     const result = bookingCreateSchema.safeParse({
-        name: bookingForm.name,
-        email: bookingForm.email,
-        phone: bookingForm.phone,
-        startDate: bookingForm.startDate,
-        endDate: bookingForm.endDate,
+        ...bookingForm,
         guests: Number(bookingForm.guests),
-        description: bookingForm.description
+        roomGUid: selectedRoomId.value // Ha hozzáadod a sémához
     })
 
     if (!result.success) {
@@ -104,13 +104,14 @@ async function submitForm() {
         })
         return
     }
+
     const payload = {
         name: bookingForm.name,
         email: bookingForm.email,
         phoneNumber: bookingForm.phone,
-        startTIme: bookingForm.startDate, // igen, így...
-        endTime: bookingForm.endDate,
-        pearsonCount: Number(bookingForm.guests),
+        startTime: bookingForm.startDate, // Javítva
+        endTime: bookingForm.endDate,     // Javítva
+        personCount: Number(bookingForm.guests), // Javítva
         description: bookingForm.description,
         roomGUid: selectedRoomId.value
     }
@@ -129,16 +130,14 @@ onMounted(async () => {
         <form @submit.prevent="submitForm">
             <BookingFormInput v-for="input in bookingInputs" :key="input.name" :input-name="input.name"
                 :type="input.type" v-model="bookingForm[input.name]" :labelText="input.label"
-                label-class="text-black/60" class="mb-3" />
+                label-class="text-black/60" class="mb-3" :error-text="errors[input.name]" />
             <select name="roomGuidId" id="" v-model="selectedRoomId">
                 <option :value="selectedRoomId" disabled selected>Válassz szobát</option>
                 <option v-for="room in roomStore.rooms" :key="room.id" :value="room.guidId">{{
                     room.name }}</option>
             </select>
-            <button type="submit"
-                class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
-                Create Booking
-            </button>
+            <DefaultButton text="Foglalás létrehozása" type="submit"
+                button-class="bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100" />
         </form>
     </div>
 </template>

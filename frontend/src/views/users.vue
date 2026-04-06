@@ -68,7 +68,7 @@ onMounted(() => {
             </div>
             <span class="actions">
                 <DefaultButton @click="openCreateModal" :text="'Felhasználó hozzáadása'" :icon="Plus"
-                    :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
+                    buttonClass="bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100" />
             </span>
 
         </div>

@@ -12,7 +12,7 @@ const props = defineProps({
     booking: { type: Object, default: null }
 })
 
-const selectedBookingId = computed(() => props.booking.id)
+const selectedBookingId = computed(() => props.booking?.id)
 const emit = defineEmits(['close'])
 const bookingStore = useBookingStore()
 
@@ -52,23 +52,26 @@ watch(() => props.booking, (newBooking) => {
 const modifiedPayload = computed(() => {
     if (!props.booking) return {}
 
-    const payload = {}
+    const changes = {}
+
     for (const key in formData) {
         const original = String(props.booking[key] ?? '')
         const current = String(formData[key] ?? '')
         if (current !== original) {
-            payload[key] = formData[key]
+            changes[key] = formData[key]
         }
     }
-    return payload
+
+    return {
+        reservationId: props.booking.id,
+        ...changes
+    }
 })
 
 const hasChanges = computed(() => Object.keys(modifiedPayload.value).length > 0)
-
 async function handleSave() {
     if (!hasChanges.value) return
     await bookingStore.updateBooking(modifiedPayload.value)
-    console.log('Modified payload:', modifiedPayload.value)
     emit('close')
 }
 
@@ -86,6 +89,7 @@ function handleReset() {
 function handleDelete() {
     bookingStore.deleteBooking(selectedBookingId.value)
     console.log('Delete booking:', props.booking)
+    emit('close')
 }
 
 function handleClose() {

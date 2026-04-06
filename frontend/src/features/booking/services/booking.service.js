@@ -22,8 +22,7 @@ export const bookingService = {
   },
 
   async deleteBooking(id) {
-    const reservationId = id
-    const { data } = await api.delete(`/api/Reservation/${reservationId}`)
+    const { data } = await api.delete(`/api/Reservation/${id}`)
     return data
   },
 
