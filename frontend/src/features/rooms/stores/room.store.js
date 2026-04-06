@@ -5,11 +5,34 @@ import { defaultOp } from '@/utils/opsHelper'
 
 const svc = roomService
 
+function filterRooms(rooms = [], filters = {}) {
+  return rooms.filter((room) => {
+    const matchesName =
+      !filters.name || room.name?.toLowerCase().includes(String(filters.name).toLowerCase())
+    const matchesMinCapacity =
+      filters.minCapacity === null ||
+      filters.minCapacity === undefined ||
+      Number(room.minCapacity ?? room.maxCapacity ?? 0) >= Number(filters.minCapacity)
+    const matchesMaxCapacity =
+      filters.maxCapacity === null ||
+      filters.maxCapacity === undefined ||
+      Number(room.maxCapacity ?? room.minCapacity ?? 0) <= Number(filters.maxCapacity)
+    const matchesApartman =
+      filters.apartmanId === null ||
+      filters.apartmanId === undefined ||
+      Number(room.apartmanId) === Number(filters.apartmanId)
+
+    return matchesName && matchesMinCapacity && matchesMaxCapacity && matchesApartman
+  })
+}
+
 export const useRoomStore = defineStore('roomStore', {
   state: () => ({
     rooms: [],
+    allRooms: [],
+    sourceMode: 'admin',
     pagination: {
-      page: 1, // 1-ről indul
+      page: 1,
     },
     filters: {
       name: '',
@@ -27,15 +50,21 @@ export const useRoomStore = defineStore('roomStore', {
   }),
 
   actions: {
+    setRooms(rooms = [], sourceMode = 'admin') {
+      this.sourceMode = sourceMode
+      this.allRooms = Array.isArray(rooms) ? rooms : []
+      this.rooms = filterRooms(this.allRooms, this.filters)
+      this.pagination.page = 1
+      return this.rooms
+    },
+
     async getAll(overrides = {}) {
-      // Csak azokat a szűrőket küldjük, amiknek van értéke
       const activeFilters = Object.fromEntries(
         Object.entries(this.filters).filter(
           ([_, value]) => value !== '' && value !== null && value !== undefined,
         ),
       )
 
-      // A backend által elvárt lapos struktúra összeállítása
       const payload = {
         page: this.pagination.page,
         ...activeFilters,
@@ -46,6 +75,8 @@ export const useRoomStore = defineStore('roomStore', {
         this.ops.getAll,
         async () => {
           const data = await svc.getAll(payload)
+          this.sourceMode = 'admin'
+          this.allRooms = data
           this.rooms = data
           return data
         },
@@ -58,23 +89,37 @@ export const useRoomStore = defineStore('roomStore', {
 
     async goToPage(page) {
       if (page < 1) return
+      if (this.sourceMode === 'user') return
+
       this.pagination.page = page
       return this.getAll()
     },
 
     async applyFilters(newFilters = {}) {
       this.filters = { ...this.filters, ...newFilters }
-      this.pagination.page = 1 // Új szűrésnél vissza az első oldalra
+      this.pagination.page = 1
+
+      if (this.sourceMode === 'user') {
+        this.rooms = filterRooms(this.allRooms, this.filters)
+        return this.rooms
+      }
+
       return this.getAll()
     },
 
-    // A többi CRUD művelet (getById, create, update, delete) változatlan maradhat
     async create(payload) {
       return runOp(
         this.ops.create,
         async () => {
           const data = await svc.create(payload)
-          await this.getAll()
+
+          if (this.sourceMode === 'admin') {
+            await this.getAll()
+          } else if (data) {
+            this.allRooms.push(data)
+            this.rooms = filterRooms(this.allRooms, this.filters)
+          }
+
           return data
         },
         { notifyOnSuccess: true, successMessage: 'Sikeres létrehozás!' },
@@ -86,7 +131,21 @@ export const useRoomStore = defineStore('roomStore', {
         this.ops.update,
         async () => {
           const updated = await svc.update(payload)
-          await this.getAll()
+
+          if (this.sourceMode === 'admin') {
+            await this.getAll()
+          } else {
+            const roomId = payload?.roomId ?? payload?.id
+            const normalizedUpdated = updated?.data ?? updated
+
+            if (roomId && normalizedUpdated) {
+              this.allRooms = this.allRooms.map((room) =>
+                room.id === roomId ? { ...room, ...normalizedUpdated } : room,
+              )
+              this.rooms = filterRooms(this.allRooms, this.filters)
+            }
+          }
+
           return updated
         },
         { notifyOnSuccess: true, successMessage: 'Sikeres frissítés!' },
@@ -98,6 +157,7 @@ export const useRoomStore = defineStore('roomStore', {
         this.ops.delete,
         async () => {
           await svc.delete(id)
+          this.allRooms = this.allRooms.filter((r) => r.id !== id)
           this.rooms = this.rooms.filter((r) => r.id !== id)
         },
         { notifyOnSuccess: true, successMessage: 'Sikeres törlés!' },
