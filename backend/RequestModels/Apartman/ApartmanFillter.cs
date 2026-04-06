@@ -14,6 +14,10 @@ namespace ApartManBackend.RequestModels.Apartman
         [NotInCollectionById]
         public int? NotInUserId { get; set; }
 
+        [CompareTo(nameof(ApartManBackend.Models.DbModels.Models.Apartman.Users))]
+        [InCollectionById]
+        public int? InUserId { get; set; }
+
         [CompareTo(nameof(ApartManBackend.Models.DbModels.Models.Apartman.Rooms))]
         [NotInCollectionById]
         public int? NotInRoomId { get; set; }

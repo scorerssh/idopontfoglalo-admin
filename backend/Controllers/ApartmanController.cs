@@ -1,5 +1,6 @@
 using ApartManBackend.RequestModels.Apartman;
 using ApartManBackend.Services;
+using ApartManBackend.StaticMambers.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -84,6 +85,22 @@ namespace ApartManBackend.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll([FromBody] ApartmanFillter filter, CancellationToken ct)
         {
+            var apartmans = await _apartmanService.GetAllAsync(filter, ct);
+            return Ok(apartmans);
+        }
+
+        [HttpPost]
+        [Route("GetAllUser")]
+        [Authorize]
+        public async Task<IActionResult> GetAllUser([FromBody] ApartmanFillter filter, CancellationToken ct)
+        {
+            var userId = User.GetUserId();
+            if (!userId.HasValue)
+            {
+                return Forbid();
+            }
+
+            filter.InUserId = userId.Value;
             var apartmans = await _apartmanService.GetAllAsync(filter, ct);
             return Ok(apartmans);
         }
