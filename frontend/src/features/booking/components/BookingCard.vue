@@ -24,6 +24,7 @@ const nightCount = computed(() => {
 })
 
 const selectedBooking = computed(() => ({
+    id: props.booking.id,
     startTIme: props.booking.startTIme,
     endTime: props.booking.endTime,
     pearsonCount: props.booking.pearsonCount,

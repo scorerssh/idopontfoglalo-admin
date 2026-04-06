@@ -96,7 +96,7 @@ onMounted(() => {
 
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <BookingCard v-for="booking in bookingStore.bookings" :key="booking.startTIme + booking.name"
-                :booking="booking" @openModifyModal="openModifyModal" />
+                :booking="booking" @openModifyModal="openModifyModal" @close="closeModifyModal" />
         </section>
         <div class="flex flex-row items-center w-full mt-8 pagination justify-center gap-x-4 ">
             <DefaultButton @click="bookingStore.goToPage(bookingStore.pagination.page - 1)" :icon="ChevronLeft"
