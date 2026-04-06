@@ -1,6 +1,7 @@
 <script setup>
 import { reactive } from 'vue'
 import { useRoomStore } from '@/features/rooms/stores/room.store'
+import { roomCreateSchema } from '../schemas/roomCreate.schema'
 import DefaultInput from '@/components/DefaultInput.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
 import MainTitle from '@/components/MainTitle.vue'
