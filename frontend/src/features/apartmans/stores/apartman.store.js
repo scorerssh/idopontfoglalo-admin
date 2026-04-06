@@ -17,6 +17,7 @@ export const useApartmanStore = defineStore('apartmanStore', {
     },
     ops: {
       getAll: defaultOp(),
+      getAllUser: defaultOp(),
       getById: defaultOp(),
       getWithRooms: defaultOp(),
       getAllWithRooms: defaultOp(),
@@ -49,6 +50,30 @@ export const useApartmanStore = defineStore('apartmanStore', {
         {
           notifyOnSuccess: false,
           errorMessage: 'Sikertelen volt az apartmanok betöltése.',
+        },
+      )
+    },
+
+    async getAllUser(overrides = {}) {
+      const activeFilters = Object.fromEntries(
+        Object.entries(this.filters).filter(([_, v]) => v !== '' && v !== null),
+      )
+
+      const payload = {
+        page: this.pagination.page,
+        ...activeFilters,
+        ...overrides,
+      }
+      return runOp(
+        this.ops.getAllUser,
+        async () => {
+          const data = await svc.getAllUser(payload)
+          this.apartmans = data
+          return data
+        },
+        {
+          notifyOnSuccess: false,
+          errorMessage: 'Sikertelen volt a felhasználóhoz tartozó apartmanok betöltése.',
         },
       )
     },

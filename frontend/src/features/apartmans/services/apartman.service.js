@@ -5,6 +5,10 @@ export const apartmanService = {
     const { data } = await api.post('/api/Apartman/GetAll', params)
     return data
   },
+  async getAllUser(params = {}) {
+    const { data } = await api.post('/api/Apartman/GetAllUser', params)
+    return data
+  },
   async getAllWithRooms(params = {}) {
     const { data } = await api.post('/api/Apartman/GetAllWithRooms', params)
     return data
