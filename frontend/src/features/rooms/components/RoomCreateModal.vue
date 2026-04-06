@@ -6,7 +6,9 @@ import { useApartmanStore } from '@/features/apartmans/stores/apartman.store'
 import DefaultInput from '@/components/DefaultInput.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
 import MainTitle from '@/components/MainTitle.vue'
+import { useRole } from '@/composables/useRole'
 
+const { isAdmin } = useRole()
 const emit = defineEmits(['close'])
 const roomStore = useRoomStore()
 const apartmanStore = useApartmanStore()
@@ -98,7 +100,9 @@ function handleClose() {
 
 
 onMounted(async () => {
-    await apartmanStore.getAll()
+    if (isAdmin.value && !apartmanStore.apartmans?.length) {
+        await apartmanStore.getAll()
+    }
 })
 </script>
 
