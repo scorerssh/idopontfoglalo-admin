@@ -68,15 +68,21 @@ async function loadRoomsForSelectedApartman(value = selectedApartmanId.value) {
     roomStore.setRooms(apartman?.rooms ?? [], 'user')
 }
 
-onMounted(async () => {
-    if (isAdmin.value) {
-        await roomStore.getAll()
+watchEffect(() => {
+    const admin = isAdmin.value
+    const user = isUser.value
+
+    if (!admin && !user) return  // ← role helyett ezt használd
+
+    if (admin) {
+        roomStore.getAll()
         return
     }
 
-    if (isUser.value) {
-        await apartmanStore.getAllUser()
-        roomStore.setRooms([], 'user')
+    if (user) {
+        apartmanStore.getAllUser().then(() => {
+            roomStore.setRooms([], 'user')
+        })
     }
 })
 </script>
@@ -104,7 +110,7 @@ onMounted(async () => {
                         @update:modelValue="loadRoomsForSelectedApartman" />
                 </div>
 
-                <DefaultButton @click="openCreateModal" :text="'Szoba hozzĂˇadĂˇsa'" :icon="Plus"
+                <DefaultButton v-if="isAdmin" @click="openCreateModal" :text="'Szoba hozzĂˇadĂˇsa'" :icon="Plus"
                     :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
 
                 <span v-if="roomStore.rooms.length > 0"

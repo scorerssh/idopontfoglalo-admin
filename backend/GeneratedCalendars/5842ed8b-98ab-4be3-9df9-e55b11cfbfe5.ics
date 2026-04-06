@@ -1,0 +1,8 @@
+BEGIN:VCALENDAR
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+PRODID:-//ApartManBackend//Room Reservations//HU
+VERSION:2.0
+X-WR-CALDESC:Osszefesult foglalasok ehhez a szobahoz: asdfasdf
+X-WR-CALNAME:asdfasdf
+END:VCALENDAR
