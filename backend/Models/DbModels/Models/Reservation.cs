@@ -1,4 +1,4 @@
-using System.Security.Permissions;
+using static ApartManBackend.StaticMambers.Enums;
 
 namespace ApartManBackend.Models.DbModels.Models
 {
@@ -12,6 +12,8 @@ namespace ApartManBackend.Models.DbModels.Models
         public string PhoneNumber { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Description { get; set; } = null!;
+        public ReservationSource Source { get; set; }
+        public string? ExternalSourceReservationId { get; set; }
 
 
         public int RoomId { get; set; }

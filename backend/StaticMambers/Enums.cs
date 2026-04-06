@@ -15,5 +15,12 @@
             Reservation,
         }
 
+        public enum ReservationSource
+        {
+            Website,
+            BookingCom,
+            SzallasHu
+        }
+
     }
 }

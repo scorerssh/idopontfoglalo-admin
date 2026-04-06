@@ -1,3 +1,5 @@
+using ApartManBackend.ResponseModel.Room;
+
 namespace ApartManBackend.ResponseModel.Reservation
 {
     public class ReservationResponse
@@ -10,5 +12,8 @@ namespace ApartManBackend.ResponseModel.Reservation
         public string PhoneNumber { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Description { get; set; } = null!;
+
+        public RoomResponse? Room { get; set; }
+        public ApartManBackend.StaticMambers.Enums.ReservationSource Source { get; set; }
     }
 }

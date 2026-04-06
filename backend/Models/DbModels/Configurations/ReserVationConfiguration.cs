@@ -2,6 +2,7 @@ using ApartManBackend.Models.DbModels.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using static ApartManBackend.StaticMambers.Enums;
 
 namespace ApartManBackend.Models.DbModels.Configurations
 {
@@ -23,10 +24,20 @@ namespace ApartManBackend.Models.DbModels.Configurations
                 .HasConversion(dateOnlyConverter)
                 .HasColumnType("date");
 
+            builder.Property(x => x.Source)
+                .HasConversion<int>()
+                .HasDefaultValue(ReservationSource.Website);
+
+            builder.Property(x => x.ExternalSourceReservationId)
+                .HasMaxLength(256);
+
             builder.HasOne(r => r.Room)
                 .WithMany(r => r.Reservations)
                 .HasForeignKey(r => r.RoomId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(x => new { x.RoomId, x.Source, x.ExternalSourceReservationId })
+                .IsUnique();
         }
     }
 }

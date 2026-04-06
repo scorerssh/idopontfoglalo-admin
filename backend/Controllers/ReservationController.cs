@@ -80,6 +80,20 @@ namespace ApartManBackend.Controllers
             return Ok(reservations);
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("GetAvailability")]
+        public async Task<IActionResult> GetAvailability([FromBody] ReservationAvailabilityRequest request, CancellationToken ct)
+        {
+            var availability = await _reservationService.GetAvailabilityAsync(request, ct);
+            if (availability is null)
+            {
+                return NotFound("Nincs ilyen szoba.");
+            }
+
+            return Ok(availability);
+        }
+
         [HttpGet]
         [Route("{Reservationid:int}")]
         [Authorize]

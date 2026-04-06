@@ -12,16 +12,21 @@ namespace ApartManBackend.Models.Mappers
         {
             CreateMap<ReservationCreateRequest, Reservation>()
                 .ForMember(x => x.RoomId, opt => opt.Ignore())
-                .ForMember(x => x.Room, opt => opt.Ignore());
+                .ForMember(x => x.Room, opt => opt.Ignore())
+                .ForMember(x => x.Source, opt => opt.Ignore())
+                .ForMember(x => x.ExternalSourceReservationId, opt => opt.Ignore());
 
             CreateMap<ReservationUpdateRequest, Reservation>()
                 .ForMember(x => x.Id, opt => opt.Ignore())
                 .ForMember(x => x.CreatedAt, opt => opt.Ignore())
                 .ForMember(x => x.Room, opt => opt.Ignore())
+                .ForMember(x => x.Source, opt => opt.Ignore())
+                .ForMember(x => x.ExternalSourceReservationId, opt => opt.Ignore())
                 .ForAllMembers(opts =>
                     opts.Condition((src, dest, srcMember) => StaticHelpers.PatchPreConditionCheck(srcMember)));
 
-            CreateMap<Reservation, ReservationResponse>();
+            CreateMap<Reservation, ReservationResponse>()
+                .ForMember(x=>x.Room,opt=>opt.MapFrom(src=>src.Room));
         }
     }
 }

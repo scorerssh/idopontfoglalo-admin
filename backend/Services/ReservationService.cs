@@ -6,6 +6,7 @@ using AutoFilterer.Extensions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using static ApartManBackend.StaticMambers.Enums;
 
 namespace ApartManBackend.Services
 {
@@ -31,6 +32,7 @@ namespace ApartManBackend.Services
             // Set the FK explicitly so the insert never depends on relationship fixup alone.
             reservation.RoomId = room.Id;
             reservation.Room = room;
+            reservation.Source = ReservationSource.Website;
 
             await _db.Reservations.AddAsync(reservation, ct);
             await _db.SaveChangesAsync(ct);
@@ -91,6 +93,42 @@ namespace ApartManBackend.Services
                 .ApplyFilter(fillter)
                 .ProjectTo<ReservationResponse>(_mapper.ConfigurationProvider)
                 .ToListAsync(ct);
+        }
+
+        public async Task<ReservationAvailabilityResponse?> GetAvailabilityAsync(ReservationAvailabilityRequest request, CancellationToken ct)
+        {
+            var room = await _db.Rooms
+                .AsNoTracking()
+                .Include(x => x.Reservations)
+                .FirstOrDefaultAsync(x => x.GuidId == request.RoomGUid, ct);
+
+            if (room is null || !request.Month.HasValue || !request.RoomGUid.HasValue)
+            {
+                return null;
+            }
+
+            var monthStart = new DateOnly(request.Month.Value.Year, request.Month.Value.Month, 1);
+            var monthEndExclusive = monthStart.AddMonths(1);
+            var availableDates = new List<DateOnly>();
+
+            for (var currentDay = monthStart; currentDay < monthEndExclusive; currentDay = currentDay.AddDays(1))
+            {
+                var nextDay = currentDay.AddDays(1);
+                var hasOverlappingReservation = room.Reservations
+                    .Any(reservation => reservation.StartTIme < nextDay && reservation.EndTime > currentDay);
+
+                if (!hasOverlappingReservation)
+                {
+                    availableDates.Add(currentDay);
+                }
+            }
+
+            return new ReservationAvailabilityResponse
+            {
+                RoomGUid = request.RoomGUid.Value,
+                Month = monthStart,
+                AvailableDates = availableDates
+            };
         }
 
         public async Task<bool> RoomExistsByPublicIdAsync(Guid roomPublicId, CancellationToken ct)
