@@ -50,6 +50,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ResourceAuthService>();
 builder.Services.AddScoped<ReservationService>();
+builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<RoomSercie>();
 builder.Services.AddScoped<RoomCalendarService>();
 builder.Services.AddScoped<RoomCalendarRefreshJob>();
