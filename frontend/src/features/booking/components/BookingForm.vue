@@ -4,12 +4,10 @@ import DefaultButton from '@/components/DefaultButton.vue';
 import { bookingCreateSchema } from '../schemas/booking.schema';
 import { useBookingStore } from '../stores/booking.store';
 import { useRoomStore } from '@/features/rooms/stores/room.store';
-import { onMounted, reactive } from 'vue';
-
+const emit = defineEmits(['close'])
 const bookingStore = useBookingStore()
 const roomStore = useRoomStore()
-const selectedRoomId = ref(null)
-const bookingInputs = [
+const bookingInputs = computed(() => [
     {
         name: 'name',
         label: 'Név',
@@ -27,25 +25,31 @@ const bookingInputs = [
     },
     {
         name: 'startDate',
-        label: 'Start Date',
+        label: 'Érkezés dátuma',
         type: 'date'
     },
     {
         name: 'endDate',
-        label: 'End Date',
+        label: 'Távozás dátuma',
         type: 'date'
     },
     {
         name: 'guests',
-        label: 'Number of Guests',
+        label: 'Vendégek száma (összesen)',
         type: 'number'
     },
     {
         name: 'description',
-        label: 'Description',
+        label: 'Leírás',
         type: 'text'
     },
-]
+    {
+        name: 'roomId',
+        label: 'Szoba',
+        type: 'select',
+        options: roomStore.rooms
+    }
+])
 
 const errors = reactive({
     name: null,
@@ -55,6 +59,7 @@ const errors = reactive({
     endDate: null,
     guests: null,
     description: null,
+    roomId: null
 })
 
 function resetErrors() {
@@ -64,7 +69,8 @@ function resetErrors() {
     errors.startDate = null;
     errors.endDate = null;
     errors.guests = null;
-    errors.description = null
+    errors.description = null,
+        errors.roomId = null
 }
 
 const bookingForm = reactive({
@@ -75,6 +81,7 @@ const bookingForm = reactive({
     endDate: '',
     guests: '',
     description: '',
+    roomId: ''
 })
 
 function resetForm() {
@@ -85,7 +92,7 @@ function resetForm() {
     bookingForm.endDate = '';
     bookingForm.guests = '';
     bookingForm.description = '';
-    bookingForm.room = '';
+    bookingForm.roomId = '';
 }
 
 async function submitForm() {
@@ -94,7 +101,6 @@ async function submitForm() {
     const result = bookingCreateSchema.safeParse({
         ...bookingForm,
         guests: Number(bookingForm.guests),
-        roomGUid: selectedRoomId.value // Ha hozzáadod a sémához
     })
 
     if (!result.success) {
@@ -109,14 +115,18 @@ async function submitForm() {
         name: bookingForm.name,
         email: bookingForm.email,
         phoneNumber: bookingForm.phone,
-        startTime: bookingForm.startDate, // Javítva
+        startTIme: bookingForm.startDate, // Javítva
         endTime: bookingForm.endDate,     // Javítva
-        personCount: Number(bookingForm.guests), // Javítva
+        pearsonCount: Number(bookingForm.guests), // Javítva
         description: bookingForm.description,
-        roomGUid: selectedRoomId.value
+        roomGUid: bookingForm.roomId
     }
-
-    await bookingStore.createBooking(payload)
+    try {
+        await bookingStore.createBooking(payload)
+    } catch (err) {
+        console.error('Booking create failed:', err)
+    }
+    emit('close')
     resetForm()
 }
 onMounted(async () => {
@@ -130,12 +140,7 @@ onMounted(async () => {
         <form @submit.prevent="submitForm">
             <BookingFormInput v-for="input in bookingInputs" :key="input.name" :input-name="input.name"
                 :type="input.type" v-model="bookingForm[input.name]" :labelText="input.label"
-                label-class="text-black/60" class="mb-3" :error-text="errors[input.name]" />
-            <select name="roomGuidId" id="" v-model="selectedRoomId">
-                <option :value="selectedRoomId" disabled selected>Válassz szobát</option>
-                <option v-for="room in roomStore.rooms" :key="room.id" :value="room.guidId">{{
-                    room.name }}</option>
-            </select>
+                label-class="text-black/60" class="mb-3" :error-text="errors[input.name]" :options="input.options" />
             <DefaultButton text="Foglalás létrehozása" type="submit"
                 button-class="bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100" />
         </form>

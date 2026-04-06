@@ -1,11 +1,12 @@
 import z from 'zod'
 
 export const bookingCreateSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email address'),
-  phone: z.string().min(10, 'Phone number must be at least 10 digits'),
-  startDate: z.string().min(1, 'Date is required'),
-  endDate: z.string().min(1, 'Date is required'),
-  guests: z.number().min(1, 'At least one guest is required'),
-  description: z.string().max(200, 'Description must be at most 200 characters').optional(),
+  name: z.string().min(1, 'A név megadása kötelező'),
+  email: z.string().email('Érvénytelen email cím'),
+  phone: z.string().min(10, 'A telefonszámnak legalább 10 karakternek kell lennie'),
+  startDate: z.string().min(1, 'A dátum megadása kötelező'),
+  endDate: z.string().min(1, 'A dátum megadása kötelező'),
+  guests: z.coerce.number().min(1, 'Legalább egy vendég szükséges'),
+  description: z.string().max(200, 'A leírás maximum 200 karakter lehet').optional(),
+  roomId: z.coerce.string().min(1, 'Kötelező szobát választani a foglalás létrehozásához'),
 })

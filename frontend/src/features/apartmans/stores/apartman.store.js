@@ -13,6 +13,7 @@ export const useApartmanStore = defineStore('apartmanStore', {
     filters: {
       name: '',
       notInUserId: null,
+      notInRoomId: null,
     },
     ops: {
       getAll: defaultOp(),

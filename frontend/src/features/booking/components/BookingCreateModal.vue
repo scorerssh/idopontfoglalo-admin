@@ -26,7 +26,7 @@ function handleClose() {
                     @click="handleClose">
                     &times;
                 </button>
-                <BookingForm />
+                <BookingForm @close="handleClose" />
             </div>
         </template>
     </Teleport>

@@ -34,11 +34,7 @@ function handleModify() {
                     <span class="text-xs text-gray-500 uppercase tracking-wider">Szoba</span>
                 </div>
             </div>
-            <div
-                :class="[statusStyles.bg, statusStyles.text, 'text-xs px-2 py-1 rounded-full flex items-center gap-1.5 font-medium']">
-                <span :class="[statusStyles.dot, 'h-2 w-2 rounded-full']"></span>
-                {{ statusStyles.label }}
-            </div>
+
         </section>
 
         <section class="flex-grow mb-4">
@@ -52,7 +48,7 @@ function handleModify() {
                 <span class="text-[10px] text-gray-500 uppercase font-bold">Kapacitás</span>
                 <div class="flex items-center gap-1 text-gray-700 font-semibold">
                     <Users class="h-3.5 w-3.5" />
-                    {{ room.capacity || '-' }} fő
+                    {{ room.maxCapacity || '-' }} fő
                 </div>
             </div>
             <div class="bg-gray-50 p-2 rounded-lg flex flex-col text-right">

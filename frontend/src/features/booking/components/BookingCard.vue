@@ -55,10 +55,14 @@ function openModifyModal() {
                     </div>
                 </div>
             </div>
-            <div
-                class="bg-green-100 text-green-700 text-[11px] px-2.5 py-1 rounded-full flex items-center gap-1.5 font-bold shrink-0">
-                <span class="h-2 w-2 rounded-full bg-green-500"></span>
-                Aktív
+            <div class="flex flex-row gap-x-1 items-center justify-center">
+                <span class="bg-green-100 text-green-700 px-2 py-1 rounded-lg ">
+                    Szoba:
+                </span>
+                <span>
+                    {{ booking.room?.bindedApartmanName }}
+                </span>
+
             </div>
         </section>
 

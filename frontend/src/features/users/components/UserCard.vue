@@ -71,6 +71,7 @@ function openModifyModal(user) {
                     </div>
                 </div>
             </div>
+            <!--
             <div :class="[
                 calculatedActivityStatus.bgClass,
                 calculatedActivityStatus.textClass,
@@ -79,6 +80,8 @@ function openModifyModal(user) {
                 <span :class="[calculatedActivityStatus.dotClass, 'h-2 w-2 rounded-full']"></span>
                 {{ calculatedActivityStatus.label }}
             </div>
+            -->
+
         </section>
 
         <section class="grid grid-cols-2 gap-3 mb-4">

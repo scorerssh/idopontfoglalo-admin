@@ -7,7 +7,8 @@ const props = defineProps({
     type: { type: String, default: 'text' },
     inputClass: { type: String, default: '' },
     labelClass: { type: String, default: '' },
-    errorText: { type: String, default: '' }
+    errorText: { type: String, default: '' },
+    options: { type: Array, default: () => [] }
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -18,7 +19,19 @@ const emit = defineEmits(['update:modelValue'])
         <label v-if="hasLabel" :for="inputName" :class="[labelClass, 'text-sm']">
             {{ props.labelText }}
         </label>
-        <input :value="props.modelValue" @input="emit('update:modelValue', $event.target.value)" :type="type"
+
+        <select v-if="type === 'select'" :value="props.modelValue"
+            @change="emit('update:modelValue', $event.target.value)" :name="inputName"
+            :class="[inputClass, 'px-3 py-2 w-full bg-gray-200 focus:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100']">
+            <slot />
+            <option :value="null" disabled>Válassz apartmant...</option>
+
+            <option v-for="option in options" :key="option.id" :value="option.guidId">
+                {{ option.name }}
+            </option>
+        </select>
+
+        <input v-else :value="props.modelValue" @input="emit('update:modelValue', $event.target.value)" :type="type"
             :name="inputName"
             :class="[inputClass, 'px-3 py-2 w-full bg-gray-100 focus-within:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100']" />
         <span v-if="props.errorText"

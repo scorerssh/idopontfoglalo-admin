@@ -1,13 +1,15 @@
 <script setup>
-import { reactive } from 'vue'
+import { computed, onMounted, reactive } from 'vue'
 import { useRoomStore } from '@/features/rooms/stores/room.store'
 import { roomCreateSchema } from '../schemas/roomCreate.schema'
+import { useApartmanStore } from '@/features/apartmans/stores/apartman.store'
 import DefaultInput from '@/components/DefaultInput.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
 import MainTitle from '@/components/MainTitle.vue'
 
 const emit = defineEmits(['close'])
-
+const roomStore = useRoomStore()
+const apartmanStore = useApartmanStore()
 const props = defineProps({
     showModal: {
         type: Boolean,
@@ -15,18 +17,20 @@ const props = defineProps({
     },
 })
 
-const inputs = [
+const inputs = computed(() => [
     { type: 'text', labelText: 'Név', inputName: 'name' },
     { type: 'number', labelText: 'Min. Kapacitás', inputName: 'minCapacity' },
     { type: 'number', labelText: 'Max. Kapacitás', inputName: 'maxCapacity' },
-]
+    { type: 'number', labelText: 'Szoba ára', inputName: 'price' },
+    { type: 'select', labelText: 'Apartman kiválasztása', inputName: 'apartmanId', options: apartmanStore.apartmans }
+])
 
-const roomStore = useRoomStore()
 
 const formData = reactive({
     name: '',
     minCapacity: 0,
     maxCapacity: 0,
+    price: 0,
     apartmanId: null,
 })
 
@@ -34,14 +38,51 @@ const resetForm = () => {
     formData.name = ''
     formData.minCapacity = 0
     formData.maxCapacity = 0
+    formData.price = 0
     formData.apartmanId = null
+    resetErrors()
 }
 
-const createRoom = async () => {
+const errors = reactive({
+    name: null,
+    minCapacity: null,
+    maxCapacity: null,
+    price: null,
+    apartmanId: null
+})
+
+function resetErrors() {
+    errors.name = null,
+        errors.minCapacity = null,
+        errors.maxCapacity = null,
+        errors.price = null
+    errors.apartmanId = null
+
+}
+
+async function createRoom() {
+    resetErrors()
+    const result = roomCreateSchema.safeParse({
+        name: formData.name,
+        minCapacity: formData.minCapacity,
+        maxCapacity: formData.maxCapacity,
+        apartmanId: formData.apartmanId,
+        price: formData.price,
+    })
+
+    if (!result.success) {
+        result.error.issues.forEach(err => {
+            const field = err.path[0]
+            errors[field] = err.message
+        })
+        return
+    }
+
     const payload = {
         name: formData.name,
         MinCapacity: formData.minCapacity,
         MaxCapacity: formData.maxCapacity,
+        price: formData.price,
         apartmanId: formData.apartmanId,
     }
 
@@ -50,10 +91,15 @@ const createRoom = async () => {
     emit('close')
 }
 
-const handleClose = () => {
+function handleClose() {
     resetForm()
     emit('close')
 }
+
+
+onMounted(async () => {
+    await apartmanStore.getAll()
+})
 </script>
 
 <template>
@@ -72,16 +118,16 @@ const handleClose = () => {
                     <MainTitle title="Szoba létrehozása" bar-color="#fbcfc4" class="mb-4" />
                     <form @submit.prevent="createRoom">
                         <div class="grid gap-3">
-                            <DefaultInput v-for="input in inputs" :key="input.inputName" :input-name="input.inputName"
-                                :label-text="input.labelText" :type="input.type" label-class="text-sm text-black/60"
-                                v-model="formData[input.inputName]" />
-
-                            <div class="form-group">
-                                <label for="apartmanId" class="block text-sm font-medium mb-1">Apartman ID</label>
-                                <input v-model.number="formData.apartmanId" type="number" id="apartmanId"
-                                    class="w-full border rounded px-3 py-2 text-sm" min="0" required />
+                            <div v-for="input in inputs" :key="input.inputName">
+                                <DefaultInput :input-name="input.inputName" :label-text="input.labelText"
+                                    :type="input.type" label-class="text-sm text-black/60"
+                                    v-model="formData[input.inputName]" :options="input.options || []" />
+                                <span v-if="errors[input.inputName]" class="text-red-500 text-xs mt-1">
+                                    {{ errors[input.inputName] }}
+                                </span>
                             </div>
                         </div>
+
 
                         <div class="form-actions flex gap-2 justify-end pt-4">
                             <DefaultButton text="Mégse" type="button"
