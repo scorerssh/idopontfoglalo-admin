@@ -26,8 +26,13 @@ namespace ApartManBackend.Services
         {
             var room = await GetRoomWithReservationsByPublicIdAsync(request.RoomGUid!.Value,ct);
             if (room == null) { return; }
-            var reservation=_mapper.Map<Reservation>(request);
-            room.Reservations.Add(reservation);
+            var reservation = _mapper.Map<Reservation>(request);
+
+            // Set the FK explicitly so the insert never depends on relationship fixup alone.
+            reservation.RoomId = room.Id;
+            reservation.Room = room;
+
+            await _db.Reservations.AddAsync(reservation, ct);
             await _db.SaveChangesAsync(ct);
 
         }
@@ -51,6 +56,18 @@ namespace ApartManBackend.Services
             }
 
             _mapper.Map(request, reservation);
+
+            if (request.RoomId.HasValue)
+            {
+                var roomExists = await _db.Rooms.AnyAsync(x => x.Id == request.RoomId.Value, ct);
+                if (!roomExists)
+                {
+                    return false;
+                }
+
+                reservation.RoomId = request.RoomId.Value;
+            }
+
             await _db.SaveChangesAsync(ct);
             return true;
         }
@@ -105,6 +122,48 @@ namespace ApartManBackend.Services
             }
 
             return personCount >= room.MinCapacity && personCount <= room.MaxCapacity;
+        }
+
+        public async Task<bool> HasValidUpdatedDateRangeAsync(ReservationUpdateRequest request, CancellationToken ct)
+        {
+            var reservation = await _db.Reservations
+                .FirstOrDefaultAsync(x => x.Id == request.ReservationId, ct);
+
+            if (reservation is null)
+            {
+                return false;
+            }
+
+            var effectiveStart = request.StartTIme ?? reservation.StartTIme;
+            var effectiveEnd = request.EndTime ?? reservation.EndTime;
+            var today = DateOnly.FromDateTime(DateTime.Now);
+
+            return effectiveStart > today && effectiveEnd > effectiveStart;
+        }
+
+        public async Task<bool> IsUpdatedReservationRoomAvailableAsync(ReservationUpdateRequest request, CancellationToken ct)
+        {
+            var reservation = await _db.Reservations
+                .FirstOrDefaultAsync(x => x.Id == request.ReservationId, ct);
+
+            if (reservation is null)
+            {
+                return false;
+            }
+
+            var effectiveRoomId = request.RoomId ?? reservation.RoomId;
+            var effectiveStart = request.StartTIme ?? reservation.StartTIme;
+            var effectiveEnd = request.EndTime ?? reservation.EndTime;
+
+            var hasOverlappingReservation = await _db.Reservations
+                .AnyAsync(x =>
+                    x.Id != reservation.Id &&
+                    x.RoomId == effectiveRoomId &&
+                    x.StartTIme < effectiveEnd &&
+                    x.EndTime > effectiveStart,
+                    ct);
+
+            return !hasOverlappingReservation;
         }
 
         private async Task<Room?> GetRoomWithReservationsByPublicIdAsync(Guid roomPublicId, CancellationToken ct)
