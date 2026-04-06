@@ -100,7 +100,7 @@ function formatShortDate(dateStr) {
 </script>
 
 <template>
-    <div class="w-full h-full ">
+    <div class="w-full min-h-full ">
         <header class="w-full flex flex-row justify-between items-center relative mb-6">
             <div class="title w-1/3">
                 <MainTitle title="Naptár" bar-color="bg-system-orange" />
