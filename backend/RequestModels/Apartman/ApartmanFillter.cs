@@ -13,6 +13,11 @@ namespace ApartManBackend.RequestModels.Apartman
         [CompareTo(nameof(ApartManBackend.Models.DbModels.Models.Apartman.Users))]
         [NotInCollectionById]
         public int? NotInUserId { get; set; }
+
+        [CompareTo(nameof(ApartManBackend.Models.DbModels.Models.Apartman.Rooms))]
+        [NotInCollectionById]
+        public int? NotInRoomId { get; set; }
+ 
     }
 
     public class ApartmanfillterValidation:AbstractValidator<ApartmanFillter>

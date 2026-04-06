@@ -93,5 +93,10 @@ namespace ApartManBackend.Services
                 .ToListAsync(ct);
             return existingUserIds.Count == distinctIds.Count;
         }
+
+        public async Task<bool> CheckUserEmailExistAsnyx(string email, CancellationToken ct)
+        {
+            return await _db.Users.AnyAsync(x => x.UserEmail == email, ct);
+        }
     }
 }

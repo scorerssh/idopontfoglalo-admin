@@ -7,12 +7,30 @@ namespace ApartManBackend.RequestModels.Reservation
     {
         public ReservationUpdateRequestValidation(ReservationService reservationService, RoomSercie roomSercie)
         {
+            var today = DateOnly.FromDateTime(DateTime.Now);
+
             RuleFor(x => x.ReservationId)
                 .Cascade(CascadeMode.Stop)
                 .NotNull().WithMessage("A foglalás azonosítójának megadása kötelező.")
                 .GreaterThan(0).WithMessage("A foglalás azonosítójának nagyobbnak kell lennie 0-nál.")
                 .MustAsync(async (id, ct) => await reservationService.CheckReservationExistsAsync(id!.Value, ct))
                 .WithMessage("Nincs ilyen foglalás.");
+
+            When(x => x.StartTIme.HasValue, () =>
+            {
+                RuleFor(x => x.StartTIme)
+                    .Cascade(CascadeMode.Stop)
+                    .Must(startDate => startDate!.Value > today)
+                    .WithMessage("Csak jövőbeli időpontra lehet foglalni.");
+            });
+
+            When(x => x.EndTime.HasValue, () =>
+            {
+                RuleFor(x => x.EndTime)
+                    .Cascade(CascadeMode.Stop)
+                    .Must(endDate => endDate!.Value > today)
+                    .WithMessage("Csak jövőbeli időpontra lehet foglalni.");
+            });
 
             When(x => x.RoomId.HasValue, () =>
             {
@@ -41,6 +59,20 @@ namespace ApartManBackend.RequestModels.Reservation
             {
                 RuleFor(x => x.Name)
                     .NotEmpty().WithMessage("A név nem lehet üres.");
+            });
+
+            When(x => x.StartTIme.HasValue || x.EndTime.HasValue, () =>
+            {
+                RuleFor(x => x)
+                    .MustAsync(async (request, ct) => await reservationService.HasValidUpdatedDateRangeAsync(request, ct))
+                    .WithMessage("A távozási időnek későbbinek kell lennie, mint az érkezés.");
+            });
+
+            When(x => x.RoomId.HasValue || x.StartTIme.HasValue || x.EndTime.HasValue, () =>
+            {
+                RuleFor(x => x)
+                    .MustAsync(async (request, ct) => await reservationService.IsUpdatedReservationRoomAvailableAsync(request, ct))
+                    .WithMessage("A szoba a megadott időszakban nem elérhető.");
             });
         }
     }

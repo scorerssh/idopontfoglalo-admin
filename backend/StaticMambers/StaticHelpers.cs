@@ -1,4 +1,4 @@
-﻿namespace ApartManBackend.StaticMambers
+namespace ApartManBackend.StaticMambers
 {
     public static class StaticHelpers
     {
@@ -9,7 +9,8 @@
 
             if (srcMember is string str)
                 return !string.IsNullOrWhiteSpace(str);
-
+            if (srcMember is DateOnly)
+                return true;
             return true;
         }
     }
