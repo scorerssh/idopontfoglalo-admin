@@ -12,6 +12,7 @@ namespace ApartManBackend.ResponseModel.Room
         public string? BindedApartmanName { get; set; }
         public Guid GuidId { get; set; }
         public int ApartmanId { get; set; }
+        public bool Active { get; set; }
 
         public string? BookingConnectionUrl { get; set; }
         public string? SzallasHuConnectionUrl { get; set; }

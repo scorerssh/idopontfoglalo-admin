@@ -1,3 +1,4 @@
+using ApartManBackend.Aditional.CoustumeFillter;
 using ApartManBackend.RequestModels.Apartman;
 using AutoFilterer.Attributes;
 using AutoFilterer.Enums;
@@ -17,7 +18,13 @@ namespace ApartManBackend.RequestModels.Room
         [OperatorComparison(OperatorType.LessThanOrEqual)]
         public int? MaxCapacity { get; set; }
 
+        public bool? Active { get; set; }
+
         public int? ApartmanId { get; set; }
+
+        [CompareTo(nameof(ApartManBackend.Models.DbModels.Models.Room.Apartman))]
+        [RoomInUserById]
+        public int? UserId { get; set; }
 
         [CompareTo(nameof(ApartmanId))]
         [OperatorComparison(OperatorType.NotEqual)]

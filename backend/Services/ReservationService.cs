@@ -84,15 +84,40 @@ namespace ApartManBackend.Services
         }
 
 
-        public async Task<List<ReservationResponse>> GetAllAsync(ReservationFillter fillter, CancellationToken ct)
+        public async Task<ReservationsWithMetaData> GetAllAsync(ReservationFillter fillter, CancellationToken ct)
         {
             fillter.PerPage = 10;
             fillter.Sort = nameof(Reservation.CreatedAt);
             fillter.SortBy = AutoFilterer.Enums.Sorting.Descending;
-            return await _db.Reservations
-                .ApplyFilter(fillter)
+
+            var now = DateTime.UtcNow;
+            var monthStart = new DateTime(now.Year, now.Month, 1);
+            var nextMonthStart = monthStart.AddMonths(1);
+            var todayStart = now.Date;
+            var nextDayStart = todayStart.AddDays(1);
+
+            var filteredQuery = _db.Reservations.ApplyFilterWithoutPagination(fillter);
+            var pagedQuery = _db.Reservations.ApplyFilter(fillter);
+
+            var reservations = await pagedQuery
                 .ProjectTo<ReservationResponse>(_mapper.ConfigurationProvider)
                 .ToListAsync(ct);
+
+            var count = await filteredQuery.CountAsync(ct);
+            var reservationsCreatedThisMonth = await filteredQuery.CountAsync(x =>
+                x.CreatedAt >= monthStart &&
+                x.CreatedAt < nextMonthStart, ct);
+            var reservationsCreatedToday = await filteredQuery.CountAsync(x =>
+                x.CreatedAt >= todayStart &&
+                x.CreatedAt < nextDayStart, ct);
+
+            return new ReservationsWithMetaData
+            {
+                Count = count,
+                Reservations = reservations,
+                ReservationsCreatedThisMonth = reservationsCreatedThisMonth,
+                ReservationsCreatedToday = reservationsCreatedToday
+            };
         }
 
         public async Task<ReservationAvailabilityResponse?> GetAvailabilityAsync(ReservationAvailabilityRequest request, CancellationToken ct)
