@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace ApartManBackend.Models.DbModels.Models
 {
     public class Room:BaseDbModel
@@ -12,5 +14,8 @@ namespace ApartManBackend.Models.DbModels.Models
         public string? BookingConnectionUrl { get; set; }
         public string? SzallasHuConnectionUrl { get; set; }
         public List<Reservation> Reservations { get; set; } = new();
+
+        [DefaultValue(true)]
+        public bool Active { get; set; }
     }
 }

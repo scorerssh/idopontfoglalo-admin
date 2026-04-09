@@ -9,6 +9,7 @@ namespace ApartManBackend.RequestModels.Room
         public int? MaxCapacity { get; set; }
         public int? MinCapacity { get; set; }
         public int? ApartmanId { get; set; }
+        public bool? Active { get; set; }
         public string? BookingConnectionUrl { get; set; }
         public string? SzallasHuConnectionUrl { get; set; }
     }
