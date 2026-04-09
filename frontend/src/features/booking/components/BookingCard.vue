@@ -7,14 +7,16 @@ const props = defineProps({
     booking: { type: Object, required: true }
 })
 
-const initials = computed(() =>
-    props.booking.name
+const initials = computed(() => {
+    if (!props.booking?.name) return ''
+
+    return props.booking.name
         .split(' ')
         .map(n => n[0])
         .join('')
         .toUpperCase()
         .slice(0, 2)
-)
+})
 
 const nightCount = computed(() => {
     const start = new Date(props.booking.startTIme)

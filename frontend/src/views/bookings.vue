@@ -17,14 +17,16 @@ const showFilters = ref(false)
 const selectedBooking = ref(null)
 const showModifyModal = ref(false)
 
-const bookingCount = computed(() => bookingStore.bookings.length)
+const bookingCount = computed(() => bookingStore.bookings.count)
+const createdThisMont = computed(() => bookingStore.bookings.reservationsCreatedThisMonth)
+const createdToday = computed(() => bookingStore.bookings.reservationsCreatedToday)
 const canGoNext = computed(() => bookingStore.bookings.length >= 10)
 const canGoPrev = computed(() => bookingStore.pagination.page > 1)
 
 const statCardContent = [
     { title: 'Összes foglalás', content: bookingCount, icon: GalleryHorizontalEnd, additional: 'Összesen', bgColor: '#f3fbff', iconBgColor: '#c8f1fb' },
-    { title: 'Teljesített foglalások', content: '15', icon: Check, additional: 'Teljesített', bgColor: '#fef5f8', iconBgColor: '#fbc3d7' },
-    { title: 'A hónapban beérkezők', content: '42', icon: ClockPlus, additional: 'Várható', bgColor: '#fef3ff', iconBgColor: '#fbcffd' },
+    { title: 'A hónapban beérkezők', content: createdThisMont, icon: Check, additional: 'Teljesített', bgColor: '#fef5f8', iconBgColor: '#fbc3d7' },
+    { title: 'Ma beérkezők', content: createdToday, icon: ClockPlus, additional: 'Várható', bgColor: '#fef3ff', iconBgColor: '#fbcffd' },
 ]
 
 function openCreateModal() { showCreateModal.value = true }
@@ -95,20 +97,18 @@ onMounted(() => {
             <p class="text-gray-500 font-medium">Jelenleg nincsenek megjeleníthető foglalások.</p>
         </section>
         <section v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <BookingCard v-for="booking in bookingStore.bookings" :key="booking.id"
-                :booking="booking" @openModifyModal="openModifyModal" @close="closeModifyModal" />
+            <BookingCard v-for="booking in bookingStore.bookings" :key="booking.id" :booking="booking"
+                @openModifyModal="openModifyModal" @close="closeModifyModal" />
         </section>
 
         <div class="flex items-center justify-center gap-x-4 pb-10">
-            <DefaultButton
-                @click="canGoPrev && bookingStore.goToPage(bookingStore.pagination.page - 1)"
+            <DefaultButton @click="canGoPrev && bookingStore.goToPage(bookingStore.pagination.page - 1)"
                 :icon="ChevronLeft"
                 :buttonClass="`bg-white text-black shadow-sm border border-gray-200 rounded-lg px-2 ${!canGoPrev ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-100'}`" />
             <span class="text-md font-semibold text-gray-700 px-1 py-2 rounded-full">
                 {{ bookingStore.pagination.page }}. oldal
             </span>
-            <DefaultButton
-                @click="canGoNext && bookingStore.goToPage(bookingStore.pagination.page + 1)"
+            <DefaultButton @click="canGoNext && bookingStore.goToPage(bookingStore.pagination.page + 1)"
                 :icon="ChevronRight"
                 :buttonClass="`bg-white text-black shadow-sm border border-gray-200 rounded-lg px-2 ${!canGoNext ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-100'}`" />
         </div>

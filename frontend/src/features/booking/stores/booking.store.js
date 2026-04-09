@@ -41,11 +41,8 @@ export const useBookingStore = defineStore('bookingStore', {
 
   actions: {
     async getAllAdmin() {
-      // 1. Kulcsok átnevezése a backend elvárásai szerint (startDate -> startTIme)
       const { startDate: startTIme, endDate: endTime, ...rest } = this.adminFilters
       const renamedFilters = { startTIme, endTime, ...rest }
-
-      // 2. Üres vagy null értékek eltávolítása a payloadból
       const activeFilters = Object.fromEntries(
         Object.entries(renamedFilters).filter(
           ([_, value]) => value !== '' && value !== null && value !== undefined,
@@ -72,11 +69,9 @@ export const useBookingStore = defineStore('bookingStore', {
     },
 
     async getAllUser() {
-      // 1. Kulcsok átnevezése a backend elvárásai szerint
       const { startDate: startTIme, endDate: endTime, ...rest } = this.userFilters
       const renamedFilters = { startTIme, endTime, ...rest }
 
-      // 2. Üres vagy null értékek eltávolítása
       const activeFilters = Object.fromEntries(
         Object.entries(renamedFilters).filter(
           ([_, value]) => value !== '' && value !== null && value !== undefined,
