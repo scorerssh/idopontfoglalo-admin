@@ -1,5 +1,4 @@
 <script setup>
-import { ref, computed } from 'vue'
 import { useRole } from '@/composables/useRole'
 import { useAuthStore } from '@/features/auth/stores/auth.store'
 import {

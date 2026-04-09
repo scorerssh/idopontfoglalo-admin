@@ -1,4 +1,3 @@
-import { computed } from 'vue'
 import { useAuthStore } from '@/features/auth/stores/auth.store'
 
 export function useRole() {

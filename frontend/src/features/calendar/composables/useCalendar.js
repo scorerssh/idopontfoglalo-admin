@@ -2,7 +2,6 @@
 // Egy teljesen önálló naptár composable — semmi külső függőség, csak Vue reaktivitás.
 // Hétfőtől indul a hét (magyar szokás szerint), kezeli az összes edge case-t.
 
-import { ref, computed } from 'vue'
 
 // Magyar napnevek (hétfőtől kezdve — mert vasárnap NEM az első nap, ez nem Amerika)
 export const DAY_NAMES = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap']

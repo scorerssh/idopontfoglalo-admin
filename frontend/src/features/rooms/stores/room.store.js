@@ -136,16 +136,14 @@ export const useRoomStore = defineStore('roomStore', {
             await this.getAll()
           } else {
             const roomId = payload?.roomId ?? payload?.id
-            const normalizedUpdated = updated?.data ?? updated
-
-            if (roomId && normalizedUpdated) {
+            if (roomId) {
+              const { roomId: _r, ...fieldsToUpdate } = payload
               this.allRooms = this.allRooms.map((room) =>
-                room.id === roomId ? { ...room, ...normalizedUpdated } : room,
+                room.id === roomId ? { ...room, ...fieldsToUpdate } : room,
               )
               this.rooms = filterRooms(this.allRooms, this.filters)
             }
           }
-
           return updated
         },
         { notifyOnSuccess: true, successMessage: 'Sikeres frissítés!' },

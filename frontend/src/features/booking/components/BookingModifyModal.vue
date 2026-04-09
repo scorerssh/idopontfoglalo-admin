@@ -1,11 +1,10 @@
 <script setup>
-import { reactive, computed, watch } from 'vue'
-import { CalendarDays, Users, Phone, Mail, FileText, X } from 'lucide-vue-next'
+import { X } from 'lucide-vue-next'
 import MainTitle from '@/components/MainTitle.vue'
 import DefaultInput from '@/components/DefaultInput.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
 import { useBookingStore } from '../stores/booking.store'
-
+import { bookingModifySchema } from '../schemas/bookingModify.schema'
 
 const props = defineProps({
     showModal: { type: Boolean, required: true },
@@ -15,7 +14,6 @@ const props = defineProps({
 const selectedBookingId = computed(() => props.booking?.id)
 const emit = defineEmits(['close'])
 const bookingStore = useBookingStore()
-
 
 const formData = reactive({
     startTIme: '',
@@ -27,15 +25,29 @@ const formData = reactive({
     description: '',
 })
 
+const errors = reactive({
+    name: null,
+    email: null,
+    phoneNumber: null,
+    startTIme: null,
+    endTime: null,
+    pearsonCount: null,
+    description: null,
+})
+
 const inputs = [
-    { name: 'name', label: 'Vendég neve', icon: null },
-    { name: 'email', label: 'Email', icon: null },
-    { name: 'phoneNumber', label: 'Telefonszám', icon: null },
-    { name: 'startTIme', label: 'Érkezés dátuma', icon: null },
-    { name: 'endTime', label: 'Távozás dátuma', icon: null },
-    { name: 'pearsonCount', label: 'Vendégek száma', icon: null },
-    { name: 'description', label: 'Megjegyzés', icon: null },
+    { name: 'name', label: 'Vendég neve' },
+    { name: 'email', label: 'Email' },
+    { name: 'phoneNumber', label: 'Telefonszám' },
+    { name: 'startTIme', label: 'Érkezés dátuma' },
+    { name: 'endTime', label: 'Távozás dátuma' },
+    { name: 'pearsonCount', label: 'Vendégek száma' },
+    { name: 'description', label: 'Megjegyzés' },
 ]
+
+function resetErrors() {
+    Object.keys(errors).forEach(k => errors[k] = null)
+}
 
 watch(() => props.booking, (newBooking) => {
     if (newBooking) {
@@ -47,13 +59,13 @@ watch(() => props.booking, (newBooking) => {
         formData.email = newBooking.email ?? ''
         formData.description = newBooking.description ?? ''
     }
+    resetErrors()
 }, { immediate: true })
 
 const modifiedPayload = computed(() => {
     if (!props.booking) return {}
 
     const changes = {}
-
     for (const key in formData) {
         const original = String(props.booking[key] ?? '')
         const current = String(formData[key] ?? '')
@@ -68,9 +80,30 @@ const modifiedPayload = computed(() => {
     }
 })
 
-const hasChanges = computed(() => Object.keys(modifiedPayload.value).length > 0)
+const hasChanges = computed(() => Object.keys(modifiedPayload.value).length > 1)
+
 async function handleSave() {
     if (!hasChanges.value) return
+
+    resetErrors()
+    const result = bookingModifySchema.safeParse({
+        name: formData.name,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        startTIme: formData.startTIme,
+        endTime: formData.endTime,
+        pearsonCount: formData.pearsonCount,
+        description: formData.description,
+    })
+
+    if (!result.success) {
+        result.error.issues.forEach(err => {
+            const field = err.path[0]
+            errors[field] = err.message
+        })
+        return
+    }
+
     await bookingStore.updateBooking(modifiedPayload.value)
     emit('close')
 }
@@ -84,11 +117,11 @@ function handleReset() {
     formData.phoneNumber = props.booking.phoneNumber ?? ''
     formData.email = props.booking.email ?? ''
     formData.description = props.booking.description ?? ''
+    resetErrors()
 }
 
 function handleDelete() {
     bookingStore.deleteBooking(selectedBookingId.value)
-    console.log('Delete booking:', props.booking)
     emit('close')
 }
 
@@ -102,7 +135,7 @@ function handleClose() {
         <template v-if="showModal">
             <div class="fixed inset-0 bg-black/50 z-40" @click="handleClose" />
             <div
-                class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-xl shadow-lg z-50 p-6">
+                class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-xl shadow-lg z-50 p-6 max-h-[90vh] overflow-y-auto">
 
                 <button @click="handleClose"
                     class="absolute top-3 right-3 p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">
@@ -112,8 +145,13 @@ function handleClose() {
                 <MainTitle title="Foglalás módosítása" barColor="#c8f1fb" class="mb-5" />
 
                 <div class="flex flex-col gap-y-3">
-                    <DefaultInput v-for="input in inputs" :key="input.name" v-model="formData[input.name]"
-                        :label-text="input.label" label-class="mt-0 text-black/60" />
+                    <div v-for="input in inputs" :key="input.name">
+                        <DefaultInput v-model="formData[input.name]" :label-text="input.label"
+                            label-class="mt-0 text-black/60" />
+                        <span v-if="errors[input.name]" class="text-red-500 text-xs mt-1 block">
+                            {{ errors[input.name] }}
+                        </span>
+                    </div>
                 </div>
 
                 <div class="flex gap-2 justify-end mt-6 pt-4 border-t border-gray-100">

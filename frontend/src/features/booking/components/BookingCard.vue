@@ -1,6 +1,5 @@
 <script setup>
 import { EllipsisVertical, CalendarDays, Users, Phone, Mail, Clock } from 'lucide-vue-next'
-import { computed } from 'vue'
 
 const emits = defineEmits(['openModifyModal'])
 

@@ -1,6 +1,5 @@
 <script setup>
 import { EllipsisVertical, BedDouble, Users, Banknote } from 'lucide-vue-next'
-import { computed } from 'vue'
 
 const emits = defineEmits(['openModifyModal'])
 
@@ -35,12 +34,6 @@ function handleModify() {
                 </div>
             </div>
 
-        </section>
-
-        <section class="flex-grow mb-4">
-            <p class="text-sm text-gray-600 line-clamp-2 leading-relaxed">
-                {{ room.description || 'Nincs megadott leírás.' }}
-            </p>
         </section>
 
         <section class="grid grid-cols-2 gap-3 mb-4">

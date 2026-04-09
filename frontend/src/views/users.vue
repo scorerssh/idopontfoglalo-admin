@@ -7,15 +7,15 @@ import UserCreateModal from '@features/users/components/UserCreateModal.vue'
 import UserModifyModal from '@features/users/components/UserModifyModal.vue'
 import UserCard from '@features/users/components/UserCard.vue'
 import { useUserStore } from '@/features/users/stores/user.store'
-import { ref, onMounted, computed } from 'vue'
 
 const userStore = useUserStore()
 const showCreateModal = ref(false)
 const showModifyModal = ref(false)
 const selectedUser = ref(null)
-const contactLenght = computed(() => {
-    return userStore.users.length
-})
+
+const contactLenght = computed(() => userStore.users.length)
+const canGoNext = computed(() => userStore.users.length >= 10)
+const canGoPrev = computed(() => userStore.pagination.page > 1)
 
 function openCreateModal() {
     showCreateModal.value = true
@@ -33,10 +33,10 @@ function closeModifyModal() {
 }
 
 const statCardContent = [
-    { title: 'Összes felhasználó', content: contactLenght, icon: GalleryHorizontalEnd, additional: 'asdf', bgColor: '#f3fbff', iconBgColor: '#c8f1fb', },
-    { title: 'Aktív felhasználók', content: '15', icon: Rss, additional: 'asdf', bgColor: '#fef5f8', iconBgColor: '#fbc3d7', },
-    { title: 'Inaktív felhasználók', content: '8', icon: GlobeOff, additional: 'asdf', bgColor: '#fff0ec', iconBgColor: '#fdd1c5', },
-    { title: 'A hónapban létrehozottak', content: '42', icon: ClockPlus, additional: 'asdf', bgColor: '#fef3ff', iconBgColor: '#fbcffd', },
+    { title: 'Összes felhasználó', content: contactLenght, icon: GalleryHorizontalEnd, additional: 'Összesen', bgColor: '#f3fbff', iconBgColor: '#c8f1fb', },
+    { title: 'Aktív felhasználók', content: '15', icon: Rss, additional: 'Aktív', bgColor: '#fef5f8', iconBgColor: '#fbc3d7', },
+    { title: 'Inaktív felhasználók', content: '8', icon: GlobeOff, additional: 'Inaktív', bgColor: '#fff0ec', iconBgColor: '#fdd1c5', },
+    { title: 'A hónapban létrehozottak', content: '42', icon: ClockPlus, additional: 'Új', bgColor: '#fef3ff', iconBgColor: '#fbcffd', },
 ]
 
 onMounted(() => {
@@ -45,7 +45,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div>
+    <div class="space-y-6">
         <div class="top">
             <MainTitle title="Felhasználók áttekintése" barColor="#fbcfc4" />
             <TransitionGroup name="card" appear tag="div"
@@ -55,25 +55,36 @@ onMounted(() => {
                     :iconBgColor="card.iconBgColor" :style="{ animationDelay: `${index * 0.2}s` }" />
             </TransitionGroup>
         </div>
-        <div class="nav-and-titles my-6 w-full flex flex-row items-center justify-between">
-            <div class="title-and-actions flex items-center justify-between ">
-                <MainTitle title="Felhasználók" barColor="#c8f1fb" />
 
-            </div>
-            <div class="pagination flex flex-row gap-x-2 justify-center">
-                <DefaultButton @click="userStore.goToPage(userStore.pagination.page - 1)" :icon="ChevronLeft"
-                    :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
-                <DefaultButton @click="userStore.goToPage(userStore.pagination.page + 1)" :icon="ChevronRight"
-                    :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
-            </div>
-            <span class="actions">
-                <DefaultButton @click="openCreateModal" :text="'Felhasználó hozzáadása'" :icon="Plus"
-                    buttonClass="bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100" />
+        <div class="flex items-center justify-between">
+            <MainTitle title="Felhasználók" barColor="#c8f1fb" />
+            <DefaultButton @click="openCreateModal" :text="'Felhasználó hozzáadása'" :icon="Plus"
+                buttonClass="bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100" />
+        </div>
+
+        <div v-if="userStore.users.length === 0"
+            class="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+            <GalleryHorizontalEnd class="h-12 w-12 text-gray-300 mx-auto mb-3" />
+            <p class="text-gray-500 font-medium">Jelenleg nincsenek megjeleníthető felhasználók.</p>
+        </div>
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <UserCard v-for="user in userStore.users" :key="user.id" :user="user" @openModifyModal="openModifyModal" />
+        </div>
+
+        <div class="pagination flex items-center justify-center gap-x-4 mt-8 pb-10">
+            <DefaultButton
+                @click="canGoPrev && userStore.goToPage(userStore.pagination.page - 1)"
+                :icon="ChevronLeft"
+                :buttonClass="`bg-white text-black shadow-sm border border-gray-200 rounded-lg px-2 ${!canGoPrev ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-100'}`" />
+
+            <span class="text-md font-semibold text-gray-700 px-1 py-2 rounded-full">
+                {{ userStore.pagination.page }}. oldal
             </span>
 
-        </div>
-        <div class="user-list w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <UserCard v-for="user in userStore.users" :key="user.id" :user="user" @openModifyModal="openModifyModal" />
+            <DefaultButton
+                @click="canGoNext && userStore.goToPage(userStore.pagination.page + 1)"
+                :icon="ChevronRight"
+                :buttonClass="`bg-white text-black shadow-sm border border-gray-200 rounded-lg px-2 ${!canGoNext ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-100'}`" />
         </div>
     </div>
 

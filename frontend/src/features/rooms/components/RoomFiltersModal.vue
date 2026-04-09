@@ -1,5 +1,4 @@
 <script setup>
-import { reactive, onMounted } from 'vue'
 import { Search, RotateCcw, X } from 'lucide-vue-next'
 import MainTitle from '@/components/MainTitle.vue'
 import DefaultButton from '@/components/DefaultButton.vue'

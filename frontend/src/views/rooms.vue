@@ -1,5 +1,4 @@
 <script setup>
-import { ref, computed, watchEffect } from 'vue'
 import {
     CalendarX,
     Rss,
@@ -24,6 +23,9 @@ import { useRole } from '@/composables/useRole'
 const roomStore = useRoomStore()
 const apartmanStore = useApartmanStore()
 const { isAdmin, isUser } = useRole()
+
+const canGoNext = computed(() => roomStore.rooms.length >= 10)
+const canGoPrev = computed(() => roomStore.pagination.page > 1)
 
 const showCreateModal = ref(false)
 const showModifyModal = ref(false)
@@ -221,9 +223,9 @@ watchEffect(() => {
 
         <div v-if="isAdmin" class="pagination flex items-center justify-center gap-x-4 mt-8 pb-10">
             <DefaultButton
-                @click="roomStore.goToPage(roomStore.pagination.page - 1)"
+                @click="canGoPrev && roomStore.goToPage(roomStore.pagination.page - 1)"
                 :icon="ChevronLeft"
-                :buttonClass="'bg-white hover:bg-gray-100 text-black shadow-sm border border-gray-200 rounded-lg px-2'"
+                :buttonClass="`bg-white text-black shadow-sm border border-gray-200 rounded-lg px-2 ${!canGoPrev ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-100'}`"
             />
 
             <span class="text-md font-semibold text-gray-700 px-1 py-2 rounded-full">
@@ -231,9 +233,9 @@ watchEffect(() => {
             </span>
 
             <DefaultButton
-                @click="roomStore.goToPage(roomStore.pagination.page + 1)"
+                @click="canGoNext && roomStore.goToPage(roomStore.pagination.page + 1)"
                 :icon="ChevronRight"
-                :buttonClass="'bg-white hover:bg-gray-100 text-black shadow-sm border border-gray-200 rounded-lg px-2'"
+                :buttonClass="`bg-white text-black shadow-sm border border-gray-200 rounded-lg px-2 ${!canGoNext ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-100'}`"
             />
         </div>
     </div>

@@ -1,5 +1,4 @@
 <script setup>
-import { reactive } from 'vue'
 import { useUserStore } from '@features/users/stores/user.store'
 import userCreateSchema from '../schemas/userCreate.schema'
 import DefaultInput from '@components/DefaultInput.vue'

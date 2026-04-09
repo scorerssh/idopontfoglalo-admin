@@ -1,6 +1,5 @@
 <script setup>
 import { House, EllipsisVertical, User, LayoutGrid, Banknote } from 'lucide-vue-next'
-import { computed } from 'vue'
 
 const emit = defineEmits(['openModifyModal'])
 
@@ -37,17 +36,14 @@ function handleModify() {
                     <span class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Apartman</span>
                 </div>
             </div>
+            <!--
             <div
                 :class="[availabilityStatus.bgClass, availabilityStatus.textClass, 'text-[11px] px-2.5 py-1 rounded-full flex items-center gap-1.5 font-bold shrink-0']">
                 <span :class="[availabilityStatus.dotClass, 'h-2 w-2 rounded-full']"></span>
                 {{ availabilityStatus.label }}
             </div>
-        </section>
+            -->
 
-        <section class="flex-grow mb-4">
-            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">
-                {{ description || 'Nincs megadott leírás az apartmanhoz.' }}
-            </p>
         </section>
 
         <section class="grid grid-cols-2 gap-3 mb-4">

@@ -1,6 +1,5 @@
 <script setup>
 import { Pencil, Plus } from 'lucide-vue-next'
-import { reactive, watch, ref, computed } from 'vue'
 import { useApartmanStore } from '@/features/apartmans/stores/apartman.store'
 import DefaultButton from '@/components/DefaultButton.vue'
 import DefaultInput from '@/components/DefaultInput.vue'

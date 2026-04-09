@@ -1,12 +1,13 @@
 <script setup>
-import { reactive, watch } from 'vue'
 import { useRoomStore } from '@/features/rooms/stores/room.store'
+import { roomModifySchema } from '@/features/rooms/schemas/roomModify.schema'
 import DefaultInput from '@/components/DefaultInput.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
 import MainTitle from '@/components/MainTitle.vue'
+import { useRole } from '@/composables/useRole'
 
 const emit = defineEmits(['close'])
-
+const { isAdmin } = useRole()
 const props = defineProps({
     showModal: { type: Boolean, required: true },
     roomData: { type: Object, default: null },
@@ -16,8 +17,8 @@ const inputs = [
     { type: 'text', labelText: 'Név', inputName: 'name' },
     { type: 'number', labelText: 'Min. Kapacitás', inputName: 'minCapacity' },
     { type: 'number', labelText: 'Max. Kapacitás', inputName: 'maxCapacity' },
+    { type: 'number', labelText: 'Szoba ára', inputName: 'price' },
 ]
-
 
 const roomStore = useRoomStore()
 
@@ -26,8 +27,23 @@ const formData = reactive({
     name: '',
     minCapacity: 0,
     maxCapacity: 0,
+    price: 0,
     apartmanId: null,
 })
+
+const errors = reactive({
+    name: null,
+    minCapacity: null,
+    maxCapacity: null,
+    price: null,
+})
+
+function resetErrors() {
+    errors.name = null
+    errors.minCapacity = null
+    errors.maxCapacity = null
+    errors.price = null
+}
 
 watch(
     () => props.roomData,
@@ -35,10 +51,12 @@ watch(
         if (newRoom) {
             formData.id = newRoom.id
             formData.name = newRoom.name ?? ''
+            formData.price = Number(newRoom.price ?? 0)
             formData.minCapacity = Number(newRoom.minCapacity ?? 0)
             formData.maxCapacity = Number(newRoom.maxCapacity ?? 0)
             formData.apartmanId = Number(newRoom.apartmanId ?? null)
         }
+        resetErrors()
     },
     { immediate: true },
 )
@@ -46,9 +64,26 @@ watch(
 const updateRoom = async () => {
     if (!formData.id) return
 
+    resetErrors()
+    const result = roomModifySchema.safeParse({
+        name: formData.name,
+        minCapacity: formData.minCapacity,
+        maxCapacity: formData.maxCapacity,
+        price: formData.price,
+    })
+
+    if (!result.success) {
+        result.error.issues.forEach(err => {
+            const field = err.path[0]
+            errors[field] = err.message
+        })
+        return
+    }
+
     const payload = {
         roomId: formData.id,
         name: formData.name,
+        price: formData.price,
         minCapacity: formData.minCapacity,
         maxCapacity: formData.maxCapacity,
         apartmanId: formData.apartmanId,
@@ -88,10 +123,15 @@ const handleClose = () => {
 
                     <form @submit.prevent="updateRoom">
                         <div class="grid gap-3">
-                            <DefaultInput v-for="input in inputs" :key="input.inputName" :input-name="input.inputName"
-                                v-model="formData[input.inputName]" :type="input.type" :label-text="input.labelText" />
+                            <div v-for="input in inputs" :key="input.inputName">
+                                <DefaultInput :input-name="input.inputName" v-model="formData[input.inputName]"
+                                    :type="input.type" :label-text="input.labelText" />
+                                <span v-if="errors[input.inputName]" class="text-red-500 text-xs mt-1 block">
+                                    {{ errors[input.inputName] }}
+                                </span>
+                            </div>
 
-                            <div class="form-group">
+                            <div v-if="isAdmin" class="form-group">
                                 <label for="apartmanId" class="block text-sm font-medium mb-1">Apartman ID</label>
                                 <input v-model.number="formData.apartmanId" type="number" id="apartmanId"
                                     class="w-full border rounded px-3 py-2 text-sm" min="0" required />

@@ -1,5 +1,4 @@
 <script setup>
-import { ref, watch, onBeforeUnmount } from 'vue'
 import { storeToRefs } from 'pinia'
 import { RouterView } from 'vue-router'
 import NotifierModal from '@components/NotifierModal.vue'

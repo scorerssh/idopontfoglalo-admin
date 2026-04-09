@@ -1,6 +1,6 @@
 <script setup>
 import MainTitle from '@/components/MainTitle.vue'
-import DashboardStatCard from '@/features/shared/DashboardStatCard.vue'
+import DashboardStatCard from '@/features/shared/DashboardStatCard.vue';
 import { BookMarked, Rss, CalendarCheck, GalleryHorizontalEnd, MapPinHouse } from 'lucide-vue-next';
 
 const statCardContent = [

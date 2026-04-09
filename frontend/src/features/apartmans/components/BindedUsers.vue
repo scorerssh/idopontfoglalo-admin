@@ -1,6 +1,5 @@
 <script setup>
 import { useApartmanStore } from '@/features/apartmans/stores/apartman.store'
-import { ref } from 'vue'
 import { Trash2 } from 'lucide-vue-next'
 
 const props = defineProps({

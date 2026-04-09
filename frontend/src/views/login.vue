@@ -2,7 +2,6 @@
 import { useRouter } from 'vue-router'
 import { useRole } from '@/composables/useRole'
 import { useAuthStore } from '@/features/auth/stores/auth.store'
-import { ref, onMounted, onUnmounted, reactive, nextTick } from 'vue'
 import login_1 from '@/assets/pictures/login-bg.webp'
 import login_2 from '@/assets/pictures/login-bg-2.webp'
 import login_3 from '@/assets/pictures/login-bg-3.webp'

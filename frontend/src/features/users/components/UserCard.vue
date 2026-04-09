@@ -1,6 +1,5 @@
 <script setup>
 import { EllipsisVertical, House, UserRound, Mail, MapPin, ShieldCheck } from 'lucide-vue-next'
-import { computed } from 'vue'
 
 const emits = defineEmits(['openModifyModal'])
 

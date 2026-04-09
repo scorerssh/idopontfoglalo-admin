@@ -1,6 +1,6 @@
 <script setup>
-import { reactive } from 'vue'
 import { useApartmanStore } from '@/features/apartmans/stores/apartman.store'
+import { apartmanCreateSchema } from '@/features/apartmans/schemas/apartmanCreate.schema'
 import DefaultInput from '@/components/DefaultInput.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
 import MainTitle from '@/components/MainTitle.vue'
@@ -20,16 +20,32 @@ const formData = reactive({
     name: '',
 })
 
+const errors = reactive({
+    name: null,
+})
+
+function resetErrors() {
+    errors.name = null
+}
+
 function resetForm() {
     formData.name = ''
+    resetErrors()
 }
 
 const createApartman = async () => {
-    const payload = {
-        name: formData.name,
+    resetErrors()
+    const result = apartmanCreateSchema.safeParse({ name: formData.name })
+
+    if (!result.success) {
+        result.error.issues.forEach(err => {
+            const field = err.path[0]
+            errors[field] = err.message
+        })
+        return
     }
 
-    await apartmanStore.create(payload)
+    await apartmanStore.create({ name: formData.name })
     resetForm()
     emit('close')
 }
@@ -58,10 +74,11 @@ const handleClose = () => {
                         <div class="form-group mb-3">
                             <DefaultInput v-model="formData.name" label="Név" placeholder="Apartman neve"
                                 labelText="Apartman neve:" labelClass="text-black/60" />
+                            <span v-if="errors.name" class="text-red-500 text-xs mt-1 block">{{ errors.name }}</span>
                         </div>
 
                         <div class="form-actions flex gap-2 justify-end">
-                            <DefaultButton @click="resetForm" type="button" :text="'Mégse'"
+                            <DefaultButton @click="handleClose" type="button" :text="'Mégse'"
                                 :buttonClass="'bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg transition duration-100'" />
                             <DefaultButton type="submit" :text="'Létrehozás'"
                                 :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />

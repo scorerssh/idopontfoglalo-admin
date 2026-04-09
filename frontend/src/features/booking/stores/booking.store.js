@@ -192,6 +192,17 @@ export const useBookingStore = defineStore('bookingStore', {
       )
     },
 
+    async goToPage(page) {
+      if (page < 1) return
+      this.pagination.page = page
+      const { isAdmin } = useRole()
+      if (isAdmin.value) {
+        return this.getAllAdmin()
+      } else {
+        return this.getAllUser()
+      }
+    },
+
     /* FILTERS */
     async applyAdminFilters(newFilters = {}) {
       this.adminFilters = { ...this.adminFilters, ...newFilters }

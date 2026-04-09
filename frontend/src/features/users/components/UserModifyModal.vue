@@ -1,6 +1,6 @@
 <script setup>
-import { reactive, watch } from 'vue'
 import { useUserStore } from '@features/users/stores/user.store'
+import { userModifySchema } from '@features/users/schemas/userModify.schema'
 import MainTitle from '@/components/MainTitle.vue'
 import DefaultInput from '@/components/DefaultInput.vue'
 import DefaultButton from '@/components/DefaultButton.vue'
@@ -19,18 +19,23 @@ const formData = reactive({
     userEmail: '',
     role: 'User',
     id: null
-
 })
+
+const errors = reactive({
+    userName: null,
+    userEmail: null,
+    role: null,
+})
+
+function resetErrors() {
+    errors.userName = null
+    errors.userEmail = null
+    errors.role = null
+}
 
 const inputs = [
     { name: 'userName', label: 'Felhasználónév', labelClass: 'mt-0 text-black/60' },
     { name: 'userEmail', label: 'Email', labelClass: 'mt-0 text-black/60' },
-]
-
-const actions = [
-    { text: 'Mentés', action: 'save', buttonClass: 'px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700' },
-    { text: 'Mégse', action: 'cancel', buttonClass: 'px-4 py-2 text-sm rounded bg-gray-300 hover:bg-gray-400' },
-    { text: 'Törlés', action: 'delete', buttonClass: 'px-4 py-2 text-sm rounded bg-red-600 text-white hover:bg-red-700' },
 ]
 
 watch(() => props.userData, (newUser) => {
@@ -40,10 +45,25 @@ watch(() => props.userData, (newUser) => {
         formData.role = newUser.role ?? 'User'
         formData.id = props.userData.id ?? null
     }
-    console.log('User data updated in modal:', formData) // Debug log
+    resetErrors()
 }, { immediate: true })
 
 const updateUser = async () => {
+    resetErrors()
+    const result = userModifySchema.safeParse({
+        userName: formData.userName,
+        userEmail: formData.userEmail,
+        role: formData.role,
+    })
+
+    if (!result.success) {
+        result.error.issues.forEach(err => {
+            const field = err.path[0]
+            errors[field] = err.message
+        })
+        return
+    }
+
     await userStore.update(formData)
     emit('close')
 }
@@ -76,8 +96,14 @@ const handleClose = () => {
                     <MainTitle bar-color="#fbcfc4" title="Felhasználó módosítása" class="mb-4" />
 
                     <form @submit.prevent="updateUser" class="flex flex-col gap-y-3">
-                        <DefaultInput v-for="input in inputs" :key="input.name" v-model="formData[input.name]"
-                            :label-text="input.label" :label-class="input.labelClass" />
+                        <div v-for="input in inputs" :key="input.name">
+                            <DefaultInput v-model="formData[input.name]" :label-text="input.label"
+                                :label-class="input.labelClass" />
+                            <span v-if="errors[input.name]" class="text-red-500 text-xs mt-1 block">
+                                {{ errors[input.name] }}
+                            </span>
+                        </div>
+
                         <div>
                             <label class="text-black/60 text-sm">Szerep:</label>
                             <select v-model="formData.role"
@@ -85,6 +111,9 @@ const handleClose = () => {
                                 <option value="Admin">Admin</option>
                                 <option value="User">User</option>
                             </select>
+                            <span v-if="errors.role" class="text-red-500 text-xs mt-1 block">
+                                {{ errors.role }}
+                            </span>
                         </div>
 
                         <div class="form-actions flex gap-2 justify-end">

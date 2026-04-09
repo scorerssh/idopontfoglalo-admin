@@ -9,7 +9,6 @@ import { useApartmanStore } from '@/features/apartmans/stores/apartman.store';
 import { useAuthStore } from '@/features/auth/stores/auth.store';
 import { useRole } from '@/composables/useRole';
 import { useRoute } from 'vue-router';
-import { computed } from 'vue';
 
 const props = defineProps({
     isOpen: {

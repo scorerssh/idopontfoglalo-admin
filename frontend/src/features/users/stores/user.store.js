@@ -70,6 +70,7 @@ export const useUserStore = defineStore('userStore', {
     },
 
     async goToPage(page) {
+      if (page < 1) return
       this.pagination.page = page
       return this.getAll()
     },

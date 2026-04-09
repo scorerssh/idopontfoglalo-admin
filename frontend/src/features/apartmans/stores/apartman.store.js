@@ -118,6 +118,7 @@ export const useApartmanStore = defineStore('apartmanStore', {
     },
 
     async goToPage(page) {
+      if (page < 1) return
       this.pagination.page = page
       return this.getAll()
     },

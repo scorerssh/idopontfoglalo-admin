@@ -8,7 +8,6 @@ import ApartmanModifyModal from '@/features/apartmans/components/ApartmanModifyM
 import { useApartmanStore } from '@/features/apartmans/stores/apartman.store'
 import ApartmanCard from '@/features/apartmans/components/ApartmanCard.vue'
 
-import { ref, onMounted, computed } from 'vue'
 
 const apartmanStore = useApartmanStore()
 const showCreateModal = ref(false)
@@ -26,7 +25,7 @@ function closeCreateModal() {
 async function handleOpenModifyModal(id) {
     const res = await apartmanStore.getWithRooms(id)
     selectedApartman.value = res
-    showModifyModal.value = true  // ← csak akkor nyílik ki, ha már van adat
+    showModifyModal.value = true
 }
 
 function closeModifyModal() {
@@ -34,21 +33,24 @@ function closeModifyModal() {
     selectedApartman.value = null
 }
 
+const canGoNext = computed(() => apartmanStore.apartmans.length >= 10)
+const canGoPrev = computed(() => apartmanStore.pagination.page > 1)
+
 const statCardContent = computed(() => [
     {
         title: 'Összes apartman',
         text: apartmanStore.apartmans.length.toString(),
-        icon: GalleryHorizontalEnd, additional: 'asdf', bgColor: '#f3fbff', iconBgColor: '#c8f1fb',
+        icon: GalleryHorizontalEnd, additional: 'Összesen', bgColor: '#f3fbff', iconBgColor: '#c8f1fb',
     },
     {
         title: 'Elérhető',
         text: apartmanStore.apartmans.filter(a => a.isAvailable).length.toString(),
-        icon: Rss, additional: 'asdf', bgColor: '#fff0ec', iconBgColor: '#fdd1c5',
+        icon: Rss, additional: 'Foglalható', bgColor: '#fff0ec', iconBgColor: '#fdd1c5',
     },
     {
         title: 'Nem elérhető',
         text: apartmanStore.apartmans.filter(a => !a.isAvailable).length.toString(),
-        icon: CalendarX, additional: 'asdf', bgColor: '#fef5f8', iconBgColor: '#fbc3d7'
+        icon: CalendarX, additional: 'Karbantartás', bgColor: '#fef5f8', iconBgColor: '#fbc3d7'
     },
 ])
 
@@ -58,7 +60,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div>
+    <div class="space-y-6">
         <div class="top">
             <MainTitle title="Apartmanok" barColor="#fbcfc4" />
             <TransitionGroup name="card" appear tag="div"
@@ -69,17 +71,17 @@ onMounted(() => {
             </TransitionGroup>
         </div>
 
-        <div class="title-and-actions flex items-center justify-between mt-6">
-            <span class="font-semibold text-base">Apartmanok listája</span>
-            <span class="actions">
-                <DefaultButton @click="openCreateModal" :text="'Apartman hozzáadása'" :icon="Plus"
-                    :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
-            </span>
+        <div class="title-and-actions flex items-center justify-between">
+            <MainTitle title="Apartmanok listája" barColor="#f4cbfe" />
+            <DefaultButton @click="openCreateModal" :text="'Apartman hozzáadása'" :icon="Plus"
+                :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
         </div>
 
-        <div class="apartman-list w-full mt-4">
-            <div v-if="apartmanStore.apartmans.length === 0" class="text-center py-8 text-gray-500">
-                Nincsenek apartmanok
+        <div class="apartman-list w-full">
+            <div v-if="apartmanStore.apartmans.length === 0"
+                class="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+                <GalleryHorizontalEnd class="h-12 w-12 text-gray-300 mx-auto mb-3" />
+                <p class="text-gray-500 font-medium">Jelenleg nincsenek megjeleníthető apartmanok.</p>
             </div>
             <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <ApartmanCard v-for="apartman in apartmanStore.apartmans" :key="apartman.id" :id="apartman.id"
@@ -89,11 +91,20 @@ onMounted(() => {
             </div>
         </div>
 
-        <div class="pagination flex flex-row gap-x-2 justify-center">
-            <DefaultButton @click="apartmanStore.goToPage(apartmanStore.pagination.page - 1)" :icon="ChevronLeft"
-                :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
-            <DefaultButton @click="apartmanStore.goToPage(apartmanStore.pagination.page + 1)" :icon="ChevronRight"
-                :buttonClass="'mt-4 bg-white hover:bg-gray-200 text-black shadow rounded-lg transition duration-100'" />
+        <div class="pagination flex items-center justify-center gap-x-4 mt-8 pb-10">
+            <DefaultButton
+                @click="canGoPrev && apartmanStore.goToPage(apartmanStore.pagination.page - 1)"
+                :icon="ChevronLeft"
+                :buttonClass="`bg-white text-black shadow-sm border border-gray-200 rounded-lg px-2 ${!canGoPrev ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-100'}`" />
+
+            <span class="text-md font-semibold text-gray-700 px-1 py-2 rounded-full">
+                {{ apartmanStore.pagination.page }}. oldal
+            </span>
+
+            <DefaultButton
+                @click="canGoNext && apartmanStore.goToPage(apartmanStore.pagination.page + 1)"
+                :icon="ChevronRight"
+                :buttonClass="`bg-white text-black shadow-sm border border-gray-200 rounded-lg px-2 ${!canGoNext ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-100'}`" />
         </div>
     </div>
 
