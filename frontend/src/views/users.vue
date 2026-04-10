@@ -56,10 +56,10 @@ onMounted(() => {
             </TransitionGroup>
         </div>
 
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
             <MainTitle title="Felhasználók" barColor="#c8f1fb" />
             <DefaultButton @click="openCreateModal" :text="'Felhasználó hozzáadása'" :icon="Plus"
-                buttonClass="bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100" />
+                buttonClass="bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100 w-full md:w-auto" />
         </div>
 
         <div v-if="userStore.users.length === 0"

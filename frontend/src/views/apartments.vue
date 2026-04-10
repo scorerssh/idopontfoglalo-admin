@@ -71,10 +71,10 @@ onMounted(() => {
             </TransitionGroup>
         </div>
 
-        <div class="title-and-actions flex items-center justify-between">
+        <div class="title-and-actions flex flex-col md:flex-row md:items-center justify-between gap-3">
             <MainTitle title="Apartmanok listája" barColor="#f4cbfe" />
             <DefaultButton @click="openCreateModal" :text="'Apartman hozzáadása'" :icon="Plus"
-                :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
+                :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100 w-full md:w-auto'" />
         </div>
 
         <div class="apartman-list w-full">

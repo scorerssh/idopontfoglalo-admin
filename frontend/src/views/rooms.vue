@@ -125,68 +125,39 @@ watchEffect(() => {
     <div class="space-y-6">
         <div class="top">
             <MainTitle title="Általános" barColor="#fbcfc4" />
-            <TransitionGroup
-                name="card"
-                appear
-                tag="div"
-                class="stats-grid grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 w-full"
-            >
-                <DashboardStatCard
-                    v-for="(card, index) in statCardContent"
-                    :key="index"
-                    :title="card.title"
-                    :content="card.content"
-                    :icon="card.icon"
-                    :additional="card.additional"
-                    :bgColor="card.bgColor"
-                    :iconBgColor="card.iconBgColor"
-                    :style="{ animationDelay: `${index * 0.2}s` }"
-                />
+            <TransitionGroup name="card" appear tag="div"
+                class="stats-grid grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 w-full">
+                <DashboardStatCard v-for="(card, index) in statCardContent" :key="index" :title="card.title"
+                    :content="card.content" :icon="card.icon" :additional="card.additional" :bgColor="card.bgColor"
+                    :iconBgColor="card.iconBgColor" :style="{ animationDelay: `${index * 0.2}s` }" />
             </TransitionGroup>
         </div>
 
-        <div class="relative flex items-center justify-between">
+        <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div class="title">
                 <MainTitle title="Szobák listája" barColor="#c8f1fb" />
             </div>
-            <div class="buttons flex flex-row items-end gap-x-2">
+            <div class="buttons flex flex-row flex-wrap items-end gap-x-2 w-full md:w-auto">
                 <div v-if="isUser" class="min-w-[260px]">
-                    <DefaultInput
-                        input-name="apartmanSelect"
-                        label-text="Apartman"
-                        type="select"
-                        v-model="selectedApartmanId"
-                        :options="userApartmanOptions"
-                        @update:modelValue="loadRoomsForSelectedApartman"
-                    />
+                    <DefaultInput input-name="apartmanSelect" label-text="Apartman" type="select"
+                        v-model="selectedApartmanId" :options="userApartmanOptions"
+                        @update:modelValue="loadRoomsForSelectedApartman" />
                 </div>
 
-                <DefaultButton
-                    v-if="isAdmin"
-                    @click="openCreateModal"
-                    :text="'Szoba hozzáadása'"
-                    :icon="Plus"
-                    :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'"
-                />
+                <DefaultButton v-if="isAdmin" @click="openCreateModal" :text="'Szoba hozzáadása'" :icon="Plus"
+                    :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
 
-                <span
-                    v-if="roomStore.rooms.length > 0"
-                    class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow ring-1 bg-green-100 ring-green-300 text-black font-medium"
-                >
+                <span v-if="roomStore.rooms.length > 0"
+                    class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow ring-1 bg-green-100 ring-green-300 text-black font-medium">
                     <span class="font-base">Találatok:</span> {{ roomStore.rooms.length }} szoba
                 </span>
-                <span
-                    v-else
-                    class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow bg-gray-100 text-black font-medium"
-                >
+                <span v-else
+                    class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow bg-gray-100 text-black font-medium">
                     Nincsenek találatok
                 </span>
 
-                <DefaultButton
-                    @click="openFilters"
-                    :icon="SlidersHorizontal"
-                    :button-class="`${showFilters ? 'bg-gray-200' : 'bg-white hover:bg-gray-200'} ml-2 text-black shadow rounded-lg transition duration-100`"
-                />
+                <DefaultButton @click="openFilters" :icon="SlidersHorizontal"
+                    :button-class="`${showFilters ? 'bg-gray-200' : 'bg-white hover:bg-gray-200'} ml-2 text-black shadow rounded-lg transition duration-100`" />
             </div>
 
             <Transition name="fade-in">
@@ -195,48 +166,34 @@ watchEffect(() => {
         </div>
 
         <div class="room-list-container">
-            <div
-                v-if="isUser && !hasSelectedApartman"
-                class="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200"
-            >
+            <div v-if="isUser && !hasSelectedApartman"
+                class="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
                 <GalleryHorizontalEnd class="h-12 w-12 text-gray-300 mx-auto mb-3" />
                 <p class="text-gray-500 font-medium">Válassz egy apartmant a szobák megjelenítéséhez.</p>
             </div>
 
-            <div
-                v-else-if="roomStore.rooms.length === 0"
-                class="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200"
-            >
+            <div v-else-if="roomStore.rooms.length === 0"
+                class="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
                 <GalleryHorizontalEnd class="h-12 w-12 text-gray-300 mx-auto mb-3" />
                 <p class="text-gray-500 font-medium">Jelenleg nincsenek megjeleníthető szobák.</p>
             </div>
 
             <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <RoomCard
-                    v-for="room in roomStore.rooms"
-                    :key="room.id"
-                    :room="room"
-                    @openModifyModal="openModifyModal"
-                />
+                <RoomCard v-for="room in roomStore.rooms" :key="room.id" :room="room"
+                    @openModifyModal="openModifyModal" />
             </div>
         </div>
 
         <div v-if="isAdmin" class="pagination flex items-center justify-center gap-x-4 mt-8 pb-10">
-            <DefaultButton
-                @click="canGoPrev && roomStore.goToPage(roomStore.pagination.page - 1)"
-                :icon="ChevronLeft"
-                :buttonClass="`bg-white text-black shadow-sm border border-gray-200 rounded-lg px-2 ${!canGoPrev ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-100'}`"
-            />
+            <DefaultButton @click="canGoPrev && roomStore.goToPage(roomStore.pagination.page - 1)" :icon="ChevronLeft"
+                :buttonClass="`bg-white text-black shadow-sm border border-gray-200 rounded-lg px-2 ${!canGoPrev ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-100'}`" />
 
             <span class="text-md font-semibold text-gray-700 px-1 py-2 rounded-full">
                 {{ roomStore.pagination.page }}. oldal
             </span>
 
-            <DefaultButton
-                @click="canGoNext && roomStore.goToPage(roomStore.pagination.page + 1)"
-                :icon="ChevronRight"
-                :buttonClass="`bg-white text-black shadow-sm border border-gray-200 rounded-lg px-2 ${!canGoNext ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-100'}`"
-            />
+            <DefaultButton @click="canGoNext && roomStore.goToPage(roomStore.pagination.page + 1)" :icon="ChevronRight"
+                :buttonClass="`bg-white text-black shadow-sm border border-gray-200 rounded-lg px-2 ${!canGoNext ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-100'}`" />
         </div>
     </div>
 

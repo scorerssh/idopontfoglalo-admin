@@ -45,7 +45,9 @@ function toDateOnly(dateStr) {
 }
 
 const bookingsForCell = computed(() => {
-    const bookings = bookingStore.bookings ?? []
+    const bookings = Array.isArray(bookingStore.bookings)
+        ? bookingStore.bookings
+        : []
     const rows = []
     for (let i = 0; i < calendarDays.value.length; i += 7) {
         rows.push(calendarDays.value.slice(i, i + 7))

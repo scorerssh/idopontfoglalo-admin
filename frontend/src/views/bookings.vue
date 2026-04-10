@@ -20,7 +20,7 @@ const showModifyModal = ref(false)
 const bookingCount = computed(() => bookingStore.bookings.count)
 const createdThisMont = computed(() => bookingStore.bookings.reservationsCreatedThisMonth)
 const createdToday = computed(() => bookingStore.bookings.reservationsCreatedToday)
-const canGoNext = computed(() => bookingStore.bookings.length >= 10)
+const canGoNext = computed(() => bookingStore.bookings.reservations?.length >= 10)
 const canGoPrev = computed(() => bookingStore.pagination.page > 1)
 
 const statCardContent = [
@@ -65,16 +65,16 @@ onMounted(() => {
             </TransitionGroup>
         </section>
 
-        <section class="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <section class="relative flex flex-col md:flex-row md:items-center justify-between gap-3">
             <MainTitle title="Foglalások" barColor="#c8f1fb" />
 
-            <div class="flex flex-row flex-wrap items-center justify-end gap-2">
+            <div class="flex flex-row flex-wrap items-center justify-end gap-2 w-full md:w-auto">
                 <DefaultButton @click="openCreateModal" :text="'Foglalás hozzáadása'" :icon="Plus"
                     :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
 
-                <span v-if="bookingStore.bookings.length > 0"
+                <span v-if="bookingStore.bookings.reservations?.length > 0"
                     class="flex items-center gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow ring-1 bg-green-100 ring-green-300 text-black font-medium">
-                    <span class="font-base">Találatok:</span> {{ bookingStore.bookings.length }} foglalás
+                    <span class="font-base">Találatok:</span> {{ bookingStore.bookings.reservations?.length }} foglalás
                 </span>
                 <span v-else
                     class="flex items-center gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow bg-gray-100 text-black font-medium">
@@ -91,13 +91,13 @@ onMounted(() => {
             </Transition>
         </section>
 
-        <section v-if="bookingStore.bookings.length === 0"
+        <section v-if="!bookingStore.bookings.reservations?.length"
             class="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
             <GalleryHorizontalEnd class="h-12 w-12 text-gray-300 mx-auto mb-3" />
             <p class="text-gray-500 font-medium">Jelenleg nincsenek megjeleníthető foglalások.</p>
         </section>
         <section v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <BookingCard v-for="booking in bookingStore.bookings" :key="booking.id" :booking="booking"
+            <BookingCard v-for="booking in bookingStore.bookings.reservations" :key="booking.id" :booking="booking"
                 @openModifyModal="openModifyModal" @close="closeModifyModal" />
         </section>
 

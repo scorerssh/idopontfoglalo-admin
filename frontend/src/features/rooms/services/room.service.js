@@ -5,6 +5,10 @@ export const roomService = {
     const { data } = await api.post('/api/Room/GetAll', payload)
     return data
   },
+  async getAllUser(payload) {
+    const { data } = await api.post('/api/Room/GetAllUser', payload)
+    return data
+  },
   async getById(id) {
     const { data } = await api.get(`/api/Room/${id}`)
     return data

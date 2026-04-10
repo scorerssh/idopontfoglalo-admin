@@ -4,6 +4,9 @@ import DefaultButton from '@/components/DefaultButton.vue';
 import { bookingCreateSchema } from '../schemas/booking.schema';
 import { useBookingStore } from '../stores/booking.store';
 import { useRoomStore } from '@/features/rooms/stores/room.store';
+import { useRole } from '@/composables/useRole';
+
+const { isAdmin } = useRole()
 const emit = defineEmits(['close'])
 const bookingStore = useBookingStore()
 const roomStore = useRoomStore()
@@ -131,7 +134,14 @@ async function submitForm() {
 }
 onMounted(async () => {
     if (!roomStore.rooms || roomStore.rooms.length === 0)
-        await roomStore.getAll()
+        if (isAdmin.value) {
+            await roomStore.getAll()
+        } else {
+            await roomStore.getAllUser()
+        }
+
+
+
 })
 </script>
 

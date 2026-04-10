@@ -6,6 +6,7 @@ import { storeToRefs } from 'pinia';
 import { Search, RotateCcw, X } from 'lucide-vue-next';
 import { useBookingStore } from '@/features/booking/stores/booking.store';
 import { useApartmanStore } from '@/features/apartmans/stores/apartman.store';
+import { useRoomStore } from '@/features/rooms/stores/room.store';
 import { useAuthStore } from '@/features/auth/stores/auth.store';
 import { useRole } from '@/composables/useRole';
 import { useRoute } from 'vue-router';
@@ -21,6 +22,8 @@ const { isAdmin } = useRole();
 const emits = defineEmits(['close']);
 const apartmanStore = useApartmanStore();
 const { apartmans } = storeToRefs(apartmanStore);
+const roomStore = useRoomStore();
+const { rooms } = storeToRefs(roomStore);
 const authStore = useAuthStore();
 const bookingStore = useBookingStore();
 const isCalendarView = computed(() => route.path === '/calendar');
@@ -117,6 +120,13 @@ onMounted(async () => {
     if (!apartmanStore.apartmans.length) {
         await apartmanStore.getAll();
     }
+    if (!roomStore.rooms.length) {
+        if (isAdmin.value) {
+            await roomStore.getAll();
+        } else {
+            await roomStore.getAllUser();
+        }
+    }
 })
 </script>
 
@@ -139,6 +149,13 @@ onMounted(async () => {
                 <option value="">Összes</option>
                 <option v-for="apartman in apartmans" :key="apartman.id" :value="apartman.id">
                     {{ apartman.name }}
+                </option>
+            </DefaultInput>
+
+            <DefaultInput label-text="Szoba" type="select" v-model="filterModel.roomId">
+                <option value="">Összes</option>
+                <option v-for="room in rooms" :key="room.id" :value="room.id">
+                    {{ room.name }}
                 </option>
             </DefaultInput>
 

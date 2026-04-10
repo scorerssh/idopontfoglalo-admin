@@ -42,6 +42,7 @@ export const useRoomStore = defineStore('roomStore', {
     },
     ops: {
       getAll: defaultOp(),
+      getAllUser: defaultOp(),
       getById: defaultOp(),
       create: defaultOp(),
       update: defaultOp(),
@@ -76,6 +77,35 @@ export const useRoomStore = defineStore('roomStore', {
         async () => {
           const data = await svc.getAll(payload)
           this.sourceMode = 'admin'
+          this.allRooms = data
+          this.rooms = data
+          return data
+        },
+        {
+          notifyOnSuccess: false,
+          errorMessage: 'Sikertelen volt a szobák betöltése.',
+        },
+      )
+    },
+
+    async getAllUser(overrides = {}) {
+      const activeFilters = Object.fromEntries(
+        Object.entries(this.filters).filter(
+          ([_, value]) => value !== '' && value !== null && value !== undefined,
+        ),
+      )
+
+      const payload = {
+        page: this.pagination.page,
+        ...activeFilters,
+        ...overrides,
+      }
+
+      return runOp(
+        this.ops.getAllUser,
+        async () => {
+          const data = await svc.getAllUser(payload)
+          this.sourceMode = 'user'
           this.allRooms = data
           this.rooms = data
           return data
