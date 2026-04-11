@@ -1,5 +1,8 @@
 <script setup>
+import { useTheme } from '@/composables/useTheme'
+import { darkenForDark, tintForDark } from '@/utils/colorUtils'
 
+const { isDark } = useTheme()
 
 const props = defineProps({
     title: String,
@@ -8,17 +11,27 @@ const props = defineProps({
     additional: String,
     bgColor: String,
     iconBgColor: String,
-
 })
+
+const cardStyle = computed(() =>
+    isDark.value
+        ? { backgroundColor: tintForDark(props.bgColor) }
+        : { backgroundColor: props.bgColor }
+)
+
+const iconStyle = computed(() =>
+    isDark.value
+        ? { backgroundColor: darkenForDark(props.iconBgColor) }
+        : { backgroundColor: props.iconBgColor }
+)
 </script>
 
 <template>
     <div>
         <div class="p-4 bg-white flex-row rounded-lg shadow flex items-center gap-x-4 border border-gray-100"
-            :style="{ backgroundColor: bgColor }">
+            :style="cardStyle">
             <div class="icon-container">
-                <div class="p-2 flex items-center justify-center rounded-full "
-                    :style="{ backgroundColor: iconBgColor }">
+                <div class="p-2 flex items-center justify-center rounded-full" :style="iconStyle">
                     <component :is="icon" class="w-6 h-6 text-black" />
                 </div>
             </div>

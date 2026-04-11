@@ -1,6 +1,7 @@
 <script setup>
 import { useRole } from '@/composables/useRole'
 import { useAuthStore } from '@/features/auth/stores/auth.store'
+import { useTheme } from '@/composables/useTheme'
 import {
     PanelRightClose,
     LayoutGrid,
@@ -13,11 +14,14 @@ import {
     LogOut,
     House,
     BedDouble,
+    Sun,
+    Moon,
 } from 'lucide-vue-next'
 import { RouterView, useRoute } from 'vue-router'
 
 const { isAdmin, isUser } = useRole()
 const authStore = useAuthStore()
+const { isDark, toggleTheme } = useTheme()
 const route = useRoute()
 const isSidebarOpen = ref(true)
 const sidebarRailWidthClass = 'w-20'
@@ -179,6 +183,22 @@ const userNavbarLinks = [
             <header class="flex items-center justify-between p-6 h-24 shrink-0">
                 <div class="unknown"></div>
                 <div class="flex items-center gap-x-3">
+                    <!-- Dark / Light mode toggle -->
+                    <button
+                        @click="toggleTheme"
+                        :title="isDark ? 'Váltás világos módra' : 'Váltás sötét módra'"
+                        class="flex items-center gap-x-1.5 rounded-full bg-gray-100 px-3 py-2 transition-colors hover:bg-gray-200"
+                    >
+                        <Sun v-if="isDark" class="w-4 h-4 text-amber-400" />
+                        <Moon v-else class="w-4 h-4 text-slate-500" />
+                        <!-- pill indicator -->
+                        <span class="relative inline-flex h-5 w-9 shrink-0 rounded-full transition-colors duration-300"
+                            :class="isDark ? 'bg-slate-600' : 'bg-slate-200'">
+                            <span class="absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-300"
+                                :class="isDark ? 'translate-x-4' : 'translate-x-0.5'" />
+                        </span>
+                    </button>
+
                     <RouterLink
                         to="/settings"
                         class="flex items-center justify-center rounded-full bg-gray-100 p-2 transition-colors hover:bg-gray-200"

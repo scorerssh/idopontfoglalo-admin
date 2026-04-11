@@ -9,9 +9,11 @@ import BookingFiltersBar from '@/features/booking/components/BookingFiltersBar.v
 import BookingModifyModal from '@/features/booking/components/BookingModifyModal.vue'
 import { useBookingStore } from '@/features/booking/stores/booking.store'
 import { useRole } from '@/composables/useRole'
+import { useRoute } from 'vue-router'
 
 const bookingStore = useBookingStore()
 const { isAdmin } = useRole()
+const route = useRoute()
 const showCreateModal = ref(false)
 const showFilters = ref(false)
 const selectedBooking = ref(null)
@@ -43,11 +45,19 @@ function closeModifyModal() {
     selectedBooking.value = null
 }
 
-onMounted(() => {
+onMounted(async () => {
     if (isAdmin.value) {
-        bookingStore.getAllAdmin()
+        await bookingStore.getAllAdmin()
     } else {
-        bookingStore.getAllUser()
+        await bookingStore.getAllUser()
+    }
+
+    const openBookingId = route.query.openBooking
+    if (openBookingId) {
+        const booking = bookingStore.bookings.reservations?.find(b => b.id === Number(openBookingId))
+        if (booking) {
+            openModifyModal(booking)
+        }
     }
 })
 </script>

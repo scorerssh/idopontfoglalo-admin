@@ -65,7 +65,7 @@ const dashboard = computed(() => dashboardStore.dashboard)
 const isLoading = computed(() => dashboardStore.ops.getDashboard.status === STATUS.loading)
 const hasError = computed(() => dashboardStore.ops.getDashboard.status === STATUS.error)
 const errorMessage = computed(
-    () => dashboardStore.ops.getDashboard.message || 'Sikertelen volt a dashboard betoltese.',
+    () => dashboardStore.ops.getDashboard.message || 'Sikertelen volt a dashboard betöltése.',
 )
 
 const normalizedMonthlyRevenues = computed(() => {
@@ -199,39 +199,39 @@ const roomRevenueConcentration = computed(() => {
 
 const statCardContent = computed(() => [
     {
-        title: 'Osszes foglalas',
+        title: 'Összes foglalás',
         content: formatInteger(dashboard.value.totalReservations),
         icon: CalendarRange,
-        additional: `${formatCurrency(revenuePerReservation.value)} / foglalas`,
+        additional: `${formatCurrency(revenuePerReservation.value)} / foglalás`,
         bgColor: '#f3fbff',
         iconBgColor: '#c8f1fb',
     },
     {
-        title: 'Aktiv szobak',
+        title: 'Aktív szobák',
         content: formatInteger(dashboard.value.activeRooms),
         icon: BedDouble,
-        additional: `${occupancyRate.value.toFixed(1)}% foglalas / szoba`,
+        additional: `${occupancyRate.value.toFixed(1)}% foglalás / szoba`,
         bgColor: '#fef5f8',
         iconBgColor: '#fbc3d7',
     },
     {
-        title: 'Uj foglalasok ebben a honapban',
+        title: 'Új foglalások ebben a hónapban',
         content: formatInteger(dashboard.value.reservationsCreatedThisMonth),
         icon: TrendingUp,
-        additional: `${monthlyRevenueGrowth.value >= 0 ? '+' : ''}${monthlyRevenueGrowth.value.toFixed(1)}% havi bevetelvaltozas`,
+        additional: `${monthlyRevenueGrowth.value >= 0 ? '+' : ''}${monthlyRevenueGrowth.value.toFixed(1)}% havi bevételváltozás`,
         bgColor: '#fff0ec',
         iconBgColor: '#fdd1c5',
     },
     {
-        title: 'Teljes bevetel',
+        title: 'Teljes bevétel',
         content: formatCurrency(dashboard.value.totalRevenue),
         icon: CircleDollarSign,
-        additional: `${formatCurrency(revenuePerActiveRoom.value)} / aktiv szoba`,
+        additional: `${formatCurrency(revenuePerActiveRoom.value)} / aktív szoba`,
         bgColor: '#fdf6d8',
         iconBgColor: '#f4d778',
     },
     {
-        title: 'Bevetelt termelo szobak',
+        title: 'Bevételt termelő szobák',
         content: formatInteger(normalizedRoomRevenues.value.length),
         icon: Hotel,
         additional: `Top 3 szoba: ${roomRevenueConcentration.value.toFixed(1)}%`,
@@ -242,22 +242,22 @@ const statCardContent = computed(() => [
 
 const comparisonItems = computed(() => [
     {
-        title: 'Utolso honap',
+        title: 'Utolsó hónap',
         value: latestMonth.value ? formatCurrency(latestMonth.value.revenue) : formatCurrency(0),
         subtitle: latestMonth.value ? formatMonthLabel(latestMonth.value.year, latestMonth.value.month) : 'Nincs adat',
     },
     {
-        title: 'Elozo honap',
+        title: 'Előző hónap',
         value: previousMonth.value ? formatCurrency(previousMonth.value.revenue) : formatCurrency(0),
-        subtitle: previousMonth.value ? formatMonthLabel(previousMonth.value.year, previousMonth.value.month) : 'Nincs osszehasonlitas',
+        subtitle: previousMonth.value ? formatMonthLabel(previousMonth.value.year, previousMonth.value.month) : 'Nincs összehasonlítás',
     },
     {
-        title: '6 havi atlag',
+        title: '6 havi átlag',
         value: formatCurrency(averageMonthlyRevenue.value),
-        subtitle: 'Stabilitasi referencia',
+        subtitle: 'Stabilitási referencia',
     },
     {
-        title: 'Legjobb honap',
+        title: 'Legjobb hónap',
         value: bestMonth.value ? formatCurrency(bestMonth.value.revenue) : formatCurrency(0),
         subtitle: bestMonth.value ? formatMonthLabel(bestMonth.value.year, bestMonth.value.month) : 'Nincs adat',
     },
@@ -289,24 +289,22 @@ onMounted(() => {
     <div class="space-y-6 pb-8">
         <section class="listing-overview-continer w-full gap-4 flex flex-col">
             <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-                <MainTitle title="Vezerlopult attekintese" barColor="#fbcfc4" />
+                <MainTitle title="Vezérlőpult áttekintése" barColor="#fbcfc4" />
 
-                <button
-                    type="button"
+                <button type="button"
                     class="inline-flex items-center justify-center gap-2 self-start rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
-                    :disabled="isLoading"
-                    @click="refreshDashboard"
-                >
+                    :disabled="isLoading" @click="refreshDashboard">
                     <RefreshCcw class="h-4 w-4" :class="{ 'animate-spin': isLoading }" />
-                    Frissites
+                    Frissítés
                 </button>
             </div>
 
             <TransitionGroup name="card" appear tag="div"
                 class="stats-grid grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
                 <DashboardStatCard v-for="(card, index) in statCardContent" :key="card.title" :title="card.title"
-                    :icon="card.icon" :additional="card.additional" :bgColor="card.bgColor" :iconBgColor="card.iconBgColor"
-                    :content="card.content" :style="{ animationDelay: `${index * 0.12}s` }" />
+                    :icon="card.icon" :additional="card.additional" :bgColor="card.bgColor"
+                    :iconBgColor="card.iconBgColor" :content="card.content"
+                    :style="{ animationDelay: `${index * 0.12}s` }" />
             </TransitionGroup>
         </section>
 
@@ -323,8 +321,8 @@ onMounted(() => {
 
         <template v-else>
             <section class="revenue-sale-progress grid grid-cols-1 gap-4 xl:grid-cols-[2fr_1fr]">
-                <div class="revenue-stats-container rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
-                    <MainTitle title="Bevetel statisztika" barColor="#f4cbfe" />
+                <div class="revenue-stats-container rounded-2xl  bg-white p-5">
+                    <MainTitle title="Bevétel statisztika" barColor="#f4cbfe" />
 
                     <div class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
                         <div v-for="item in comparisonItems" :key="item.title"
@@ -338,8 +336,8 @@ onMounted(() => {
                     <div class="mt-8 rounded-2xl bg-[linear-gradient(180deg,#faf5ff_0%,#ffffff_100%)] p-5">
                         <div class="flex items-center justify-between gap-4">
                             <div>
-                                <p class="text-sm font-medium text-slate-500">Havi bevetel alakulasa</p>
-                                <p class="mt-1 text-lg font-semibold text-slate-900">Utolso 6 honap osszehasonlitasa</p>
+                                <p class="text-sm font-medium text-slate-500">Havi bevétel alakulása</p>
+                                <p class="mt-1 text-lg font-semibold text-slate-900">Utolsó 6 hónap összehasonlítása</p>
                             </div>
 
                             <div class="text-right">
@@ -352,16 +350,20 @@ onMounted(() => {
 
                         <div class="mt-3 grid grid-cols-2 gap-2 text-xs text-slate-500 md:grid-cols-4">
                             <div class="rounded-xl bg-white/80 px-3 py-2">
-                                Aktualis: <span class="font-semibold text-slate-900">{{ latestMonth ? latestMonth.label || formatMonthLabel(latestMonth.year, latestMonth.month) : 'Nincs adat' }}</span>
+                                Aktuális: <span class="font-semibold text-slate-900">{{ latestMonth ? latestMonth.label
+                                    || formatMonthLabel(latestMonth.year, latestMonth.month) : 'Nincs adat' }}</span>
                             </div>
                             <div class="rounded-xl bg-white/80 px-3 py-2">
-                                Elozo: <span class="font-semibold text-slate-900">{{ previousMonth ? formatMonthLabel(previousMonth.year, previousMonth.month) : 'Nincs adat' }}</span>
+                                Előző: <span class="font-semibold text-slate-900">{{ previousMonth ?
+                                    formatMonthLabel(previousMonth.year, previousMonth.month) : 'Nincs adat' }}</span>
                             </div>
                             <div class="rounded-xl bg-white/80 px-3 py-2">
-                                Legjobb: <span class="font-semibold text-slate-900">{{ bestMonth ? formatMonthLabel(bestMonth.year, bestMonth.month) : 'Nincs adat' }}</span>
+                                Legjobb: <span class="font-semibold text-slate-900">{{ bestMonth ?
+                                    formatMonthLabel(bestMonth.year, bestMonth.month) : 'Nincs adat' }}</span>
                             </div>
                             <div class="rounded-xl bg-white/80 px-3 py-2">
-                                Atlag: <span class="font-semibold text-slate-900">{{ formatCurrency(averageMonthlyRevenue) }}</span>
+                                Átlag: <span class="font-semibold text-slate-900">{{
+                                    formatCurrency(averageMonthlyRevenue) }}</span>
                             </div>
                         </div>
 
@@ -371,24 +373,26 @@ onMounted(() => {
                                 <p class="mb-2 text-center text-xs font-medium text-slate-400">
                                     {{ bar.formattedRevenue }}
                                 </p>
-                                <div class="relative flex h-56 items-end justify-center rounded-t-[24px] bg-slate-100/70 px-2 pb-2">
+                                <div
+                                    class="relative flex h-56 items-end justify-center rounded-t-[24px] bg-slate-100/70 px-2 pb-2">
                                     <div class="w-full rounded-t-[18px] transition-all duration-500"
                                         :class="bar.isLatest ? 'bg-[linear-gradient(180deg,#f59e0b_0%,#f97316_100%)]' : 'bg-[linear-gradient(180deg,#c084fc_0%,#818cf8_100%)]'"
                                         :style="{ height: bar.height }"></div>
                                 </div>
-                                <p class="mt-3 text-center text-xs font-semibold text-slate-500">{{ bar.shortLabel }}</p>
+                                <p class="mt-3 text-center text-xs font-semibold text-slate-500">{{ bar.shortLabel }}
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="sale-progress rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
-                    <MainTitle title="Szobak beveteli rangsora" barColor="#c5edfc" />
+                <div class="sale-progress rounded-2xl bg-white p-5">
+                    <MainTitle title="Szobák bevételi rangsora" barColor="#c5edfc" />
 
                     <div class="mt-6 space-y-4">
                         <div v-if="!roomRevenueBars.length"
                             class="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-10 text-center text-sm text-slate-500">
-                            Meg nincs megjelenitheto szoba bevetel adat.
+                            Még nincs megjeleníthető szoba bevétel adat.
                         </div>
 
                         <div v-for="room in roomRevenueBars" :key="room.roomId"
@@ -396,7 +400,8 @@ onMounted(() => {
                             <div class="flex items-start justify-between gap-3">
                                 <div>
                                     <p class="font-semibold text-slate-900">{{ room.roomName }}</p>
-                                    <p class="mt-1 text-xs text-slate-400">{{ room.share }}% reszesedes a teljes bevetelbol</p>
+                                    <p class="mt-1 text-xs text-slate-400">{{ room.share }}% részesedés a teljes
+                                        bevételből</p>
                                 </div>
                                 <p class="text-sm font-semibold text-slate-700">{{ room.formattedRevenue }}</p>
                             </div>
@@ -411,79 +416,81 @@ onMounted(() => {
             </section>
 
             <section class="listing space-y-4">
-                <MainTitle title="Osszehasonlitasok" barColor="#d8d6f9" />
+                <MainTitle title="Összehasonlítások" barColor="#d8d6f9" />
 
                 <div class="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-                    <div class="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+                    <div class="rounded-2xl bg-white p-5">
                         <div class="flex items-center gap-3">
                             <div class="rounded-full bg-[#ede9fe] p-3 text-[#6d28d9]">
                                 <ChartColumnBig class="h-5 w-5" />
                             </div>
                             <div>
-                                <p class="text-sm font-medium text-slate-500">Mukodesi mutatok</p>
-                                <p class="text-lg font-semibold text-slate-900">Mit erdemes most figyelni</p>
+                                <p class="text-sm font-medium text-slate-500">Működési mutatók</p>
+                                <p class="text-lg font-semibold text-slate-900">Mit érdemes most figyelni</p>
                             </div>
                         </div>
 
                         <div class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
                             <div class="rounded-2xl bg-slate-50 p-4">
-                                <p class="text-sm text-slate-500">Foglalasok / aktiv szoba</p>
+                                <p class="text-sm text-slate-500">Foglalások / aktív szoba</p>
                                 <p class="mt-2 text-3xl font-semibold text-slate-900">
                                     {{ occupancyRate.toFixed(1) }}%
                                 </p>
                                 <p class="mt-2 text-xs text-slate-400">
-                                    Ennyi foglalas jut atlagosan egy aktiv szobara.
+                                    Ennyi foglalás jut átlagosan egy aktív szobára.
                                 </p>
                             </div>
 
                             <div class="rounded-2xl bg-slate-50 p-4">
-                                <p class="text-sm text-slate-500">Atlag bevetel / foglalas</p>
+                                <p class="text-sm text-slate-500">Átlag bevétel / foglalás</p>
                                 <p class="mt-2 text-3xl font-semibold text-slate-900">
                                     {{ formatCurrency(revenuePerReservation) }}
                                 </p>
                                 <p class="mt-2 text-xs text-slate-400">
-                                    Hasznos gyors benchmark az arbevetel kovetesehez.
+                                    Hasznos gyors benchmark az árbevétel követéséhez.
                                 </p>
                             </div>
 
                             <div class="rounded-2xl bg-slate-50 p-4">
-                                <p class="text-sm text-slate-500">Atlag bevetel / aktiv szoba</p>
+                                <p class="text-sm text-slate-500">Átlag bevétel / aktív szoba</p>
                                 <p class="mt-2 text-3xl font-semibold text-slate-900">
                                     {{ formatCurrency(revenuePerActiveRoom) }}
                                 </p>
                                 <p class="mt-2 text-xs text-slate-400">
-                                    Segit latni, mennyire huzza a portfolio az osszbevetelt.
+                                    Segít látni, mennyire húzza a portfolió az összbevételt.
                                 </p>
                             </div>
 
                             <div class="rounded-2xl bg-slate-50 p-4">
-                                <p class="text-sm text-slate-500">Leggyengebb honap</p>
+                                <p class="text-sm text-slate-500">Leggyengebb hónap</p>
                                 <p class="mt-2 text-2xl font-semibold text-slate-900">
                                     {{ lowestMonth ? formatCurrency(lowestMonth.revenue) : formatCurrency(0) }}
                                 </p>
                                 <p class="mt-2 text-xs text-slate-400">
-                                    {{ lowestMonth ? formatMonthLabel(lowestMonth.year, lowestMonth.month) : 'Nincs adat' }}
+                                    {{ lowestMonth ? formatMonthLabel(lowestMonth.year, lowestMonth.month)
+                                        : 'Nincs adat' }}
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+                    <div class="rounded-2xl  bg-white p-5 ">
                         <div class="flex items-center gap-3">
                             <div class="rounded-full bg-[#e0f2fe] p-3 text-[#0369a1]">
                                 <DoorOpen class="h-5 w-5" />
                             </div>
                             <div>
-                                <p class="text-sm font-medium text-slate-500">Kiemelt megfigyelesek</p>
-                                <p class="text-lg font-semibold text-slate-900">Gyors osszkep</p>
+                                <p class="text-sm font-medium text-slate-500">Kiemelt megfigyelések</p>
+                                <p class="text-lg font-semibold text-slate-900">Gyors összkép</p>
                             </div>
                         </div>
 
                         <div class="mt-6 space-y-5">
                             <div>
                                 <div class="mb-2 flex items-center justify-between text-sm">
-                                    <span class="font-medium text-slate-600">Top 3 szoba beveteli sulya</span>
-                                    <span class="font-semibold text-slate-900">{{ roomRevenueConcentration.toFixed(1) }}%</span>
+                                    <span class="font-medium text-slate-600">Top 3 szoba bevételi súlya</span>
+                                    <span class="font-semibold text-slate-900">{{ roomRevenueConcentration.toFixed(1)
+                                        }}%</span>
                                 </div>
                                 <div class="h-3 overflow-hidden rounded-full bg-slate-100">
                                     <div class="h-full rounded-full bg-[linear-gradient(90deg,#60a5fa_0%,#2563eb_100%)]"
@@ -493,7 +500,7 @@ onMounted(() => {
 
                             <div>
                                 <div class="mb-2 flex items-center justify-between text-sm">
-                                    <span class="font-medium text-slate-600">Havi novekedesi lendulet</span>
+                                    <span class="font-medium text-slate-600">Havi növekedési lendület</span>
                                     <span class="font-semibold" :class="growthTone(monthlyRevenueGrowth)">
                                         {{ monthlyRevenueGrowth >= 0 ? '+' : '' }}{{ monthlyRevenueGrowth.toFixed(1) }}%
                                     </span>
@@ -506,7 +513,7 @@ onMounted(() => {
 
                             <div>
                                 <div class="mb-2 flex items-center justify-between text-sm">
-                                    <span class="font-medium text-slate-600">Aktiv szobak kihasznaltsagi indexe</span>
+                                    <span class="font-medium text-slate-600">Aktív szobák kihasználtsági indexe</span>
                                     <span class="font-semibold text-slate-900">{{ occupancyRate.toFixed(1) }}%</span>
                                 </div>
                                 <div class="h-3 overflow-hidden rounded-full bg-slate-100">
@@ -517,15 +524,18 @@ onMounted(() => {
                             </div>
 
                             <div class="rounded-2xl bg-slate-50 p-4">
-                                <p class="text-sm font-medium text-slate-500">Rovid ertelmezes</p>
+                                <p class="text-sm font-medium text-slate-500">Rövid értelmezés</p>
                                 <p class="mt-2 text-sm leading-6 text-slate-600">
-                                    A legerosebb honap
+                                    A legerősebb hónap
                                     <span class="font-semibold text-slate-900">
-                                        {{ bestMonth ? formatMonthLabel(bestMonth.year, bestMonth.month) : 'meg nem latszik' }}
+                                        {{ bestMonth ? formatMonthLabel(bestMonth.year, bestMonth.month)
+                                            : 'még nem látszik' }}
                                     </span>,
-                                    mikozben a havi atlag
-                                    <span class="font-semibold text-slate-900">{{ formatCurrency(averageMonthlyRevenue) }}</span>.
-                                    Ez jo gyors indikator arra, hogy a mostani teljesitmeny mennyire ter el a kozelmult mintajatol.
+                                    miközben a havi átlag
+                                    <span class="font-semibold text-slate-900">{{ formatCurrency(averageMonthlyRevenue)
+                                        }}</span>.
+                                    Ez jó gyors indikátor arra, hogy a mostani teljesítmény mennyire tér el a közelmúlt
+                                    mintájától.
                                 </p>
                             </div>
                         </div>

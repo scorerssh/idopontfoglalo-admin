@@ -118,7 +118,7 @@ function clearFilters() {
 
 onMounted(async () => {
     if (!apartmanStore.apartmans.length) {
-        await apartmanStore.getAll();
+        await apartmanStore.getAllUser();
     }
     if (!roomStore.rooms.length) {
         if (isAdmin.value) {

@@ -76,10 +76,11 @@ export const useRoomStore = defineStore('roomStore', {
         this.ops.getAll,
         async () => {
           const data = await svc.getAll(payload)
+          const rooms = Array.isArray(data) ? data : (data?.rooms ?? [])
           this.sourceMode = 'admin'
-          this.allRooms = data
-          this.rooms = data
-          return data
+          this.allRooms = rooms
+          this.rooms = rooms
+          return rooms
         },
         {
           notifyOnSuccess: false,
@@ -105,10 +106,11 @@ export const useRoomStore = defineStore('roomStore', {
         this.ops.getAllUser,
         async () => {
           const data = await svc.getAllUser(payload)
+          const rooms = Array.isArray(data) ? data : (data?.rooms ?? [])
           this.sourceMode = 'user'
-          this.allRooms = data
-          this.rooms = data
-          return data
+          this.allRooms = rooms
+          this.rooms = rooms
+          return rooms
         },
         {
           notifyOnSuccess: false,
