@@ -70,7 +70,7 @@ const bookingsForCell = computed(() => {
             let blockEndIndex = -1
 
             row.forEach((cell, cellIndex) => {
-                const cellDate = toDateOnly(`${cell.year}-${String(cell.month).padStart(2, '0')}-${String(cell.day).padStart(2, '0')}`)
+                const cellDate = toDateOnly(`${cell.year}-${String(cell.month + 1).padStart(2, '0')}-${String(cell.day).padStart(2, '0')}`)
 
                 if (cellDate >= start && cellDate <= end) {
                     if (blockStartIndex === -1) blockStartIndex = cellIndex
@@ -81,7 +81,7 @@ const bookingsForCell = computed(() => {
             if (blockStartIndex === -1) return
             const spanDays = blockEndIndex - blockStartIndex + 1
             const startCell = row[blockStartIndex]
-            const key = `${startCell.year}-${startCell.month}-${startCell.day}`
+            const key = `${startCell.year}-${startCell.month + 1}-${startCell.day}`
 
             if (!result.has(key)) result.set(key, [])
             result.get(key).push({
@@ -97,7 +97,7 @@ const bookingsForCell = computed(() => {
 })
 
 function getCellKey(cell) {
-    return `${cell.year}-${cell.month}-${cell.day}`
+    return `${cell.year}-${cell.month + 1}-${cell.day}`
 }
 
 function formatShortDate(dateStr) {
@@ -144,7 +144,8 @@ function formatShortDate(dateStr) {
             </div>
 
             <Transition name="fade-in">
-                <BookingFiltersBar v-if="showFilters" :show="showFilters" @close="closeFilters" :is-open="showFilters" />
+                <BookingFiltersBar v-if="showFilters" :show="showFilters" @close="closeFilters"
+                    :is-open="showFilters" />
             </Transition>
         </header>
 
@@ -162,16 +163,15 @@ function formatShortDate(dateStr) {
             <!-- Naptár rács -->
             <div class="grid grid-cols-7 gap-px bg-black/10 border border-black/10 rounded-lg overflow-hidden">
                 <div v-for="cell in calendarDays" :key="`${cell.year}-${cell.month}-${cell.day}`"
-                    class="bg-white min-h-[50px] sm:min-h-[90px] p-1 sm:p-2 flex flex-col relative"
-                    :class="{
-                        'bg-white':        cell.isCurrentMonth && !cell.isWeekend,
-                        'bg-gray-50':      cell.isCurrentMonth && cell.isWeekend,
-                        'bg-gray-100/60':  !cell.isCurrentMonth,
+                    class="bg-white min-h-[50px] sm:min-h-[90px] p-1 sm:p-2 flex flex-col relative" :class="{
+                        'bg-white': cell.isCurrentMonth && !cell.isWeekend,
+                        'bg-gray-50': cell.isCurrentMonth && cell.isWeekend,
+                        'bg-gray-100/60': !cell.isCurrentMonth,
                         'ring-2 ring-inset ring-system-orange': cell.isToday,
                     }">
                     <!-- Nap száma -->
                     <span class="self-end text-[10px] sm:text-sm font-medium leading-none z-10" :class="{
-                        'text-black':    cell.isCurrentMonth && !cell.isToday,
+                        'text-black': cell.isCurrentMonth && !cell.isToday,
                         'text-black/30': !cell.isCurrentMonth,
                         'bg-system-orange text-white rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center text-[9px] sm:text-xs': cell.isToday,
                     }">
@@ -179,41 +179,29 @@ function formatShortDate(dateStr) {
                     </span>
 
                     <!-- Foglalás blokkok -->
-                    <div class="mt-0.5 sm:mt-1">
-                        <div v-for="entry in (bookingsForCell.get(getCellKey(cell)) ?? [])" :key="entry.bookingIndex"
-                            class="absolute left-0.5 flex items-center rounded-sm sm:rounded-md cursor-pointer select-none overflow-hidden transition-all duration-200 hover:z-20 hover:shadow-md"
-                            :class="[entry.color.bg, entry.color.text, entry.color.hover]"
-                            :style="{
-                                top: '22px',
-                                height: '14px',
-                                width: `calc(${entry.spanDays} * 100% + ${entry.spanDays - 1}px - 4px)`,
-                                zIndex: 10,
-                            }"
-                            @click="navigateToBooking(entry.booking)">
-                        </div>
-                        <!-- Teljes blokk szöveggel sm+-on -->
-                        <div v-for="entry in (bookingsForCell.get(getCellKey(cell)) ?? [])" :key="`label-${entry.bookingIndex}`"
-                            class="absolute left-0.5 h-7 hidden sm:flex items-center px-2 rounded-md cursor-pointer select-none overflow-hidden transition-all duration-200 hover:z-20 hover:shadow-md"
-                            :class="[entry.color.bg, entry.color.text, entry.color.hover]"
-                            :style="{
-                                top: '32px',
-                                width: `calc(${entry.spanDays} * 100% + ${entry.spanDays - 1}px - 4px)`,
-                                zIndex: 10,
-                            }"
-                            @click="navigateToBooking(entry.booking)">
-                            <div class="flex items-center w-full gap-x-1.5 overflow-hidden text-[10px]">
-                                <span class="font-bold truncate shrink-0 max-w-[35%]">
-                                    {{ entry.booking.name }}
-                                </span>
-                                <span class="opacity-60">•</span>
-                                <span class="font-medium truncate shrink-0 max-w-[30%] opacity-90">
-                                    {{ entry.booking.room?.name }}
-                                </span>
-                                <span class="opacity-60">•</span>
-                                <span class="font-medium whitespace-nowrap opacity-90">
-                                    {{ formatShortDate(entry.booking.startTIme) }} – {{ formatShortDate(entry.booking.endTime) }}
-                                </span>
-                            </div>
+                    <div v-for="entry in (bookingsForCell.get(getCellKey(cell)) ?? [])" :key="entry.bookingIndex"
+                        class="absolute left-0.5 flex items-center rounded sm:rounded-md mt-0.5 cursor-pointer select-none overflow-hidden transition-all duration-200 hover:z-20 hover:brightness-110 hover:shadow-lg border border-black/20"
+                        :class="[entry.color.bg, entry.color.text]" :style="{
+                            top: '20px',
+                            height: '30px',
+                            width: `calc(${entry.spanDays} * 100% + ${entry.spanDays - 1}px - 4px)`,
+                            zIndex: 10,
+                        }" @click="navigateToBooking(entry.booking)">
+                        <!-- Mobilon: csak név -->
+                        <span class="sm:hidden text-[8px] font-semibold truncate px-1 leading-none">
+                            {{ entry.booking.name }}
+                        </span>
+                        <!-- sm+: teljes info -->
+                        <div class="hidden sm:flex items-center w-full gap-x-1 overflow-hidden text-[10px] px-1.5">
+                            <span class="font-bold truncate shrink min-w-0">{{ entry.booking.name }}</span>
+                            <span class="opacity-50 shrink-0">•</span>
+                            <span class="font-medium truncate shrink min-w-0 opacity-90">{{ entry.booking.room?.name
+                            }}</span>
+                            <span class="opacity-50 shrink-0">•</span>
+                            <span class="font-medium whitespace-nowrap shrink-0 opacity-90">
+                                {{ formatShortDate(entry.booking.startTIme) }}–{{ formatShortDate(entry.booking.endTime)
+                                }}
+                            </span>
                         </div>
                     </div>
                 </div>
