@@ -20,6 +20,7 @@ namespace ApartManBackend.Models.Mappers
             CreateMap<Room, RoomResponse>()
                 .ForMember(d => d.BindedApartmanName, o => o.MapFrom(src => src.Apartman.Name))
                 .ForMember(d => d.GuidId, o => o.MapFrom(src => src.GuidId));
+            CreateMap<Room, RoomPublicResponse>();
          
         }
     }

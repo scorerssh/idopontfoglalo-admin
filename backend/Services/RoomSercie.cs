@@ -56,6 +56,11 @@ namespace ApartManBackend.Services
             return await _db.Rooms.Where(x => x.Id == roomid).ProjectTo<RoomResponse>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(ct);
         }
 
+        public async Task<RoomPublicResponse?> GetByGuidIdAsync(Guid guidId, CancellationToken ct)
+        {
+            return await _db.Rooms.Where(x => x.GuidId == guidId).ProjectTo<RoomPublicResponse>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(ct);
+        }
+
         public async Task<RoomsWithMetaData> GetAllAsync(RoomFillter fillter, CancellationToken ct)
         {
             fillter.PerPage = 10;

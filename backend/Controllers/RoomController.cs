@@ -78,6 +78,19 @@ namespace ApartManBackend.Controllers
             return Ok(room);
         }
 
+        [HttpGet]
+        [Route("{roomGuidId:guid}")]
+        public async Task<IActionResult> GetByGuidId(Guid roomGuidId, CancellationToken ct)
+        {
+            var room = await _roomSercie.GetByGuidIdAsync(roomGuidId, ct);
+            if (room == null)
+            {
+                return NotFound("Nincs ilyen szoba");
+            }
+
+            return Ok(room);
+        }
+
         [HttpPost]
         [Route("GetAll")]
         [Authorize(Roles ="Admin")]
