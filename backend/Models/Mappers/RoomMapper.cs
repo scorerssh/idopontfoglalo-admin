@@ -14,8 +14,15 @@ namespace ApartManBackend.Models.Mappers
             CreateMap<RoomCreateRequest, Room>();
             //Update
             CreateMap<RoomUpdateRequest, Room>()
-            .ForAllMembers(opts =>
-              opts.Condition((src, dest, srcMember) =>StaticHelpers.PatchPreConditionCheck(srcMember)));
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Apartman, opt => opt.Ignore())
+                .ForMember(dest => dest.Reservations, opt => opt.Ignore())
+                .ForAllMembers(opts =>
+                {
+                    opts.PreCondition((RoomUpdateRequest src) => StaticHelpers.PatchPreConditionCheck(src, opts.DestinationMember.Name));
+                    opts.Condition((src, dest, srcMember) => StaticHelpers.PatchPreConditionCheck(srcMember));
+                });
             //Response
             CreateMap<Room, RoomResponse>()
                 .ForMember(d => d.BindedApartmanName, o => o.MapFrom(src => src.Apartman.Name))

@@ -23,7 +23,10 @@ namespace ApartManBackend.Models.Mappers
                 .ForMember(x => x.Source, opt => opt.Ignore())
                 .ForMember(x => x.ExternalSourceReservationId, opt => opt.Ignore())
                 .ForAllMembers(opts =>
-                    opts.Condition((src, dest, srcMember) => StaticHelpers.PatchPreConditionCheck(srcMember)));
+                {
+                    opts.PreCondition((ReservationUpdateRequest src) => StaticHelpers.PatchPreConditionCheck(src, opts.DestinationMember.Name));
+                    opts.Condition((src, dest, srcMember) => StaticHelpers.PatchPreConditionCheck(srcMember));
+                });
 
             CreateMap<Reservation, ReservationResponse>()
                 .ForMember(x=>x.Room,opt=>opt.MapFrom(src=>src.Room));
