@@ -110,6 +110,7 @@ const userNavbarLinks = [
                     </ul>
 
                     <ul class="mt-2 flex flex-col gap-y-1">
+                        <!--
                         <li>
                             <RouterLink to="/settings" :class="[
                                 isSidebarOpen ? 'justify-start gap-x-3' : 'justify-center',
@@ -128,6 +129,7 @@ const userNavbarLinks = [
                                 </span>
                             </RouterLink>
                         </li>
+                       -->
 
                         <li>
                             <button @click="handleLogout" :class="[
