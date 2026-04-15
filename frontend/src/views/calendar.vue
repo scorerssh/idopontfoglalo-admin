@@ -5,13 +5,14 @@ import DefaultButton from '@/components/DefaultButton.vue'
 import { useCalendar } from '@/features/calendar/composables/useCalendar.js'
 import { useBookingStore } from '@/features/booking/stores/booking.store'
 import BookingFiltersBar from '@/features/booking/components/BookingFiltersBar.vue'
+import BookingModifyModal from '@/features/booking/components/BookingModifyModal.vue'
 import { useRole } from '@/composables/useRole'
-import { useRouter } from 'vue-router'
 
 const bookingStore = useBookingStore()
 const { isAdmin } = useRole()
-const router = useRouter()
 const showFilters = ref(false)
+const selectedBooking = ref(null)
+const showModifyModal = ref(false)
 
 const {
     year,
@@ -24,6 +25,15 @@ const {
 
 function openFilters() { showFilters.value = true }
 function closeFilters() { showFilters.value = false }
+
+function openModifyModal(booking) {
+    selectedBooking.value = booking
+    showModifyModal.value = true
+}
+function closeModifyModal() {
+    showModifyModal.value = false
+    selectedBooking.value = null
+}
 
 onMounted(() => {
     if (isAdmin.value) {
@@ -45,9 +55,6 @@ function toDateOnly(dateStr) {
     return new Date(dateStr + 'T00:00:00')
 }
 
-function navigateToBooking(booking) {
-    router.push({ name: 'bookings', query: { openBooking: booking.id } })
-}
 
 const bookingsForCell = computed(() => {
     const bookings = Array.isArray(bookingStore.bookings?.reservations)
@@ -149,7 +156,8 @@ function formatShortDate(dateStr) {
             </Transition>
         </header>
 
-        <div class="w-full">
+        <div class="w-full overflow-x-auto">
+            <div class="min-w-[560px]">
             <!-- Napok fejléce -->
             <div class="grid grid-cols-7 mb-1">
                 <div v-for="dayName in DAY_NAMES" :key="dayName"
@@ -186,7 +194,7 @@ function formatShortDate(dateStr) {
                             height: '30px',
                             width: `calc(${entry.spanDays} * 100% + ${entry.spanDays - 1}px - 4px)`,
                             zIndex: 10,
-                        }" @click="navigateToBooking(entry.booking)">
+                        }" @click="openModifyModal(entry.booking)">
                         <!-- Mobilon: csak név -->
                         <span class="sm:hidden text-[8px] font-semibold truncate px-1 leading-none">
                             {{ entry.booking.name }}
@@ -206,7 +214,11 @@ function formatShortDate(dateStr) {
                     </div>
                 </div>
             </div>
+            </div>
         </div>
+
+        <BookingModifyModal v-if="showModifyModal" :showModal="showModifyModal" :booking="selectedBooking"
+            @close="closeModifyModal" />
     </div>
 </template>
 
