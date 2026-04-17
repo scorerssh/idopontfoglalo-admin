@@ -14,6 +14,7 @@ import DefaultButton from '@/components/DefaultButton.vue'
 import DefaultInput from '@/components/DefaultInput.vue'
 import RoomCreateModal from '@/features/rooms/components/RoomCreateModal.vue'
 import RoomModifyModal from '@/features/rooms/components/RoomModifyModal.vue'
+import RoomPriceTiersModal from '@/features/rooms/components/RoomPriceTiersModal.vue'
 import RoomCard from '@/features/rooms/components/RoomCard.vue'
 import RoomFiltersModal from '@/features/rooms/components/RoomFiltersModal.vue'
 import { useRoomStore } from '@/features/rooms/stores/room.store'
@@ -29,6 +30,7 @@ const canGoPrev = computed(() => roomStore.pagination.page > 1)
 
 const showCreateModal = ref(false)
 const showModifyModal = ref(false)
+const showPriceTiersModal = ref(false)
 const selectedRoom = ref(null)
 const showFilters = ref(false)
 const selectedApartmanId = ref('')
@@ -86,6 +88,16 @@ function openModifyModal(room) {
 
 function closeModifyModal() {
     showModifyModal.value = false
+    selectedRoom.value = null
+}
+
+function openPriceTiersModal(room) {
+    showPriceTiersModal.value = true
+    selectedRoom.value = room
+}
+
+function closePriceTiersModal() {
+    showPriceTiersModal.value = false
     selectedRoom.value = null
 }
 
@@ -180,7 +192,7 @@ watchEffect(() => {
 
             <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <RoomCard v-for="room in roomStore.rooms" :key="room.id" :room="room"
-                    @openModifyModal="openModifyModal" />
+                    @openModifyModal="openModifyModal" @openPriceTiersModal="openPriceTiersModal" />
             </div>
         </div>
 
@@ -199,6 +211,7 @@ watchEffect(() => {
 
     <RoomCreateModal :showModal="showCreateModal" @close="closeCreateModal" />
     <RoomModifyModal :showModal="showModifyModal" @close="closeModifyModal" :roomData="selectedRoom" />
+    <RoomPriceTiersModal :showModal="showPriceTiersModal" @close="closePriceTiersModal" :roomData="selectedRoom" />
 </template>
 
 <style scoped>

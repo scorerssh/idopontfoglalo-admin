@@ -1,7 +1,7 @@
 <script setup>
-import { EllipsisVertical, BedDouble, Users, Banknote } from 'lucide-vue-next'
+import { EllipsisVertical, BedDouble, Users, Banknote, UsersRound } from 'lucide-vue-next'
 
-const emits = defineEmits(['openModifyModal'])
+const emits = defineEmits(['openModifyModal', 'openPriceTiersModal'])
 
 const props = defineProps({
     room: {
@@ -18,6 +18,10 @@ const statusStyles = computed(() => {
 
 function handleModify() {
     emits('openModifyModal', props.room)
+}
+
+function handlePriceTiers() {
+    emits('openPriceTiersModal', props.room)
 }
 </script>
 
@@ -53,7 +57,11 @@ function handleModify() {
             </div>
         </section>
 
-        <section class="flex justify-end pt-3 border-t border-gray-50">
+        <section class="flex justify-end gap-2 pt-3 border-t border-gray-50">
+            <button @click="handlePriceTiers"
+                class="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
+                <UsersRound class="h-5 w-5" />
+            </button>
             <button @click="handleModify"
                 class="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
                 <EllipsisVertical class="h-5 w-5" />

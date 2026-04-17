@@ -21,6 +21,10 @@ export const roomService = {
     const { data } = await api.patch('/api/Room/Update', payload)
     return data
   },
+  async updatePriceTier(payload) {
+    const { data } = await api.patch('/api/RoomPriceTier/Update', payload)
+    return data
+  },
   async delete(id) {
     const { data } = await api.delete(`/api/Room/${id}`)
     return data

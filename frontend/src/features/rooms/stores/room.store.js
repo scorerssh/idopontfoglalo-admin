@@ -46,6 +46,7 @@ export const useRoomStore = defineStore('roomStore', {
       getById: defaultOp(),
       create: defaultOp(),
       update: defaultOp(),
+      updatePriceTier: defaultOp(),
       delete: defaultOp(),
     },
   }),
@@ -176,6 +177,31 @@ export const useRoomStore = defineStore('roomStore', {
               this.rooms = filterRooms(this.allRooms, this.filters)
             }
           }
+          return updated
+        },
+        { notifyOnSuccess: true, successMessage: 'Sikeres frissítés!' },
+      )
+    },
+
+    async updatePriceTier(payload) {
+      return runOp(
+        this.ops.updatePriceTier,
+        async () => {
+          const updated = await svc.updatePriceTier(payload)
+          const tierId = Number(payload?.roomPriceTierId)
+
+          if (tierId) {
+            this.allRooms = this.allRooms.map((room) => ({
+              ...room,
+              roomPriceTiers: Array.isArray(room.roomPriceTiers)
+                ? room.roomPriceTiers.map((tier) =>
+                    Number(tier.id) === tierId ? { ...tier, price: Number(payload.price) } : tier,
+                  )
+                : [],
+            }))
+            this.rooms = filterRooms(this.allRooms, this.filters)
+          }
+
           return updated
         },
         { notifyOnSuccess: true, successMessage: 'Sikeres frissítés!' },
