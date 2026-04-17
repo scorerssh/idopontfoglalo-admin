@@ -13,6 +13,9 @@ namespace ApartManBackend.Models.Mappers
             CreateMap<ReservationCreateRequest, Reservation>()
                 .ForMember(x => x.RoomId, opt => opt.Ignore())
                 .ForMember(x => x.Room, opt => opt.Ignore())
+                .ForMember(x => x.Persons, opt => opt.Ignore())
+                .ForMember(x => x.PearsonCount, opt => opt.Ignore())
+                .ForMember(x => x.TotalPrice, opt => opt.Ignore())
                 .ForMember(x => x.Source, opt => opt.Ignore())
                 .ForMember(x => x.ExternalSourceReservationId, opt => opt.Ignore());
 
@@ -20,6 +23,9 @@ namespace ApartManBackend.Models.Mappers
                 .ForMember(x => x.Id, opt => opt.Ignore())
                 .ForMember(x => x.CreatedAt, opt => opt.Ignore())
                 .ForMember(x => x.Room, opt => opt.Ignore())
+                .ForMember(x => x.Persons, opt => opt.Ignore())
+                .ForMember(x => x.PearsonCount, opt => opt.Ignore())
+                .ForMember(x => x.TotalPrice, opt => opt.Ignore())
                 .ForMember(x => x.Source, opt => opt.Ignore())
                 .ForMember(x => x.ExternalSourceReservationId, opt => opt.Ignore())
                 .ForAllMembers(opts =>
@@ -29,7 +35,10 @@ namespace ApartManBackend.Models.Mappers
                 });
 
             CreateMap<Reservation, ReservationResponse>()
-                .ForMember(x=>x.Room,opt=>opt.MapFrom(src=>src.Room));
+                .ForMember(x=>x.Room,opt=>opt.MapFrom(src=>src.Room))
+                .ForMember(x => x.Persons, opt => opt.MapFrom(src => src.Persons));
+
+            CreateMap<ReservationPerson, ReservationPersonResponse>();
         }
     }
 }

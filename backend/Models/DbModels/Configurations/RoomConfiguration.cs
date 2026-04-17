@@ -1,4 +1,4 @@
-﻿using ApartManBackend.Models.DbModels.Models;
+using ApartManBackend.Models.DbModels.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -29,6 +29,14 @@ namespace ApartManBackend.Models.DbModels.Configurations
 
             builder.Property(x => x.MaxCapacity)
                 .IsRequired();
+
+            builder.HasMany(x => x.RoomPriceTiers)
+                .WithOne(x => x.Room).HasForeignKey(x => x.RoomId);
+
+            builder.HasMany(x => x.AgePriceTiers)
+                .WithOne(x => x.Room).HasForeignKey(x => x.RoomId);
+
+                
         }
     }
 }

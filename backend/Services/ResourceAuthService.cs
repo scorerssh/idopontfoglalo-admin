@@ -43,6 +43,8 @@ namespace ApartManBackend.Services
             {
                 ResourceObjectType.Apartman => await IsUserOwnApartmanAsync(resourceId, userId.Value, ct),
                 ResourceObjectType.Room => await IsUserOwnRoomAsync(resourceId, userId.Value, ct),
+                ResourceObjectType.RoomPriceTier => await IsUserOwnRoomPriceTierAsync(resourceId, userId.Value, ct),
+                ResourceObjectType.AgePriceTier => await IsUserOwnAgePriceTierAsync(resourceId, userId.Value, ct),
                 ResourceObjectType.Reservation => await IsUserOwnReservationAsync(resourceId, userId.Value, ct),
                 _ => false
             };
@@ -65,6 +67,28 @@ namespace ApartManBackend.Services
                 .SelectMany(u => u.Apartmans)
                 .SelectMany(a => a.Rooms)
                 .AnyAsync(r => r.Id == roomId, ct);
+        }
+
+        private Task<bool> IsUserOwnRoomPriceTierAsync(int roomPriceTierId, int userId, CancellationToken ct)
+        {
+            return _db.Users
+                .AsNoTracking()
+                .Where(u => u.Id == userId)
+                .SelectMany(u => u.Apartmans)
+                .SelectMany(a => a.Rooms)
+                .SelectMany(r => r.RoomPriceTiers!)
+                .AnyAsync(rpt => rpt.Id == roomPriceTierId, ct);
+        }
+
+        private Task<bool> IsUserOwnAgePriceTierAsync(int agePriceTierId, int userId, CancellationToken ct)
+        {
+            return _db.Users
+                .AsNoTracking()
+                .Where(u => u.Id == userId)
+                .SelectMany(u => u.Apartmans)
+                .SelectMany(a => a.Rooms)
+                .SelectMany(r => r.AgePriceTiers!)
+                .AnyAsync(apt => apt.Id == agePriceTierId, ct);
         }
 
 

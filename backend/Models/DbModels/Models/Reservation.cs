@@ -7,6 +7,7 @@ namespace ApartManBackend.Models.DbModels.Models
         public DateOnly StartTIme { get; set; }
         public DateOnly EndTime { get; set; }
         public int PearsonCount { get; set; }
+        public decimal TotalPrice { get; set; }
 
         public string Name { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
@@ -18,6 +19,7 @@ namespace ApartManBackend.Models.DbModels.Models
 
         public int RoomId { get; set; }
         public Room Room { get; set; } = null!;
+        public List<ReservationPerson> Persons { get; set; } = new();
 
     }
 }

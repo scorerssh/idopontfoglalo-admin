@@ -31,9 +31,17 @@ namespace ApartManBackend.Models.DbModels.Configurations
             builder.Property(x => x.ExternalSourceReservationId)
                 .HasMaxLength(256);
 
+            builder.Property(x => x.TotalPrice)
+                .HasPrecision(18, 2);
+
             builder.HasOne(r => r.Room)
                 .WithMany(r => r.Reservations)
                 .HasForeignKey(r => r.RoomId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(r => r.Persons)
+                .WithOne(p => p.Reservation)
+                .HasForeignKey(p => p.ReservationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasIndex(x => new { x.RoomId, x.Source, x.ExternalSourceReservationId })

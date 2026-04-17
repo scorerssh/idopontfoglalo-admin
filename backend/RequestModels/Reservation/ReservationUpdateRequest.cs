@@ -11,5 +11,6 @@ namespace ApartManBackend.RequestModels.Reservation
         public string? PhoneNumber { get; set; }
         public string? Email { get; set; }
         public string? Description { get; set; }
+        public List<ReservationPersonRequest>? Persons { get; set; }
     }
 }

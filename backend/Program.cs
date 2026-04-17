@@ -52,6 +52,8 @@ builder.Services.AddScoped<ResourceAuthService>();
 builder.Services.AddScoped<ReservationService>();
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<RoomSercie>();
+builder.Services.AddScoped<RoomPriceTierService>();
+builder.Services.AddScoped<AgePriceTierService>();
 builder.Services.AddScoped<RoomCalendarService>();
 builder.Services.AddScoped<RoomCalendarRefreshJob>();
 builder.Services.AddScoped<UserService>();

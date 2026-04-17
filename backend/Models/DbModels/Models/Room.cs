@@ -16,6 +16,9 @@ namespace ApartManBackend.Models.DbModels.Models
         public List<Reservation> Reservations { get; set; } = new();
 
         [DefaultValue(true)]
+        public List<RoomPriceTier>? RoomPriceTiers { get; set; }
+
+        public List<AgePriceTier>? AgePriceTiers { get; set; }
         public bool Active { get; set; }
     }
 }

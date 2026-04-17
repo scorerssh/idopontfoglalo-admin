@@ -12,44 +12,64 @@ namespace ApartManBackend.RequestModels.Reservation
 
             RuleFor(x => x.RoomGUid)
                 .Cascade(CascadeMode.Stop)
-                .NotNull().WithMessage("A szoba azonosító megadása kötelező.")
+                .NotNull().WithMessage("A szoba azonosito megadasa kotelezo.")
                 .MustAsync(async (guid, ct) => await reservationService.RoomExistsByPublicIdAsync(guid!.Value, ct))
-                .WithMessage("A szoba nem létezik.");
+                .WithMessage("A szoba nem letezik.");
 
             RuleFor(x => x.StartTIme)
                 .Cascade(CascadeMode.Stop)
-                .NotNull().WithMessage("A kezdési idő megadása kötelező.")
+                .NotNull().WithMessage("A kezdesi ido megadasa kotelezo.")
                 .Must(startDate => startDate!.Value > today)
-                .WithMessage("Csak jövőbeli időpontra lehet foglalni.");
+                .WithMessage("Csak jovobeli idopontra lehet foglalni.");
 
             RuleFor(x => x.EndTime)
                 .Cascade(CascadeMode.Stop)
-                .NotNull().WithMessage("A távozási idő megadása kötelező.")
+                .NotNull().WithMessage("A tavozasi ido megadasa kotelezo.")
                 .Must((model, endDate) => model.StartTIme is not null && endDate!.Value > model.StartTIme.Value)
-                .WithMessage("A távozási időnek későbbinek kell lennie, mint az érkezés.");
+                .WithMessage("A tavozasi idonek kesobbinek kell lennie, mint az erkezes.");
 
-            RuleFor(x => x.PearsonCount)
+            RuleFor(x => x.Persons)
                 .Cascade(CascadeMode.Stop)
-                .NotNull().WithMessage("A vendégek számának megadása kötelező.")
-                .GreaterThan(0).WithMessage("Legalább 1 fő megadása kötelező.")
-                .MustAsync(async (request, personCount, ct) =>
+                .NotNull().WithMessage("A vendegek eletkoranak megadasa kotelezo.")
+                .NotEmpty().WithMessage("Legalabb 1 fo megadasa kotelezo.");
+
+            RuleForEach(x => x.Persons)
+                .ChildRules(person =>
                 {
-                    if (request.RoomGUid is null || personCount is null)
+                    person.RuleFor(x => x.Age)
+                        .Cascade(CascadeMode.Stop)
+                        .NotNull().WithMessage("A vendeg eletkoranak megadasa kotelezo.")
+                        .GreaterThanOrEqualTo(0).WithMessage("A vendeg eletkora nem lehet negativ.")
+                        .LessThanOrEqualTo(150).WithMessage("A vendeg eletkora legfeljebb 150 lehet.");
+                });
+
+            When(x => x.PearsonCount.HasValue, () =>
+            {
+                RuleFor(x => x.PearsonCount)
+                    .GreaterThan(0).WithMessage("Legalabb 1 fo megadasa kotelezo.")
+                    .Must((request, personCount) => request.Persons is null || personCount == request.Persons.Count)
+                    .WithMessage("A vendegszamnak egyeznie kell a megadott szemelyek szamaval.");
+            });
+
+            RuleFor(x => x)
+                .MustAsync(async (request, ct) =>
+                {
+                    if (request.RoomGUid is null || request.Persons is null)
                     {
                         return true;
                     }
 
                     return await reservationService.IsPersonCountWithinRoomCapacityAsync(
                         request.RoomGUid.Value,
-                        personCount.Value,
+                        request.Persons.Count,
                         ct);
                 })
-                .WithMessage("A megadott vendégszám nem fér bele a szoba minimum és maximum kapacitásába.");
+                .WithMessage("A megadott vendegszam nem fer bele a szoba minimum es maximum kapacitasaba.");
 
             RuleFor(x => x.Email)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty().WithMessage("Az email cím megadása kötelező.")
-                .EmailAddress().WithMessage("Az email cím formátuma nem megfelelő.");
+                .NotEmpty().WithMessage("Az email cim megadasa kotelezo.")
+                .EmailAddress().WithMessage("Az email cim formatuma nem megfelelo.");
 
             RuleFor(x => x)
                 .MustAsync(async (request, ct) =>
@@ -65,7 +85,7 @@ namespace ApartManBackend.RequestModels.Reservation
                         request.EndTime.Value,
                         ct);
                 })
-                .WithMessage("A szoba a megadott időszakban nem elérhető.");
+                .WithMessage("A szoba a megadott idoszakban nem elerheto.");
         }
     }
 }

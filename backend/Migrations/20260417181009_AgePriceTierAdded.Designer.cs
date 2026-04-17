@@ -3,6 +3,7 @@ using System;
 using ApartManBackend.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApartManBackend.Migrations
 {
     [DbContext(typeof(ApartmanDbContext))]
-    partial class ApartmanDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260417181009_AgePriceTierAdded")]
+    partial class AgePriceTierAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,42 +115,12 @@ namespace ApartManBackend.Migrations
                     b.Property<DateTime>("StartTIme")
                         .HasColumnType("date");
 
-                    b.Property<decimal>("TotalPrice")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("RoomId", "Source", "ExternalSourceReservationId")
                         .IsUnique();
 
                     b.ToTable("reservations", (string)null);
-                });
-
-            modelBuilder.Entity("ApartManBackend.Models.DbModels.Models.ReservationPerson", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<decimal>("PricePerNight")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ReservationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReservationId");
-
-                    b.ToTable("reservation_persons", (string)null);
                 });
 
             modelBuilder.Entity("ApartManBackend.Models.DbModels.Models.Room", b =>
@@ -300,17 +273,6 @@ namespace ApartManBackend.Migrations
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("ApartManBackend.Models.DbModels.Models.ReservationPerson", b =>
-                {
-                    b.HasOne("ApartManBackend.Models.DbModels.Models.Reservation", "Reservation")
-                        .WithMany("Persons")
-                        .HasForeignKey("ReservationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Reservation");
-                });
-
             modelBuilder.Entity("ApartManBackend.Models.DbModels.Models.Room", b =>
                 {
                     b.HasOne("ApartManBackend.Models.DbModels.Models.Apartman", "Apartman")
@@ -351,11 +313,6 @@ namespace ApartManBackend.Migrations
             modelBuilder.Entity("ApartManBackend.Models.DbModels.Models.Apartman", b =>
                 {
                     b.Navigation("Rooms");
-                });
-
-            modelBuilder.Entity("ApartManBackend.Models.DbModels.Models.Reservation", b =>
-                {
-                    b.Navigation("Persons");
                 });
 
             modelBuilder.Entity("ApartManBackend.Models.DbModels.Models.Room", b =>

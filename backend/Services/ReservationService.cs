@@ -25,7 +25,7 @@ namespace ApartManBackend.Services
 
         public async Task CreateAsync(ReservationCreateRequest request,CancellationToken ct)
         {
-            var room = await GetRoomWithReservationsByPublicIdAsync(request.RoomGUid!.Value,ct);
+            var room = await GetRoomWithPricingByPublicIdAsync(request.RoomGUid!.Value,ct);
             if (room == null) { return; }
             var reservation = _mapper.Map<Reservation>(request);
 
@@ -33,6 +33,12 @@ namespace ApartManBackend.Services
             reservation.RoomId = room.Id;
             reservation.Room = room;
             reservation.Source = ReservationSource.Website;
+            ApplyPersonsAndPrice(
+                reservation,
+                room,
+                request.Persons!,
+                request.StartTIme!.Value,
+                request.EndTime!.Value);
 
             await _db.Reservations.AddAsync(reservation, ct);
             await _db.SaveChangesAsync(ct);
@@ -51,7 +57,10 @@ namespace ApartManBackend.Services
 
         public async Task<bool> UpdateAsync(ReservationUpdateRequest request, CancellationToken ct)
         {
-            var reservation = await _db.Reservations.FirstOrDefaultAsync(x => x.Id == request.ReservationId, ct);
+            var reservation = await _db.Reservations
+                .Include(x => x.Persons)
+                .FirstOrDefaultAsync(x => x.Id == request.ReservationId, ct);
+
             if (reservation == null)
             {
                 return false;
@@ -68,6 +77,32 @@ namespace ApartManBackend.Services
                 }
 
                 reservation.RoomId = request.RoomId.Value;
+            }
+
+            if (request.Persons is not null || request.RoomId.HasValue || request.StartTIme.HasValue || request.EndTime.HasValue)
+            {
+                var room = await _db.Rooms
+                    .Include(x => x.RoomPriceTiers)
+                    .Include(x => x.AgePriceTiers)
+                    .FirstOrDefaultAsync(x => x.Id == reservation.RoomId, ct);
+
+                if (room is null)
+                {
+                    return false;
+                }
+
+                var effectivePersons = request.Persons ?? reservation.Persons
+                    .Select(x => new ReservationPersonRequest { Age = x.Age })
+                    .ToList();
+
+                _db.ReservationPersons.RemoveRange(reservation.Persons);
+
+                ApplyPersonsAndPrice(
+                    reservation,
+                    room,
+                    effectivePersons,
+                    reservation.StartTIme,
+                    reservation.EndTime);
             }
 
             await _db.SaveChangesAsync(ct);
@@ -187,6 +222,32 @@ namespace ApartManBackend.Services
             return personCount >= room.MinCapacity && personCount <= room.MaxCapacity;
         }
 
+        public Task<bool> IsPersonCountWithinRoomCapacityAsync(int roomId, int personCount, CancellationToken ct)
+        {
+            return _db.Rooms.AnyAsync(x =>
+                x.Id == roomId &&
+                personCount >= x.MinCapacity &&
+                personCount <= x.MaxCapacity,
+                ct);
+        }
+
+        public async Task<bool> IsUpdatedPersonCountWithinRoomCapacityAsync(ReservationUpdateRequest request, CancellationToken ct)
+        {
+            var reservation = await _db.Reservations
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.ReservationId, ct);
+
+            if (reservation is null)
+            {
+                return false;
+            }
+
+            var effectiveRoomId = request.RoomId ?? reservation.RoomId;
+            var effectivePersonCount = request.Persons?.Count ?? reservation.PearsonCount;
+
+            return await IsPersonCountWithinRoomCapacityAsync(effectiveRoomId, effectivePersonCount, ct);
+        }
+
         public async Task<bool> HasValidUpdatedDateRangeAsync(ReservationUpdateRequest request, CancellationToken ct)
         {
             var reservation = await _db.Reservations
@@ -246,6 +307,50 @@ namespace ApartManBackend.Services
             }
 
             return room;
+        }
+
+        private Task<Room?> GetRoomWithPricingByPublicIdAsync(Guid roomPublicId, CancellationToken ct)
+        {
+            return _db.Rooms
+                .Include(x => x.Reservations)
+                .Include(x => x.RoomPriceTiers)
+                .Include(x => x.AgePriceTiers)
+                .FirstOrDefaultAsync(x => x.GuidId == roomPublicId, ct);
+        }
+
+        private static void ApplyPersonsAndPrice(
+            Reservation reservation,
+            Room room,
+            List<ReservationPersonRequest> personRequests,
+            DateOnly startTime,
+            DateOnly endTime)
+        {
+            var nights = endTime.DayNumber - startTime.DayNumber;
+            var fallbackPricePerNight = GetFallbackPricePerNight(room, personRequests.Count);
+            var persons = personRequests.Select(personRequest =>
+            {
+                var age = personRequest.Age!.Value;
+                var ageTier = room.AgePriceTiers?
+                    .FirstOrDefault(x => x.AgeRangeLow <= age && x.AgeRangeHigh >= age);
+
+                return new ReservationPerson
+                {
+                    Age = age,
+                    PricePerNight = ageTier?.Price ?? fallbackPricePerNight
+                };
+            }).ToList();
+
+            reservation.PearsonCount = persons.Count;
+            reservation.Persons = persons;
+            reservation.TotalPrice = persons.Sum(x => x.PricePerNight) * nights;
+        }
+
+        private static decimal GetFallbackPricePerNight(Room room, int personCount)
+        {
+            var roomPriceTier = room.RoomPriceTiers?
+                .FirstOrDefault(x => x.GuestCount == personCount);
+
+            return roomPriceTier?.Price ?? room.Price;
         }
 
 

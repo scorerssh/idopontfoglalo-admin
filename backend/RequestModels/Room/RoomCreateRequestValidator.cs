@@ -15,6 +15,12 @@ namespace ApartManBackend.RequestModels.Room
             RuleFor(x=>x.MaxCapacity)
                 .GreaterThan(0).WithMessage("A szoba kapacitasanak nagyobbnak kell lennie 0-nal.")
                 .LessThan(100).WithMessage("A szoba kapacitasanak kevesebbnek kell lennie 100-nal.");
+            RuleFor(x => x.MinCapacity)
+                .GreaterThan(0).WithMessage("A minimum kapacitasnak nagyobbnak kell lennie 0-nal.")
+                .LessThan(100).WithMessage("A minimum kapacitasnak kevesebbnek kell lennie 100-nal.");
+            RuleFor(x => x.MaxCapacity)
+                .GreaterThanOrEqualTo(x => x.MinCapacity)
+                .WithMessage("A maximum kapacitas nem lehet kisebb mint a minimum kapacitas.");
             RuleFor(x => x.ApartmanId)
                 .Cascade(CascadeMode.Stop)
                 .GreaterThan(0).WithMessage("Az apartman azonositonak nagyobbnak kell lennie 0-nal.")

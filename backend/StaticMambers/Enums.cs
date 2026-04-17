@@ -12,6 +12,8 @@
         {
             Apartman,
             Room,
+            RoomPriceTier,
+            AgePriceTier,
             Reservation,
         }
 

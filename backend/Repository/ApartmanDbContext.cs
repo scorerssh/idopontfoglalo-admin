@@ -13,6 +13,13 @@ namespace ApartManBackend.Repository
         public DbSet<Apartman> Apartmans => Set<Apartman>();
         public DbSet<Room> Rooms => Set<Room>();
         public DbSet<Reservation> Reservations => Set<Reservation>();
+        public DbSet<ReservationPerson> ReservationPersons => Set<ReservationPerson>();
+
+        public DbSet<RoomPriceTier> RoomPriceTiers => Set<RoomPriceTier>();
+
+        public DbSet<AgePriceTier> AgePriceTiers => Set<AgePriceTier>();
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

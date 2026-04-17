@@ -25,6 +25,20 @@ namespace ApartManBackend.RequestModels.Room
              .LessThan(100).WithMessage("A szoba kapacitasanak kevesebbnek kell lennie 100-nal.");
             });
 
+            When(x => x.MinCapacity.HasValue, () =>
+            {
+                RuleFor(x => x.MinCapacity)
+                    .GreaterThan(0).WithMessage("A minimum kapacitasnak nagyobbnak kell lennie 0-nal.")
+                    .LessThan(100).WithMessage("A minimum kapacitasnak kevesebbnek kell lennie 100-nal.");
+            });
+
+            When(x => x.RoomId.HasValue && (x.MinCapacity.HasValue || x.MaxCapacity.HasValue), () =>
+            {
+                RuleFor(x => x)
+                    .MustAsync(async (request, ct) => await roomSercie.HasValidUpdatedCapacityAsync(request, ct))
+                    .WithMessage("A maximum kapacitas nem lehet kisebb mint a minimum kapacitas.");
+            });
+
             When(x => x.Name is not null, () =>
             {
 
