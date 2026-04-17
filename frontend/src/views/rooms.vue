@@ -32,6 +32,7 @@ const canGoPrev = computed(() => roomStore.pagination.page > 1)
 const showCreateModal = ref(false)
 const showModifyModal = ref(false)
 const showAgePriceTierModal = ref(false)
+const showPriceTiersModal = ref(false)
 const selectedRoom = ref(null)
 const showFilters = ref(false)
 const selectedApartmanId = ref('')
@@ -99,6 +100,16 @@ function openAgePriceTierModal(room) {
 
 function closeAgePriceTierModal() {
     showAgePriceTierModal.value = false
+    selectedRoom.value = null
+}
+
+function openPriceTiersModal(room) {
+    showPriceTiersModal.value = true
+    selectedRoom.value = room
+}
+
+function closePriceTiersModal() {
+    showPriceTiersModal.value = false
     selectedRoom.value = null
 }
 
@@ -194,7 +205,8 @@ watchEffect(() => {
             <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <RoomCard v-for="room in roomStore.rooms" :key="room.id" :room="room"
                     @openModifyModal="openModifyModal"
-                    @openAgePriceTierModal="openAgePriceTierModal" />
+                    @openAgePriceTierModal="openAgePriceTierModal"
+                    @openPriceTiersModal="openPriceTiersModal" />
             </div>
         </div>
 
@@ -214,6 +226,7 @@ watchEffect(() => {
     <RoomCreateModal :showModal="showCreateModal" @close="closeCreateModal" />
     <RoomModifyModal :showModal="showModifyModal" @close="closeModifyModal" :roomData="selectedRoom" />
     <AgePriceTierModal :showModal="showAgePriceTierModal" @close="closeAgePriceTierModal" :room="selectedRoom" />
+    <RoomPriceTiersModal :showModal="showPriceTiersModal" @close="closePriceTiersModal" :roomData="selectedRoom" />
 </template>
 
 <style scoped>
