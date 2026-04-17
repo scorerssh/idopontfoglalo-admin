@@ -148,16 +148,16 @@ watchEffect(() => {
                     :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
 
                 <span v-if="roomStore.rooms.length > 0"
-                    class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow ring-1 bg-green-100 ring-green-300 text-black font-medium">
+                    class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow ring-1 bg-green-100 ring-green-300 text-black font-medium md:w-auto w-full md:mt-0 mt-2">
                     <span class="font-base">Találatok:</span> {{ roomStore.rooms.length }} szoba
                 </span>
                 <span v-else
-                    class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow bg-gray-100 text-black font-medium">
+                    class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow bg-gray-100 text-black font-medium md:w-auto w-full md:mt-0 mt-2">
                     Nincsenek találatok
                 </span>
 
                 <DefaultButton @click="openFilters" :icon="SlidersHorizontal"
-                    :button-class="`${showFilters ? 'bg-gray-200' : 'bg-white hover:bg-gray-200'} ml-2 text-black shadow rounded-lg transition duration-100`" />
+                    :button-class="`${showFilters ? 'bg-gray-200' : 'bg-white hover:bg-gray-200'} md:ml-2 ml-0 md:mt-0 mt-2 text-black shadow rounded-lg transition duration-100`" />
             </div>
 
             <Transition name="fade-in">

@@ -78,12 +78,12 @@ onMounted(async () => {
         <section class="relative flex flex-col md:flex-row md:items-center justify-between gap-3">
             <MainTitle title="Foglalások" barColor="#c8f1fb" />
 
-            <div class="flex flex-row flex-wrap items-center justify-end gap-2 w-full md:w-auto">
+            <div class="flex flex-row flex-wrap items-center justify-end gap-2 w-full">
                 <DefaultButton @click="openCreateModal" :text="'Foglalás hozzáadása'" :icon="Plus"
-                    :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
+                    :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg md:w-auto w-full transition duration-100'" />
 
                 <span v-if="bookingStore.bookings.reservations?.length > 0"
-                    class="flex items-center gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow ring-1 bg-green-100 ring-green-300 text-black font-medium">
+                    class="flex items-center gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow ring-1 md:w-auto w-full bg-green-100 ring-green-300 text-black font-medium">
                     <span class="font-base">Találatok:</span> {{ bookingStore.bookings.reservations?.length }} foglalás
                 </span>
                 <span v-else

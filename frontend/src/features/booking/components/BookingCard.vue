@@ -1,5 +1,5 @@
 <script setup>
-import { EllipsisVertical, CalendarDays, Users, Phone, Mail, Clock } from 'lucide-vue-next'
+import { EllipsisVertical, CalendarDays, Users, Phone, Mail, Clock, Building2 } from 'lucide-vue-next'
 
 const emits = defineEmits(['openModifyModal'])
 
@@ -56,15 +56,6 @@ function openModifyModal() {
                     </div>
                 </div>
             </div>
-            <div class="flex flex-row gap-x-1 items-center justify-center">
-                <span class="bg-green-100 text-green-700 px-2 py-1 rounded-lg ">
-                    Szoba:
-                </span>
-                <span>
-                    {{ booking.room?.bindedApartmanName }}
-                </span>
-
-            </div>
         </section>
 
         <section class="grid grid-cols-2 gap-3 mb-4">
@@ -94,6 +85,13 @@ function openModifyModal() {
                 <div class="flex items-center gap-1.5 font-bold text-sm text-gray-700">
                     <Clock class="h-3.5 w-3.5 text-gray-400" />
                     <span>{{ nightCount }} nap</span>
+                </div>
+            </div>
+            <div class="col-span-2 bg-green-50 p-2.5 rounded-lg flex flex-col gap-y-0.5">
+                <span class="text-[10px] text-green-600 uppercase font-bold tracking-tight">Apartman</span>
+                <div class="flex items-center gap-1.5 font-bold text-sm text-green-700">
+                    <Building2 class="h-3.5 w-3.5 text-green-500" />
+                    <span>{{ booking.room?.bindedApartmanName }}</span>
                 </div>
             </div>
         </section>

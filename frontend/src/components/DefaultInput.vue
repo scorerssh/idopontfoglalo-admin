@@ -21,7 +21,7 @@ const emit = defineEmits(['update:modelValue'])
 
         <select v-if="type === 'select'" :value="props.modelValue"
             @change="emit('update:modelValue', $event.target.value)" :name="inputName"
-            :class="[inputClass, 'px-3 py-2 w-full bg-gray-200 focus:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100']">
+            :class="[inputClass, 'px-3 py-2 md:w-auto w-full bg-gray-200 focus:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100']">
             <slot />
             <option :value="null" disabled>Válassz apartmant...</option>
 
