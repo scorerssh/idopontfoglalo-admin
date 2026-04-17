@@ -25,4 +25,27 @@ export const roomService = {
     const { data } = await api.delete(`/api/Room/${id}`)
     return data
   },
+
+  agePriceTier: {
+    async getByRoom(roomId) {
+      const { data } = await api.get(`/api/AgePriceTier/Room/${roomId}`)
+      return data
+    },
+    async getById(agePriceTierId) {
+      const { data } = await api.get(`/api/AgePriceTier/${agePriceTierId}`)
+      return data
+    },
+    async create(payload) {
+      const { data } = await api.post('/api/AgePriceTier/Create', payload)
+      return data
+    },
+    async update(payload) {
+      const { data } = await api.patch('/api/AgePriceTier/Update', payload)
+      return data
+    },
+    async delete(agePriceTierId) {
+      const { data } = await api.delete(`/api/AgePriceTier/${agePriceTierId}`)
+      return data
+    },
+  },
 }

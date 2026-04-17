@@ -1,7 +1,7 @@
 <script setup>
-import { EllipsisVertical, BedDouble, Users, Banknote } from 'lucide-vue-next'
+import { EllipsisVertical, BedDouble, Users, Banknote, Coins } from 'lucide-vue-next'
 
-const emits = defineEmits(['openModifyModal'])
+const emits = defineEmits(['openModifyModal', 'openAgePriceTierModal'])
 
 const props = defineProps({
     room: {
@@ -18,6 +18,10 @@ const statusStyles = computed(() => {
 
 function handleModify() {
     emits('openModifyModal', props.room)
+}
+
+function handleAgePriceTier() {
+    emits('openAgePriceTierModal', props.room)
 }
 </script>
 
@@ -53,7 +57,11 @@ function handleModify() {
             </div>
         </section>
 
-        <section class="flex justify-end pt-3 border-t border-gray-50">
+        <section class="flex justify-end gap-1 pt-3 border-t border-gray-50">
+            <button @click="handleAgePriceTier"
+                class="p-2 rounded-lg hover:bg-yellow-50 text-gray-400 hover:text-yellow-500 transition-colors">
+                <Coins class="h-5 w-5" />
+            </button>
             <button @click="handleModify"
                 class="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
                 <EllipsisVertical class="h-5 w-5" />
