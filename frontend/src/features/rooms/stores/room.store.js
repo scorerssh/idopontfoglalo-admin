@@ -48,7 +48,15 @@ export const useRoomStore = defineStore('roomStore', {
       update: defaultOp(),
       updatePriceTier: defaultOp(),
       delete: defaultOp(),
+      agePriceTier: {
+        getByRoom: defaultOp(),
+        create: defaultOp(),
+        update: defaultOp(),
+        delete: defaultOp(),
+      },
     },
+    agePriceTiers: [],
+    agePriceTierRoomId: null,
   }),
 
   actions: {
@@ -215,6 +223,54 @@ export const useRoomStore = defineStore('roomStore', {
           await svc.delete(id)
           this.allRooms = this.allRooms.filter((r) => r.id !== id)
           this.rooms = this.rooms.filter((r) => r.id !== id)
+        },
+        { notifyOnSuccess: true, successMessage: 'Sikeres törlés!' },
+      )
+    },
+
+    async getAgePriceTiersByRoom(roomId) {
+      this.agePriceTierRoomId = roomId
+      return runOp(
+        this.ops.agePriceTier.getByRoom,
+        async () => {
+          const data = await svc.agePriceTier.getByRoom(roomId)
+          this.agePriceTiers = Array.isArray(data) ? data : []
+          return this.agePriceTiers
+        },
+        { notifyOnSuccess: false, errorMessage: 'Sikertelen volt az árkategóriák betöltése.' },
+      )
+    },
+
+    async createAgePriceTier(payload) {
+      return runOp(
+        this.ops.agePriceTier.create,
+        async () => {
+          const data = await svc.agePriceTier.create(payload)
+          await this.getAgePriceTiersByRoom(this.agePriceTierRoomId)
+          return data
+        },
+        { notifyOnSuccess: true, successMessage: 'Sikeres létrehozás!' },
+      )
+    },
+
+    async updateAgePriceTier(payload) {
+      return runOp(
+        this.ops.agePriceTier.update,
+        async () => {
+          const data = await svc.agePriceTier.update(payload)
+          await this.getAgePriceTiersByRoom(this.agePriceTierRoomId)
+          return data
+        },
+        { notifyOnSuccess: true, successMessage: 'Sikeres frissítés!' },
+      )
+    },
+
+    async deleteAgePriceTier(agePriceTierId) {
+      return runOp(
+        this.ops.agePriceTier.delete,
+        async () => {
+          await svc.agePriceTier.delete(agePriceTierId)
+          this.agePriceTiers = this.agePriceTiers.filter((t) => t.id !== agePriceTierId)
         },
         { notifyOnSuccess: true, successMessage: 'Sikeres törlés!' },
       )
