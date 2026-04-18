@@ -36,6 +36,9 @@ namespace ApartManBackend.Models.DbModels.Configurations
             builder.HasMany(x => x.AgePriceTiers)
                 .WithOne(x => x.Room).HasForeignKey(x => x.RoomId);
 
+            builder.HasMany(x => x.RoomSpecialPricingRules)
+                .WithOne(x => x.Room).HasForeignKey(x => x.RoomId);
+
                 
         }
     }

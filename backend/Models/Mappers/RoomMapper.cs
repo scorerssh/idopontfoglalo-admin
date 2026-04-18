@@ -28,6 +28,7 @@ namespace ApartManBackend.Models.Mappers
                 .ForMember(d => d.BindedApartmanName, o => o.MapFrom(src => src.Apartman.Name))
                 .ForMember(d => d.GuidId, o => o.MapFrom(src => src.GuidId))
                 .ForMember(d => d.RoomPriceTiers, o => o.MapFrom(src => src.RoomPriceTiers))
+                .ForMember(d => d.RoomSpecialPricingRules, o => o.MapFrom(src => src.RoomSpecialPricingRules))
                 .ForMember(d => d.AgePriceTiers, o => o.MapFrom(src => src.AgePriceTiers));
             CreateMap<Room, RoomPublicResponse>();
          

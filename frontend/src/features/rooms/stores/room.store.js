@@ -5,6 +5,16 @@ import { defaultOp } from '@/utils/opsHelper'
 
 const svc = roomService
 
+function normalizeSpecialPricingRuleTypes(data) {
+  if (Array.isArray(data)) return data
+  if (!data || typeof data !== 'object') return []
+
+  return Object.entries(data).map(([ruleType, description]) => ({
+    ruleType,
+    description,
+  }))
+}
+
 function filterRooms(rooms = [], filters = {}) {
   return rooms.filter((room) => {
     const matchesName =
@@ -54,9 +64,19 @@ export const useRoomStore = defineStore('roomStore', {
         update: defaultOp(),
         delete: defaultOp(),
       },
+      specialPricingRule: {
+        getTypes: defaultOp(),
+        getByRoom: defaultOp(),
+        create: defaultOp(),
+        update: defaultOp(),
+        delete: defaultOp(),
+      },
     },
     agePriceTiers: [],
     agePriceTierRoomId: null,
+    specialPricingRules: [],
+    specialPricingRuleTypes: [],
+    specialPricingRuleRoomId: null,
   }),
 
   actions: {
@@ -273,6 +293,88 @@ export const useRoomStore = defineStore('roomStore', {
           this.agePriceTiers = this.agePriceTiers.filter((t) => t.id !== agePriceTierId)
         },
         { notifyOnSuccess: true, successMessage: 'Sikeres törlés!' },
+      )
+    },
+
+    syncSpecialPricingRulesForRoom(roomId, rules = this.specialPricingRules) {
+      const normalizedRoomId = Number(roomId)
+      const normalizedRules = Array.isArray(rules) ? rules : []
+
+      this.allRooms = this.allRooms.map((room) =>
+        Number(room.id) === normalizedRoomId
+          ? { ...room, roomSpecialPricingRules: normalizedRules }
+          : room,
+      )
+      this.rooms = filterRooms(this.allRooms, this.filters)
+    },
+
+    async getSpecialPricingRuleTypes() {
+      return runOp(
+        this.ops.specialPricingRule.getTypes,
+        async () => {
+          const data = await svc.specialPricingRule.getTypes()
+          this.specialPricingRuleTypes = normalizeSpecialPricingRuleTypes(data)
+          return this.specialPricingRuleTypes
+        },
+        {
+          notifyOnSuccess: false,
+          errorMessage: 'Sikertelen volt az arszabaly tipusok betoltese.',
+        },
+      )
+    },
+
+    async getSpecialPricingRulesByRoom(roomId) {
+      this.specialPricingRuleRoomId = roomId
+      return runOp(
+        this.ops.specialPricingRule.getByRoom,
+        async () => {
+          const data = await svc.specialPricingRule.getByRoom(roomId)
+          this.specialPricingRules = Array.isArray(data) ? data : []
+          this.syncSpecialPricingRulesForRoom(roomId, this.specialPricingRules)
+          return this.specialPricingRules
+        },
+        {
+          notifyOnSuccess: false,
+          errorMessage: 'Sikertelen volt az arszabalyok betoltese.',
+        },
+      )
+    },
+
+    async createSpecialPricingRule(payload) {
+      return runOp(
+        this.ops.specialPricingRule.create,
+        async () => {
+          const data = await svc.specialPricingRule.create(payload)
+          await this.getSpecialPricingRulesByRoom(payload.roomId)
+          return data
+        },
+        { notifyOnSuccess: true, successMessage: 'Sikeres letrehozas!' },
+      )
+    },
+
+    async updateSpecialPricingRule(payload) {
+      return runOp(
+        this.ops.specialPricingRule.update,
+        async () => {
+          const data = await svc.specialPricingRule.update(payload)
+          await this.getSpecialPricingRulesByRoom(payload.roomId ?? this.specialPricingRuleRoomId)
+          return data
+        },
+        { notifyOnSuccess: true, successMessage: 'Sikeres frissites!' },
+      )
+    },
+
+    async deleteSpecialPricingRule(roomSpecialPricingRuleId) {
+      return runOp(
+        this.ops.specialPricingRule.delete,
+        async () => {
+          await svc.specialPricingRule.delete(roomSpecialPricingRuleId)
+          this.specialPricingRules = this.specialPricingRules.filter(
+            (rule) => Number(rule.id) !== Number(roomSpecialPricingRuleId),
+          )
+          this.syncSpecialPricingRulesForRoom(this.specialPricingRuleRoomId, this.specialPricingRules)
+        },
+        { notifyOnSuccess: true, successMessage: 'Sikeres torles!' },
       )
     },
   },

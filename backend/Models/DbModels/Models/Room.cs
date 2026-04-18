@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.ComponentModel;
 
 namespace ApartManBackend.Models.DbModels.Models
@@ -17,7 +18,7 @@ namespace ApartManBackend.Models.DbModels.Models
 
         [DefaultValue(true)]
         public List<RoomPriceTier>? RoomPriceTiers { get; set; }
-
+        public List<RoomSpecialPricingRule>? RoomSpecialPricingRules { get; set; }
         public List<AgePriceTier>? AgePriceTiers { get; set; }
         public bool Active { get; set; }
     }

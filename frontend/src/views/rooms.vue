@@ -18,6 +18,7 @@ import RoomPriceTiersModal from '@/features/rooms/components/RoomPriceTiersModal
 import RoomCard from '@/features/rooms/components/RoomCard.vue'
 import RoomFiltersModal from '@/features/rooms/components/RoomFiltersModal.vue'
 import AgePriceTierModal from '@/features/rooms/components/AgePriceTierModal.vue'
+import RoomSpecialPricingRulesModal from '@/features/rooms/components/RoomSpecialPricingRulesModal.vue'
 import { useRoomStore } from '@/features/rooms/stores/room.store'
 import { useApartmanStore } from '@/features/apartmans/stores/apartman.store'
 import { useRole } from '@/composables/useRole'
@@ -33,6 +34,7 @@ const showCreateModal = ref(false)
 const showModifyModal = ref(false)
 const showAgePriceTierModal = ref(false)
 const showPriceTiersModal = ref(false)
+const showSpecialPricingRulesModal = ref(false)
 const selectedRoom = ref(null)
 const showFilters = ref(false)
 const selectedApartmanId = ref('')
@@ -110,6 +112,16 @@ function openPriceTiersModal(room) {
 
 function closePriceTiersModal() {
     showPriceTiersModal.value = false
+    selectedRoom.value = null
+}
+
+function openSpecialPricingRulesModal(room) {
+    showSpecialPricingRulesModal.value = true
+    selectedRoom.value = room
+}
+
+function closeSpecialPricingRulesModal() {
+    showSpecialPricingRulesModal.value = false
     selectedRoom.value = null
 }
 
@@ -206,7 +218,8 @@ watchEffect(() => {
                 <RoomCard v-for="room in roomStore.rooms" :key="room.id" :room="room"
                     @openModifyModal="openModifyModal"
                     @openAgePriceTierModal="openAgePriceTierModal"
-                    @openPriceTiersModal="openPriceTiersModal" />
+                    @openPriceTiersModal="openPriceTiersModal"
+                    @openSpecialPricingRulesModal="openSpecialPricingRulesModal" />
             </div>
         </div>
 
@@ -227,6 +240,8 @@ watchEffect(() => {
     <RoomModifyModal :showModal="showModifyModal" @close="closeModifyModal" :roomData="selectedRoom" />
     <AgePriceTierModal :showModal="showAgePriceTierModal" @close="closeAgePriceTierModal" :room="selectedRoom" />
     <RoomPriceTiersModal :showModal="showPriceTiersModal" @close="closePriceTiersModal" :roomData="selectedRoom" />
+    <RoomSpecialPricingRulesModal :showModal="showSpecialPricingRulesModal" @close="closeSpecialPricingRulesModal"
+        :room="selectedRoom" />
 </template>
 
 <style scoped>

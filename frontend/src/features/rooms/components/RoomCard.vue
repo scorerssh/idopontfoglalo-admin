@@ -1,7 +1,12 @@
 <script setup>
 import { EllipsisVertical, BedDouble, Users, Banknote, Coins, UsersRound } from 'lucide-vue-next'
 
-const emits = defineEmits(['openModifyModal', 'openAgePriceTierModal', 'openPriceTiersModal'])
+const emits = defineEmits([
+    'openModifyModal',
+    'openAgePriceTierModal',
+    'openPriceTiersModal',
+    'openSpecialPricingRulesModal',
+])
 
 const props = defineProps({
     room: {
@@ -26,6 +31,10 @@ function handleAgePriceTier() {
 
 function handlePriceTiers() {
     emits('openPriceTiersModal', props.room)
+}
+
+function handleSpecialPricingRules() {
+    emits('openSpecialPricingRulesModal', props.room)
 }
 </script>
 
@@ -69,6 +78,10 @@ function handlePriceTiers() {
             <button @click="handlePriceTiers"
                 class="p-2 rounded-lg hover:bg-blue-50 text-gray-400 hover:text-blue-500 transition-colors">
                 <UsersRound class="h-5 w-5" />
+            </button>
+            <button @click="handleSpecialPricingRules"
+                class="p-2 rounded-lg hover:bg-green-50 text-gray-400 hover:text-green-600 transition-colors">
+                <Banknote class="h-5 w-5" />
             </button>
             <button @click="handleModify"
                 class="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">

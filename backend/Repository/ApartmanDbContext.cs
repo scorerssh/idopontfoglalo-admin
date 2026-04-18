@@ -17,6 +17,7 @@ namespace ApartManBackend.Repository
 
         public DbSet<RoomPriceTier> RoomPriceTiers => Set<RoomPriceTier>();
 
+        public DbSet<RoomSpecialPricingRule> RoomSpecialPricingRules => Set<RoomSpecialPricingRule>();
         public DbSet<AgePriceTier> AgePriceTiers => Set<AgePriceTier>();
 
 

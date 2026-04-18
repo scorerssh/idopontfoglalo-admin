@@ -1,4 +1,4 @@
-﻿namespace ApartManBackend.StaticMambers
+namespace ApartManBackend.StaticMambers
 {
     public static class Enums
     {
@@ -15,6 +15,7 @@
             RoomPriceTier,
             AgePriceTier,
             Reservation,
+            RoomSpecialPricingRule,
         }
 
         public enum ReservationSource
@@ -22,6 +23,14 @@
             Website,
             BookingCom,
             SzallasHu
+        }
+
+        public enum SpecialPricingRuleType
+        {
+            OneNightSurcharge,
+            WeekendSurcharge,
+            HolidaySurcharge,
+            LongStayDiscount,
         }
 
     }

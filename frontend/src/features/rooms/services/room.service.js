@@ -52,4 +52,31 @@ export const roomService = {
       return data
     },
   },
+
+  specialPricingRule: {
+    async getTypes() {
+      const { data } = await api.get('/api/RoomSpecialPricingRule/Types')
+      return data
+    },
+    async getByRoom(roomId) {
+      const { data } = await api.get(`/api/RoomSpecialPricingRule/Room/${roomId}`)
+      return data
+    },
+    async getById(roomSpecialPricingRuleId) {
+      const { data } = await api.get(`/api/RoomSpecialPricingRule/${roomSpecialPricingRuleId}`)
+      return data
+    },
+    async create(payload) {
+      const { data } = await api.post('/api/RoomSpecialPricingRule/Create', payload)
+      return data
+    },
+    async update(payload) {
+      const { data } = await api.patch('/api/RoomSpecialPricingRule/Update', payload)
+      return data
+    },
+    async delete(roomSpecialPricingRuleId) {
+      const { data } = await api.delete(`/api/RoomSpecialPricingRule/${roomSpecialPricingRuleId}`)
+      return data
+    },
+  },
 }

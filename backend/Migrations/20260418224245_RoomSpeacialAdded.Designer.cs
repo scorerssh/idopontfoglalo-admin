@@ -3,6 +3,7 @@ using System;
 using ApartManBackend.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApartManBackend.Migrations
 {
     [DbContext(typeof(ApartmanDbContext))]
-    partial class ApartmanDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260418224245_RoomSpeacialAdded")]
+    partial class RoomSpeacialAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -2,6 +2,7 @@ using ApartManBackend.Models.DbModels.Models;
 using ApartManBackend.Repository;
 using ApartManBackend.RequestModels.Reservation;
 using ApartManBackend.ResponseModel.Reservation;
+using ApartManBackend.Services.RoomSpecialPricingRules;
 using AutoFilterer.Extensions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -15,11 +16,16 @@ namespace ApartManBackend.Services
         private readonly Dictionary<Guid, Room> _roomCache = [];
         private readonly ApartmanDbContext _db;
         private readonly IMapper _mapper;
+        private readonly RoomSpecialPricingRuleSolver _roomSpecialPricingRuleSolver;
 
-        public ReservationService(ApartmanDbContext db, IMapper mapper)
+        public ReservationService(
+            ApartmanDbContext db,
+            IMapper mapper,
+            RoomSpecialPricingRuleSolver roomSpecialPricingRuleSolver)
         {
             _db = db;
             _mapper = mapper;
+            _roomSpecialPricingRuleSolver = roomSpecialPricingRuleSolver;
         }
 
 
@@ -84,6 +90,7 @@ namespace ApartManBackend.Services
                 var room = await _db.Rooms
                     .Include(x => x.RoomPriceTiers)
                     .Include(x => x.AgePriceTiers)
+                    .Include(x => x.RoomSpecialPricingRules)
                     .FirstOrDefaultAsync(x => x.Id == reservation.RoomId, ct);
 
                 if (room is null)
@@ -315,17 +322,17 @@ namespace ApartManBackend.Services
                 .Include(x => x.Reservations)
                 .Include(x => x.RoomPriceTiers)
                 .Include(x => x.AgePriceTiers)
+                .Include(x => x.RoomSpecialPricingRules)
                 .FirstOrDefaultAsync(x => x.GuidId == roomPublicId, ct);
         }
 
-        private static void ApplyPersonsAndPrice(
+        private void ApplyPersonsAndPrice(
             Reservation reservation,
             Room room,
             List<ReservationPersonRequest> personRequests,
             DateOnly startTime,
             DateOnly endTime)
         {
-            var nights = endTime.DayNumber - startTime.DayNumber;
             var fallbackPricePerNight = GetFallbackPricePerNight(room, personRequests.Count);
             var persons = personRequests.Select(personRequest =>
             {
@@ -342,7 +349,7 @@ namespace ApartManBackend.Services
 
             reservation.PearsonCount = persons.Count;
             reservation.Persons = persons;
-            reservation.TotalPrice = persons.Sum(x => x.PricePerNight) * nights;
+            reservation.TotalPrice = _roomSpecialPricingRuleSolver.ApplyRules(room, persons, startTime, endTime);
         }
 
         private static decimal GetFallbackPricePerNight(Room room, int personCount)

@@ -1,6 +1,7 @@
 using ApartManBackend.Models.DbModels.Models;
 using ApartManBackend.ResponseModel.AgePriceTier;
 using ApartManBackend.ResponseModel.RoomPriceTier;
+using ApartManBackend.ResponseModel.RoomSpecialPricingRule;
 
 namespace ApartManBackend.ResponseModel.Room
 {
@@ -19,6 +20,7 @@ namespace ApartManBackend.ResponseModel.Room
         public string? BookingConnectionUrl { get; set; }
         public string? SzallasHuConnectionUrl { get; set; }
         public List<RoomPriceTierResponse>? RoomPriceTiers { get; set; }
+        public List<RoomSpecialPricingRuleResponse>? RoomSpecialPricingRules { get; set; }
         public List<AgePriceTierResponse>? AgePriceTiers { get; set; }
     }
 }
