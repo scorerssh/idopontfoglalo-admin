@@ -1,5 +1,5 @@
 <script setup>
-import { EllipsisVertical, CalendarDays, Users, Phone, Mail, Clock, Building2 } from 'lucide-vue-next'
+import { EllipsisVertical, CalendarDays, Users, Phone, Mail, Banknote, Building2 } from 'lucide-vue-next'
 
 const emits = defineEmits(['openModifyModal'])
 
@@ -18,10 +18,11 @@ const initials = computed(() => {
         .slice(0, 2)
 })
 
-const nightCount = computed(() => {
-    const start = new Date(props.booking.startTIme)
-    const end = new Date(props.booking.endTime)
-    return Math.round((end - start) / (1000 * 60 * 60 * 24))
+const formattedTotalPrice = computed(() => {
+    const price = Number(props.booking.totalPrice)
+    if (!Number.isFinite(price)) return '-'
+
+    return `${price.toLocaleString('hu-HU')} Ft`
 })
 
 const selectedBooking = computed(() => ({
@@ -33,6 +34,7 @@ const selectedBooking = computed(() => ({
     phoneNumber: props.booking.phoneNumber,
     email: props.booking.email,
     description: props.booking.description,
+    totalPrice: props.booking.totalPrice,
 }))
 
 function openModifyModal() {
@@ -81,10 +83,10 @@ function openModifyModal() {
                 </div>
             </div>
             <div class="bg-gray-50 p-2.5 rounded-lg flex flex-col gap-y-0.5">
-                <span class="text-[10px] text-gray-400 uppercase font-bold tracking-tight">Időtartam</span>
+                <span class="text-[10px] text-gray-400 uppercase font-bold tracking-tight">Ár:</span>
                 <div class="flex items-center gap-1.5 font-bold text-sm text-gray-700">
-                    <Clock class="h-3.5 w-3.5 text-gray-400" />
-                    <span>{{ nightCount }} nap</span>
+                    <Banknote class="h-3.5 w-3.5 text-gray-400" />
+                    <span>{{ formattedTotalPrice }}</span>
                 </div>
             </div>
             <div class="col-span-2 bg-green-50 p-2.5 rounded-lg flex flex-col gap-y-0.5">
