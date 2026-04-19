@@ -60,7 +60,7 @@ const statCardContent = computed(() => [
         iconBgColor: '#fbc3d7',
     },
     {
-        title: 'Nem elérhetők',
+        title: 'Nem elérhető',
         content: '2',
         icon: CalendarX,
         additional: 'Karbantartás',
@@ -215,10 +215,8 @@ watchEffect(() => {
             </div>
 
             <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <RoomCard v-for="room in roomStore.rooms" :key="room.id" :room="room"
-                    @openModifyModal="openModifyModal"
-                    @openAgePriceTierModal="openAgePriceTierModal"
-                    @openPriceTiersModal="openPriceTiersModal"
+                <RoomCard v-for="room in roomStore.rooms" :key="room.id" :room="room" @openModifyModal="openModifyModal"
+                    @openAgePriceTierModal="openAgePriceTierModal" @openPriceTiersModal="openPriceTiersModal"
                     @openSpecialPricingRulesModal="openSpecialPricingRulesModal" />
             </div>
         </div>
