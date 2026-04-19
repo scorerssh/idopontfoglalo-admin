@@ -124,7 +124,6 @@ onMounted(async () => {
 <template>
     <div class="flex flex-col">
         <form @submit.prevent="submitForm" class="grid grid-cols-[1fr_auto_1fr] gap-x-6">
-            <!-- BAL OSZLOP: Alap foglalási adatok -->
             <div class="booking-general">
                 <BookingFormInput v-for="input in bookingInputs" :key="input.name" :input-name="input.name"
                     :type="input.type" v-model="bookingForm[input.name]" :label-text="input.label"
