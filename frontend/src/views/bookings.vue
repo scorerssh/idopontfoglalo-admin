@@ -27,7 +27,7 @@ const canGoPrev = computed(() => bookingStore.pagination.page > 1)
 
 const statCardContent = [
     { title: 'Összes foglalás', content: bookingCount, icon: GalleryHorizontalEnd, additional: 'Összesen', bgColor: '#f3fbff', iconBgColor: '#c8f1fb' },
-    { title: 'A hónapban beérkezők', content: createdThisMont, icon: Check, additional: 'Teljesített', bgColor: '#fef5f8', iconBgColor: '#fbc3d7' },
+    { title: 'A hónapban beérkező', content: createdThisMont, icon: Check, additional: 'Teljesített', bgColor: '#fef5f8', iconBgColor: '#fbc3d7' },
     { title: 'Ma beérkezők', content: createdToday, icon: ClockPlus, additional: 'Várható', bgColor: '#fef3ff', iconBgColor: '#fbcffd' },
 ]
 
