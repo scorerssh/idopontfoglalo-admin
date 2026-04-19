@@ -197,7 +197,6 @@ function handleClose() {
                     Prioritás: {{ rule.priority }}
                   </span>
                 </div>
-                <p class="mt-1 text-xs text-gray-500">{{ rule.ruleType }}</p>
               </div>
 
               <div class="flex shrink-0 gap-1">
@@ -279,6 +278,10 @@ function handleClose() {
             @click="startAdd"
             button-class="px-4 py-2 text-sm rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors" />
         </div>
+
+        <p class="mt-4 text-xs text-gray-400 text-center">
+          * Az összes összeg forintban (Ft) értendő.
+        </p>
       </div>
     </template>
   </Teleport>
