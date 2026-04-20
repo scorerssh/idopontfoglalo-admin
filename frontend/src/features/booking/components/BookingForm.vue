@@ -109,7 +109,6 @@ async function submitForm() {
     }
 }
 
-// --- LIFECYCLE ---
 onMounted(async () => {
     if (!roomStore.rooms || roomStore.rooms.length === 0) {
         if (isAdmin.value) {
@@ -123,7 +122,7 @@ onMounted(async () => {
 
 <template>
     <div class="flex flex-col">
-        <form @submit.prevent="submitForm" class="grid grid-cols-[1fr_auto_1fr] gap-x-6">
+        <form @submit.prevent="submitForm" class="grid sm:grid-cols-[1fr_auto_1fr] grid-cols-1 gap-x-6">
             <div class="booking-general">
                 <BookingFormInput v-for="input in bookingInputs" :key="input.name" :input-name="input.name"
                     :type="input.type" v-model="bookingForm[input.name]" :label-text="input.label"
@@ -132,7 +131,7 @@ onMounted(async () => {
             </div>
 
             <!-- FÜGGŐLEGES ELVÁLASZTÓ -->
-            <div class="w-px bg-gray-200"></div>
+            <div class="hidden sm:block w-px bg-gray-200"></div>
 
             <!-- JOBB OSZLOP: Vendégek -->
             <div class="persons mt-5.5">
@@ -169,7 +168,7 @@ onMounted(async () => {
 
             <!-- SUBMIT GOMB (mindkét oszlop alá) -->
             <DefaultButton text="Foglalás létrehozása" type="submit"
-                button-class="col-span-3 bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100 mt-4" />
+                button-class="sm:col-span-3 bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100 mt-4" />
         </form>
     </div>
 </template>

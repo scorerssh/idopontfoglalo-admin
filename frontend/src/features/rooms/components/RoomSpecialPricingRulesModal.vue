@@ -164,7 +164,7 @@ function handleClose() {
     <template v-if="showModal && room">
       <div class="fixed inset-0 bg-black/50 z-40" @click="handleClose" />
       <div
-        class="fixed top-1/2 left-1/2 z-50 max-h-[90vh] w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl bg-white p-6 shadow-lg">
+        class="fixed top-1/2 left-1/2 z-50 max-h-[90vh] w-[calc(100%-20px)] max-w-2xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl bg-white p-6 shadow-lg">
         <button @click="handleClose"
           class="absolute right-3 top-3 rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600">
           <X class="h-4 w-4" />

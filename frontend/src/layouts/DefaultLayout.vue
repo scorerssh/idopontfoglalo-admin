@@ -24,7 +24,6 @@ const authStore = useAuthStore()
 const { isDark, toggleTheme } = useTheme()
 const route = useRoute()
 const isSidebarOpen = ref(true)
-const sidebarRailWidthClass = 'w-18'
 
 const handleLogout = async () => {
     await authStore.logout()
@@ -65,10 +64,10 @@ const userNavbarLinks = [
 
 <template>
     <div class="relative h-screen w-full flex overflow-hidden bg-white">
-        <div :class="[sidebarRailWidthClass, 'relative shrink-0 border-r border-gray-200 bg-white']">
+        <div class="md:w-18 w-14 relative shrink-0 border-r border-gray-200 bg-white">
             <aside :class="[
-                isSidebarOpen ? 'w-64 shadow-xl' : sidebarRailWidthClass,
-                'absolute left-0 top-0 z-40 flex h-screen flex-col gap-y-2 overflow-y-scroll border-r border-gray-200 bg-white p-4 transition-all duration-300 ease-in-out [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
+                isSidebarOpen ? 'w-64 shadow-xl' : 'md:w-18 w-14',
+                'absolute left-0 top-0 z-40 flex h-screen flex-col gap-y-2 overflow-y-scroll border-r border-gray-200 bg-white md:p-4 p-2 transition-all duration-300 ease-in-out [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
             ]">
                 <h1 class="font-semibold tracking-tight w-full flex items-center justify-center">
                     <span :class="[
@@ -88,14 +87,14 @@ const userNavbarLinks = [
                 </button>
 
                 <nav class="flex flex-col justify-between h-full">
-                    <ul class="mt-2 flex flex-col gap-y-1">
+                    <ul class="mt-2 flex flex-col md:gap-y-1 gap-y-3">
                         <li v-for="link in navbarLinks" :key="link.title">
                             <RouterLink :to="link.route" :class="[
                                 isSidebarOpen ? 'justify-start gap-x-3' : 'justify-center',
                                 route.path === link.route
                                     ? 'bg-[#275bf6] text-white shadow-md'
                                     : 'text-black/60 hover:bg-blue-100',
-                                'flex items-center overflow-hidden rounded-lg p-3 transition-all duration-200 ease-in-out',
+                                'flex items-center overflow-hidden rounded-lg md:p-3 p-2 transition-all duration-200 ease-in-out',
                             ]">
                                 <component :is="link.icon" class="h-6 w-6 shrink-0" />
 
@@ -134,7 +133,7 @@ const userNavbarLinks = [
                         <li>
                             <button @click="handleLogout" :class="[
                                 isSidebarOpen ? 'justify-start gap-x-3' : 'justify-center',
-                                'flex w-full items-center overflow-hidden rounded-lg bg-red-200 p-3 text-red-700 transition-all duration-200 ease-in-out hover:bg-red-300',
+                                'flex w-full items-center overflow-hidden rounded-lg bg-red-200 md:p-3 p-2 text-red-700 transition-all duration-200 ease-in-out hover:bg-red-300',
                             ]">
                                 <LogOut class="h-6 w-6 shrink-0" />
 
@@ -184,8 +183,8 @@ const userNavbarLinks = [
         </header>
         -->
 
-
-            <main class="flex-1 overflow-y-auto p-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <main
+                class="flex-1 overflow-y-auto md:px-6 md:py-6 px-2 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <RouterView />
             </main>
         </div>

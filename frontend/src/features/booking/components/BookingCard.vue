@@ -60,7 +60,7 @@ function openModifyModal() {
             </div>
         </section>
 
-        <section class="grid grid-cols-2 gap-3 mb-4">
+        <section class="grid md:grid-cols-2 grid-cols-1 gap-3 mb-4">
             <div class="bg-gray-50 p-2.5 rounded-lg flex flex-col gap-y-0.5">
                 <span class="text-[10px] text-gray-400 uppercase font-bold tracking-tight">Érkezés</span>
                 <div class="flex items-center gap-1.5 font-bold text-sm text-gray-700">
@@ -89,7 +89,7 @@ function openModifyModal() {
                     <span>{{ formattedTotalPrice }}</span>
                 </div>
             </div>
-            <div class="col-span-2 bg-green-50 p-2.5 rounded-lg flex flex-col gap-y-0.5">
+            <div class="md:col-span-2 col-span-1 bg-green-50 p-2.5 rounded-lg flex flex-col gap-y-0.5">
                 <span class="text-[10px] text-green-600 uppercase font-bold tracking-tight">Apartman</span>
                 <div class="flex items-center gap-1.5 font-bold text-sm text-green-700">
                     <Building2 class="h-3.5 w-3.5 text-green-500" />

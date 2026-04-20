@@ -54,7 +54,7 @@ function closeFilter() {
 
 <template>
     <div
-        class="filters p-5 bg-white rounded-xl shadow-2xl border border-gray-100 absolute top-16 right-0 flex flex-col justify-start items-start z-50 min-w-[300px]">
+        class="filters p-5 bg-white rounded-xl shadow-2xl border border-gray-100 absolute top-16 right-0 flex flex-col justify-start items-start z-50 w-[400px]">
         <button type="button" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition"
             @click="closeFilter">
             <X class="h-5 w-5" />
