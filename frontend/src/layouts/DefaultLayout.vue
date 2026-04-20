@@ -156,34 +156,34 @@ const userNavbarLinks = [
             aria-label="Oldalsáv bezárása" />
 
         <div class="flex-1 flex flex-col min-h-screen min-w-0">
+            <!--
             <header class="flex items-center justify-between p-6 h-24 shrink-0">
                 <div class="unknown"></div>
                 <div class="flex items-center gap-x-3">
-                    <!-- Dark / Light mode toggle -->
-                    <button @click="toggleTheme" :title="isDark ? 'Váltás világos módra' : 'Váltás sötét módra'"
-                        class="flex items-center gap-x-1.5 rounded-full bg-gray-100 px-3 py-2 transition-colors hover:bg-gray-200">
-                        <Sun v-if="isDark" class="w-4 h-4 text-amber-400" />
-                        <Moon v-else class="w-4 h-4 text-slate-500" />
-                        <!-- pill indicator -->
-                        <span class="relative inline-flex h-5 w-9 shrink-0 rounded-full transition-colors duration-300"
-                            :class="isDark ? 'bg-slate-600' : 'bg-slate-200'">
-                            <span
-                                class="absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-300"
-                                :class="isDark ? 'translate-x-4' : 'translate-x-0.5'" />
-                        </span>
-                    </button>
+            <button @click="toggleTheme" :title="isDark ? 'Váltás világos módra' : 'Váltás sötét módra'"
+                class="flex items-center gap-x-1.5 rounded-full bg-gray-100 px-3 py-2 transition-colors hover:bg-gray-200">
+                <Sun v-if="isDark" class="w-4 h-4 text-amber-400" />
+                <Moon v-else class="w-4 h-4 text-slate-500" />
+            <span class="relative inline-flex h-5 w-9 shrink-0 rounded-full transition-colors duration-300"
+                :class="isDark ? 'bg-slate-600' : 'bg-slate-200'">
+                <span class="absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-300"
+                    :class="isDark ? 'translate-x-4' : 'translate-x-0.5'" />
+            </span>
+            </button>
 
-                    <RouterLink to="/settings"
-                        class="flex items-center justify-center rounded-full bg-gray-100 p-2 transition-colors hover:bg-gray-200">
-                        <Settings class="w-6 h-6 text-gray-600" />
-                    </RouterLink>
+            <RouterLink to="/settings"
+                class="flex items-center justify-center rounded-full bg-gray-100 p-2 transition-colors hover:bg-gray-200">
+                <Settings class="w-6 h-6 text-gray-600" />
+            </RouterLink>
 
-                    <RouterLink to="/notifications"
-                        class="flex items-center justify-center rounded-full bg-gray-100 p-2 transition-colors hover:bg-gray-200">
-                        <Bell class="w-6 h-6 text-gray-600" />
-                    </RouterLink>
-                </div>
-            </header>
+            <RouterLink to="/notifications"
+                class="flex items-center justify-center rounded-full bg-gray-100 p-2 transition-colors hover:bg-gray-200">
+                <Bell class="w-6 h-6 text-gray-600" />
+            </RouterLink>
+        </div>
+        </header>
+        -->
+
 
             <main class="flex-1 overflow-y-auto p-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <RouterView />
