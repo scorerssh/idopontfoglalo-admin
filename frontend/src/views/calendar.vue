@@ -90,12 +90,19 @@ const bookingsForCell = computed(() => {
             const startCell = row[blockStartIndex]
             const key = `${startCell.year}-${startCell.month + 1}-${startCell.day}`
 
+            const rowStartDate = toDateOnly(`${row[blockStartIndex].year}-${String(row[blockStartIndex].month + 1).padStart(2, '0')}-${String(row[blockStartIndex].day).padStart(2, '0')}`)
+            const rowEndDate = toDateOnly(`${row[blockEndIndex].year}-${String(row[blockEndIndex].month + 1).padStart(2, '0')}-${String(row[blockEndIndex].day).padStart(2, '0')}`)
+            const isActualStart = rowStartDate.getTime() === start.getTime()
+            const isActualEnd = rowEndDate.getTime() === end.getTime()
+
             if (!result.has(key)) result.set(key, [])
             result.get(key).push({
                 booking,
                 color,
                 spanDays,
                 bookingIndex,
+                isActualStart,
+                isActualEnd,
             })
         })
     })
@@ -105,6 +112,15 @@ const bookingsForCell = computed(() => {
 
 function getCellKey(cell) {
     return `${cell.year}-${cell.month + 1}-${cell.day}`
+}
+
+function getBookingStyle(entry) {
+    const halfCells = (entry.isActualStart ? 0.5 : 0) + (entry.isActualEnd ? 0.5 : 0)
+    const leftOffset = entry.isActualStart ? 'calc(50% + 2px)' : '2px'
+    const width = halfCells > 0
+        ? `calc(${entry.spanDays} * 100% + ${entry.spanDays - 1}px - 4px - ${halfCells * 100}%)`
+        : `calc(${entry.spanDays} * 100% + ${entry.spanDays - 1}px - 4px)`
+    return { top: '20px', height: '30px', left: leftOffset, width, zIndex: 10 }
 }
 
 function formatShortDate(dateStr) {
@@ -188,13 +204,10 @@ function formatShortDate(dateStr) {
 
                     <!-- Foglalás blokkok -->
                     <div v-for="entry in (bookingsForCell.get(getCellKey(cell)) ?? [])" :key="entry.bookingIndex"
-                        class="absolute left-0.5 flex items-center rounded sm:rounded-md mt-0.5 cursor-pointer select-none overflow-hidden transition-all duration-200 hover:z-20 hover:brightness-110 hover:shadow-lg border border-black/20"
-                        :class="[entry.color.bg, entry.color.text]" :style="{
-                            top: '20px',
-                            height: '30px',
-                            width: `calc(${entry.spanDays} * 100% + ${entry.spanDays - 1}px - 4px)`,
-                            zIndex: 10,
-                        }" @click="openModifyModal(entry.booking)">
+                        class="absolute flex items-center rounded sm:rounded-md mt-0.5 cursor-pointer select-none overflow-hidden transition-all duration-200 hover:z-20 hover:brightness-110 hover:shadow-lg border border-black/20"
+                        :class="[entry.color.bg, entry.color.text]"
+                        :style="getBookingStyle(entry)"
+                        @click="openModifyModal(entry.booking)">
                         <!-- Mobilon: csak név -->
                         <span class="sm:hidden text-[8px] font-semibold truncate px-1 leading-none">
                             {{ entry.booking.name }}
