@@ -55,17 +55,17 @@ function handleSpecialPricingRules() {
 
         <section class="grid grid-cols-2 gap-3 mb-4">
             <div class="bg-gray-50 p-2 rounded-lg flex flex-col">
-                <span class="text-[10px] text-gray-500 uppercase font-bold">Kapacitás</span>
+                <span class="text-[10px] text-gray-500 uppercase font-bold">Min. kapacitás</span>
                 <div class="flex items-center gap-1 text-gray-700 font-semibold">
                     <Users class="h-3.5 w-3.5" />
-                    {{ room.maxCapacity || '-' }} fő
+                    {{ room.minCapacity ?? '-' }} fő
                 </div>
             </div>
             <div class="bg-gray-50 p-2 rounded-lg flex flex-col text-right">
-                <span class="text-[10px] text-gray-500 uppercase font-bold">Ár / éj</span>
+                <span class="text-[10px] text-gray-500 uppercase font-bold">Max. kapacitás</span>
                 <div class="flex items-center justify-end gap-1 text-blue-600 font-bold">
-                    <Banknote class="h-3.5 w-3.5" />
-                    {{ room.price?.toLocaleString('hu-HU') }} Ft
+                    <Users class="h-3.5 w-3.5" />
+                    {{ room.maxCapacity ?? '-' }} fő
                 </div>
             </div>
         </section>

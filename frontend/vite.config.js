@@ -16,7 +16,11 @@ export default defineConfig({
       imports: ['vue', 'vue-router', 'pinia'],
     }),
   ],
-
+  test: {
+    environment: 'node',
+    globals: true,
+    setupFiles: ['./tests/setup.js'],
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

@@ -60,7 +60,7 @@ const statCardContent = computed(() => [
         iconBgColor: '#fbc3d7',
     },
     {
-        title: 'Nem elérhetők',
+        title: 'Nem elérhető',
         content: '2',
         icon: CalendarX,
         additional: 'Karbantartás',
@@ -181,7 +181,7 @@ watchEffect(() => {
                 </div>
 
                 <DefaultButton v-if="isAdmin" @click="openCreateModal" :text="'Szoba hozzáadása'" :icon="Plus"
-                    :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100'" />
+                    :buttonClass="'bg-[#275bf6] hover:bg-[#1a4ad5] text-white rounded-lg transition duration-100 md:w-fit w-full'" />
 
                 <span v-if="roomStore.rooms.length > 0"
                     class="flex items-center gap-2 flex-row gap-x-2 p-2 rounded-lg transition-colors duration-100 shadow ring-1 bg-green-100 ring-green-300 text-black font-medium md:w-auto w-full md:mt-0 mt-2">
@@ -215,10 +215,8 @@ watchEffect(() => {
             </div>
 
             <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <RoomCard v-for="room in roomStore.rooms" :key="room.id" :room="room"
-                    @openModifyModal="openModifyModal"
-                    @openAgePriceTierModal="openAgePriceTierModal"
-                    @openPriceTiersModal="openPriceTiersModal"
+                <RoomCard v-for="room in roomStore.rooms" :key="room.id" :room="room" @openModifyModal="openModifyModal"
+                    @openAgePriceTierModal="openAgePriceTierModal" @openPriceTiersModal="openPriceTiersModal"
                     @openSpecialPricingRulesModal="openSpecialPricingRulesModal" />
             </div>
         </div>
