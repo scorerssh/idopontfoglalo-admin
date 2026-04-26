@@ -333,7 +333,11 @@ namespace ApartManBackend.Services
             DateOnly startTime,
             DateOnly endTime)
         {
-            var fallbackPricePerNight = GetFallbackPricePerNight(room, personRequests.Count);
+            var roomPricePerNight = GetRoomPricePerNight(room, personRequests.Count);
+            var fallbackPricePerPersonPerNight = personRequests.Count > 0
+                ? roomPricePerNight / personRequests.Count
+                : 0;
+
             var persons = personRequests.Select(personRequest =>
             {
                 var age = personRequest.Age!.Value;
@@ -343,7 +347,7 @@ namespace ApartManBackend.Services
                 return new ReservationPerson
                 {
                     Age = age,
-                    PricePerNight = ageTier?.Price ?? fallbackPricePerNight
+                    PricePerNight = ageTier?.Price ?? fallbackPricePerPersonPerNight
                 };
             }).ToList();
 
@@ -352,7 +356,7 @@ namespace ApartManBackend.Services
             reservation.TotalPrice = _roomSpecialPricingRuleSolver.ApplyRules(room, persons, startTime, endTime);
         }
 
-        private static decimal GetFallbackPricePerNight(Room room, int personCount)
+        private static decimal GetRoomPricePerNight(Room room, int personCount)
         {
             var roomPriceTier = room.RoomPriceTiers?
                 .FirstOrDefault(x => x.GuestCount == personCount);
