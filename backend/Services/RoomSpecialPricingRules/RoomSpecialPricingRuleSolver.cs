@@ -13,7 +13,7 @@ namespace ApartManBackend.Services.RoomSpecialPricingRules
 
         public decimal ApplyRules(Room room, IReadOnlyList<ReservationPerson> persons, DateOnly startDate, DateOnly endDate)
         {
-            var nights = endDate.DayNumber - startDate.DayNumber;
+            var nights = (endDate.DayNumber - startDate.DayNumber)-1;
             if (nights <= 0)
             {
                 return 0;
