@@ -190,7 +190,7 @@ namespace ApartManBackend.Services
             var inActiveCount = await filteredQuery.CountAsync(x => !x.Active, ct);
             var inUseCount = await filteredQuery.CountAsync(x =>
                 x.Reservations.Any(r =>
-                    r.EndTime >= currentDate &&
+                    r.EndTime > currentDate &&
                     r.StartTIme <= currentDate), ct);
 
             var res = new RoomsWithMetaData

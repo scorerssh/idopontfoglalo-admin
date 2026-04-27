@@ -28,11 +28,9 @@ namespace ApartManBackend.Services
                 .SelectMany(r => r.Reservations.Select(reservation => new DashboardReservationData
                 {
                     CreatedAt = reservation.CreatedAt,
-                    StartTime = reservation.StartTIme,
-                    EndTime = reservation.EndTime,
                     RoomId = r.Id,
                     RoomName = r.Name,
-                    RoomPrice = r.Price
+                    TotalPrice = reservation.TotalPrice
                 }))
                 .ToListAsync(ct);
 
@@ -85,19 +83,15 @@ namespace ApartManBackend.Services
 
         private static decimal CalculateRevenue(DashboardReservationData reservation)
         {
-            var totalDays = reservation.EndTime.DayNumber - reservation.StartTime.DayNumber;
-            var billableDays = totalDays <= 0 ? 1 : totalDays;
-            return reservation.RoomPrice * billableDays;
+            return reservation.TotalPrice;
         }
 
         private sealed class DashboardReservationData
         {
             public DateTime CreatedAt { get; set; }
-            public DateOnly StartTime { get; set; }
-            public DateOnly EndTime { get; set; }
             public int RoomId { get; set; }
             public string RoomName { get; set; } = null!;
-            public decimal RoomPrice { get; set; }
+            public decimal TotalPrice { get; set; }
         }
     }
 }
