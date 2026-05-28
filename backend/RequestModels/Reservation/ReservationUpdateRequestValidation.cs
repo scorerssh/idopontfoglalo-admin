@@ -20,16 +20,16 @@ namespace ApartManBackend.RequestModels.Reservation
             {
                 RuleFor(x => x.StartTIme)
                     .Cascade(CascadeMode.Stop)
-                    .Must(startDate => startDate!.Value > today)
-                    .WithMessage("Csak jovobeli idopontra lehet foglalni.");
+                    .Must(startDate => startDate!.Value >= today)
+                    .WithMessage("Nem lehet multbeli idopontra foglalni.");
             });
 
             When(x => x.EndTime.HasValue, () =>
             {
                 RuleFor(x => x.EndTime)
                     .Cascade(CascadeMode.Stop)
-                    .Must(endDate => endDate!.Value > today)
-                    .WithMessage("Csak jovobeli idopontra lehet foglalni.");
+                    .Must(endDate => endDate!.Value >= today)
+                    .WithMessage("Nem lehet multbeli idopontra foglalni.");
             });
 
             When(x => x.RoomId.HasValue, () =>

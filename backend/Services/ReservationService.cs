@@ -269,7 +269,7 @@ namespace ApartManBackend.Services
             var effectiveEnd = request.EndTime ?? reservation.EndTime;
             var today = DateOnly.FromDateTime(DateTime.Now);
 
-            return effectiveStart > today && effectiveEnd > effectiveStart;
+            return effectiveStart >= today && effectiveEnd > effectiveStart;
         }
 
         public async Task<bool> IsUpdatedReservationRoomAvailableAsync(ReservationUpdateRequest request, CancellationToken ct)

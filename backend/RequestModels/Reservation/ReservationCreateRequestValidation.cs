@@ -19,8 +19,8 @@ namespace ApartManBackend.RequestModels.Reservation
             RuleFor(x => x.StartTIme)
                 .Cascade(CascadeMode.Stop)
                 .NotNull().WithMessage("A kezdesi ido megadasa kotelezo.")
-                .Must(startDate => startDate!.Value > today)
-                .WithMessage("Csak jovobeli idopontra lehet foglalni.");
+                .Must(startDate => startDate!.Value >= today)
+                .WithMessage("Nem lehet multbeli idopontra foglalni.");
 
             RuleFor(x => x.EndTime)
                 .Cascade(CascadeMode.Stop)
