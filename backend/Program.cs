@@ -51,6 +51,8 @@ builder.Services.AddMemoryCache();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ResourceAuthService>();
 builder.Services.AddScoped<ReservationService>();
+builder.Services.AddScoped<ApartmanSmtpSettingService>();
+builder.Services.AddScoped<ReservationEmailNotificationJob>();
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<RoomSercie>();
 builder.Services.AddScoped<RoomPriceTierService>();

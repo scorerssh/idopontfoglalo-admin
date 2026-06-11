@@ -29,6 +29,18 @@ export const apartmanService = {
     const { data } = await api.patch('/api/Apartman/Update', payload)
     return data
   },
+  async getSmtpSetting(apartmanId) {
+    const { data } = await api.get(`/api/ApartmanSmtpSetting/${apartmanId}`)
+    return data
+  },
+  async upsertSmtpSetting(payload) {
+    const { data } = await api.put('/api/ApartmanSmtpSetting', payload)
+    return data
+  },
+  async deleteSmtpSetting(apartmanId) {
+    const { data } = await api.delete(`/api/ApartmanSmtpSetting/${apartmanId}`)
+    return data
+  },
   async delete(id) {
     const { data } = await api.delete(`/api/Apartman/${id}`)
     return data

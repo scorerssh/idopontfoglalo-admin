@@ -6,6 +6,7 @@ import DefaultInput from '@/components/DefaultInput.vue'
 import MainTitle from '@/components/MainTitle.vue'
 import BindedUsers from './BindedUsers.vue'
 import AvailableUsers from './AvailableUsers.vue'
+import ApartmanSmtpSettings from './ApartmanSmtpSettings.vue'
 
 const emit = defineEmits(['close', 'apartmanUpdated'])
 
@@ -80,7 +81,7 @@ const handleClose = () => {
         <template v-if="showModal && apartmanData">
             <div class="modal-backdrop fixed inset-0 bg-black/50 z-40" @click="handleClose" />
             <div
-                class="modal bg-white p-6 rounded-lg shadow-lg fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] z-50 h-[60vh] overflow-y-auto scrollable">
+                class="modal bg-white p-6 rounded-lg shadow-lg fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[92%] lg:w-[70%] z-50 max-h-[85vh] overflow-y-auto scrollable">
                 <button
                     class="close-button absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl leading-none"
                     @click="handleClose">
@@ -141,6 +142,7 @@ const handleClose = () => {
 
 
                     </div>
+                    <ApartmanSmtpSettings :apartmanId="apartmanData.id" />
                 </div>
             </div>
         </template>

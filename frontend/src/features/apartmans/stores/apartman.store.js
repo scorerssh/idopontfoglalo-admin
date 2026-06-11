@@ -23,6 +23,9 @@ export const useApartmanStore = defineStore('apartmanStore', {
       getAllWithRooms: defaultOp(),
       create: defaultOp(),
       update: defaultOp(),
+      getSmtpSetting: defaultOp(),
+      upsertSmtpSetting: defaultOp(),
+      deleteSmtpSetting: defaultOp(),
       delete: defaultOp(),
     },
   }),
@@ -174,6 +177,51 @@ export const useApartmanStore = defineStore('apartmanStore', {
           notifyOnSuccess: true,
           successMessage: 'Sikeresen frissítette az apartman adatait!',
           errorMessage: 'Sikertelen volt az apartman adatainak frissítése.',
+        },
+      )
+    },
+
+    async getSmtpSetting(apartmanId) {
+      if (!apartmanId) throw new Error('Nincs azonosito')
+      return runOp(
+        this.ops.getSmtpSetting,
+        async () => {
+          try {
+            return await svc.getSmtpSetting(apartmanId)
+          } catch (error) {
+            if (error?.response?.status === 404) return null
+            throw error
+          }
+        },
+        {
+          notifyOnSuccess: false,
+          errorMessage: 'Sikertelen volt az SMTP beallitas betoltese.',
+        },
+      )
+    },
+
+    async upsertSmtpSetting(payload) {
+      if (!payload) throw new Error('Nincs payload')
+      return runOp(
+        this.ops.upsertSmtpSetting,
+        async () => svc.upsertSmtpSetting(payload),
+        {
+          notifyOnSuccess: true,
+          successMessage: 'Sikeresen mentette az SMTP beallitast!',
+          errorMessage: 'Sikertelen volt az SMTP beallitas mentese.',
+        },
+      )
+    },
+
+    async deleteSmtpSetting(apartmanId) {
+      if (!apartmanId) throw new Error('Nincs azonosito')
+      return runOp(
+        this.ops.deleteSmtpSetting,
+        async () => svc.deleteSmtpSetting(apartmanId),
+        {
+          notifyOnSuccess: true,
+          successMessage: 'Sikeresen torolte az SMTP beallitast!',
+          errorMessage: 'Sikertelen volt az SMTP beallitas torlese.',
         },
       )
     },

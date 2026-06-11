@@ -6,6 +6,7 @@ using ApartManBackend.Services.RoomSpecialPricingRules;
 using AutoFilterer.Extensions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using static ApartManBackend.StaticMambers.Enums;
 
@@ -17,15 +18,18 @@ namespace ApartManBackend.Services
         private readonly ApartmanDbContext _db;
         private readonly IMapper _mapper;
         private readonly RoomSpecialPricingRuleSolver _roomSpecialPricingRuleSolver;
+        private readonly IBackgroundJobClient _backgroundJobClient;
 
         public ReservationService(
             ApartmanDbContext db,
             IMapper mapper,
-            RoomSpecialPricingRuleSolver roomSpecialPricingRuleSolver)
+            RoomSpecialPricingRuleSolver roomSpecialPricingRuleSolver,
+            IBackgroundJobClient backgroundJobClient)
         {
             _db = db;
             _mapper = mapper;
             _roomSpecialPricingRuleSolver = roomSpecialPricingRuleSolver;
+            _backgroundJobClient = backgroundJobClient;
         }
 
 
@@ -48,6 +52,8 @@ namespace ApartManBackend.Services
 
             await _db.Reservations.AddAsync(reservation, ct);
             await _db.SaveChangesAsync(ct);
+            _backgroundJobClient.Enqueue<ReservationEmailNotificationJob>(
+                job => job.SendReservationCreatedEmailsAsync(reservation.Id));
 
         }
 

@@ -19,6 +19,7 @@ namespace ApartManBackend.Repository
 
         public DbSet<RoomSpecialPricingRule> RoomSpecialPricingRules => Set<RoomSpecialPricingRule>();
         public DbSet<AgePriceTier> AgePriceTiers => Set<AgePriceTier>();
+        public DbSet<ApartmanSmtpSetting> ApartmanSmtpSettings => Set<ApartmanSmtpSetting>();
 
 
 
