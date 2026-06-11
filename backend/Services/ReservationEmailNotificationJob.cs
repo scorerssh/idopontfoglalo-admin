@@ -1,5 +1,6 @@
 using ApartManBackend.Models.DbModels.Models;
 using ApartManBackend.Repository;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Net;
@@ -10,13 +11,21 @@ namespace ApartManBackend.Services
 {
     public class ReservationEmailNotificationJob
     {
+        private const int MaxRetryAttempts = 3;
+        private static readonly TimeSpan RetryDelay = TimeSpan.FromSeconds(10);
+
         private readonly ApartmanDbContext _db;
         private readonly ILogger<ReservationEmailNotificationJob> _logger;
+        private readonly IBackgroundJobClient _backgroundJobClient;
 
-        public ReservationEmailNotificationJob(ApartmanDbContext db, ILogger<ReservationEmailNotificationJob> logger)
+        public ReservationEmailNotificationJob(
+            ApartmanDbContext db,
+            ILogger<ReservationEmailNotificationJob> logger,
+            IBackgroundJobClient backgroundJobClient)
         {
             _db = db;
             _logger = logger;
+            _backgroundJobClient = backgroundJobClient;
         }
 
         public async Task SendReservationCreatedEmailsAsync(int reservationId)
@@ -52,43 +61,104 @@ namespace ApartManBackend.Services
                 return;
             }
 
-            using var smtpClient = CreateSmtpClient(smtpSetting);
             if (guestRecipient is not null)
             {
-                using var guestMessage = CreateGuestMessage(smtpSetting, reservation, apartman, guestRecipient);
-                await SendMessageAsync(smtpClient, guestMessage, reservationId, guestRecipient);
+                EnqueueRecipientEmail(reservationId, guestRecipient, ReservationEmailRecipientKind.Guest);
             }
 
             foreach (var apartmanUserRecipient in apartmanUserRecipients)
             {
-                using var apartmanUserMessage = CreateApartmanUserMessage(
-                    smtpSetting,
-                    reservation,
-                    apartman,
-                    apartmanUserRecipient);
-
-                await SendMessageAsync(smtpClient, apartmanUserMessage, reservationId, apartmanUserRecipient);
+                EnqueueRecipientEmail(reservationId, apartmanUserRecipient, ReservationEmailRecipientKind.ApartmanUser);
             }
         }
 
-        private async Task SendMessageAsync(
-            SmtpClient smtpClient,
-            MailMessage message,
+        [AutomaticRetry(Attempts = 0)]
+        public async Task SendReservationCreatedEmailToRecipientAsync(
             int reservationId,
-            MailAddress recipient)
+            string recipientEmail,
+            ReservationEmailRecipientKind recipientKind,
+            int retryAttempt)
         {
+            var normalizedRetryAttempt = Math.Clamp(retryAttempt, 0, MaxRetryAttempts);
+            var sendAttempt = normalizedRetryAttempt + 1;
+            var maxSendAttempts = MaxRetryAttempts + 1;
+            var recipient = CreateMailAddressOrNull(recipientEmail);
+            if (recipient is null)
+            {
+                _logger.LogWarning(
+                    "Reservation email notification skipped. Invalid recipient {Recipient} for reservation {ReservationId}.",
+                    recipientEmail,
+                    reservationId);
+                return;
+            }
+
+            var reservation = await _db.Reservations
+                .AsNoTracking()
+                .Include(x => x.Room)
+                    .ThenInclude(x => x.Apartman)
+                        .ThenInclude(x => x.SmtpSetting)
+                .FirstOrDefaultAsync(x => x.Id == reservationId);
+
+            if (reservation is null)
+            {
+                _logger.LogWarning("Reservation email notification skipped. Reservation {ReservationId} was not found.", reservationId);
+                return;
+            }
+
+            var apartman = reservation.Room.Apartman;
+            var smtpSetting = apartman.SmtpSetting;
+            if (smtpSetting is null || !smtpSetting.IsEnabled)
+            {
+                return;
+            }
+
             try
             {
+                using var smtpClient = CreateSmtpClient(smtpSetting);
+                using var message = CreateMessage(smtpSetting, reservation, apartman, recipient, recipientKind);
                 await smtpClient.SendMailAsync(message);
             }
             catch (Exception ex)
             {
                 _logger.LogError(
                     ex,
-                    "Failed to send reservation email notification for reservation {ReservationId} to {Recipient}.",
+                    "Failed to send reservation email notification attempt {Attempt}/{MaxAttempts} for reservation {ReservationId} to {Recipient}.",
+                    sendAttempt,
+                    maxSendAttempts,
                     reservationId,
                     recipient.Address);
+
+                if (normalizedRetryAttempt >= MaxRetryAttempts)
+                {
+                    _logger.LogError(
+                        "Reservation email notification permanently failed after {RetryAttempts} retries for reservation {ReservationId} to {Recipient}.",
+                        MaxRetryAttempts,
+                        reservationId,
+                        recipient.Address);
+                    return;
+                }
+
+                _backgroundJobClient.Schedule<ReservationEmailNotificationJob>(
+                    job => job.SendReservationCreatedEmailToRecipientAsync(
+                        reservationId,
+                        recipient.Address,
+                        recipientKind,
+                        normalizedRetryAttempt + 1),
+                    RetryDelay);
             }
+        }
+
+        private void EnqueueRecipientEmail(
+            int reservationId,
+            MailAddress recipient,
+            ReservationEmailRecipientKind recipientKind)
+        {
+            _backgroundJobClient.Enqueue<ReservationEmailNotificationJob>(
+                job => job.SendReservationCreatedEmailToRecipientAsync(
+                    reservationId,
+                    recipient.Address,
+                    recipientKind,
+                    0));
         }
 
         private static MailAddress? CreateMailAddressOrNull(string? email)
@@ -122,7 +192,8 @@ namespace ApartManBackend.Services
         {
             var smtpClient = new SmtpClient(smtpSetting.Host, smtpSetting.Port)
             {
-                EnableSsl = smtpSetting.UseSsl
+                EnableSsl = smtpSetting.UseSsl,
+                DeliveryMethod = SmtpDeliveryMethod.Network
             };
 
             if (!string.IsNullOrWhiteSpace(smtpSetting.UserName))
@@ -132,6 +203,21 @@ namespace ApartManBackend.Services
             }
 
             return smtpClient;
+        }
+
+        private static MailMessage CreateMessage(
+            ApartmanSmtpSetting smtpSetting,
+            Reservation reservation,
+            Apartman apartman,
+            MailAddress recipient,
+            ReservationEmailRecipientKind recipientKind)
+        {
+            return recipientKind switch
+            {
+                ReservationEmailRecipientKind.Guest => CreateGuestMessage(smtpSetting, reservation, apartman, recipient),
+                ReservationEmailRecipientKind.ApartmanUser => CreateApartmanUserMessage(smtpSetting, reservation, apartman, recipient),
+                _ => throw new ArgumentOutOfRangeException(nameof(recipientKind), recipientKind, "Unknown email recipient kind.")
+            };
         }
 
         private static MailMessage CreateGuestMessage(
