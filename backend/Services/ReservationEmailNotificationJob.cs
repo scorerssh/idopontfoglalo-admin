@@ -117,6 +117,12 @@ namespace ApartManBackend.Services
                 using var smtpClient = CreateSmtpClient(smtpSetting);
                 using var message = CreateMessage(smtpSetting, reservation, apartman, recipient, recipientKind);
                 await smtpClient.SendMailAsync(message);
+                _logger.LogInformation(
+                    "Reservation email notification sent for reservation {ReservationId} to {Recipient} on attempt {Attempt}/{MaxAttempts}.",
+                    reservationId,
+                    recipient.Address,
+                    sendAttempt,
+                    maxSendAttempts);
             }
             catch (Exception ex)
             {
@@ -135,7 +141,9 @@ namespace ApartManBackend.Services
                         MaxRetryAttempts,
                         reservationId,
                         recipient.Address);
-                    return;
+                    throw new InvalidOperationException(
+                        $"Reservation email notification failed after {MaxRetryAttempts} retries for reservation {reservationId} to {recipient.Address}.",
+                        ex);
                 }
 
                 _backgroundJobClient.Schedule<ReservationEmailNotificationJob>(
