@@ -195,7 +195,7 @@ export const useApartmanStore = defineStore('apartmanStore', {
         },
         {
           notifyOnSuccess: false,
-          errorMessage: 'Sikertelen volt az SMTP beallitas betoltese.',
+          errorMessage: 'Sikertelen volt az SMTP beállítás betöltése.',
         },
       )
     },
@@ -207,8 +207,8 @@ export const useApartmanStore = defineStore('apartmanStore', {
         async () => svc.upsertSmtpSetting(payload),
         {
           notifyOnSuccess: true,
-          successMessage: 'Sikeresen mentette az SMTP beallitast!',
-          errorMessage: 'Sikertelen volt az SMTP beallitas mentese.',
+          successMessage: 'Sikeresen mentette az SMTP beállítást!',
+          errorMessage: 'Sikertelen volt az SMTP beállítás mentése.',
         },
       )
     },
@@ -220,8 +220,8 @@ export const useApartmanStore = defineStore('apartmanStore', {
         async () => svc.deleteSmtpSetting(apartmanId),
         {
           notifyOnSuccess: true,
-          successMessage: 'Sikeresen torolte az SMTP beallitast!',
-          errorMessage: 'Sikertelen volt az SMTP beallitas torlese.',
+          successMessage: 'Sikeresen törölte az SMTP beállítást!',
+          errorMessage: 'Sikertelen volt az SMTP beállítás törlése.',
         },
       )
     },

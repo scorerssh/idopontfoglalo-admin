@@ -15,6 +15,8 @@ const MOCK_SMTP_SETTING = {
   userName: 'mailer',
   senderEmail: 'noreply@example.com',
   senderName: 'Panorama Apartman',
+  guestEmailIntroTemplate: 'Köszönjük a foglalást.',
+  guestSmsTemplate: 'Kedves {guestName}! Érkezés: {startDate}.',
   useSsl: true,
   isEnabled: true,
   hasPassword: true,

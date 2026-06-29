@@ -2,6 +2,11 @@
 import { Mail, Save, Trash2 } from 'lucide-vue-next'
 import { useApartmanStore } from '@/features/apartmans/stores/apartman.store'
 
+const DEFAULT_GUEST_EMAIL_INTRO_TEMPLATE =
+    'Köszönjük a foglalást. Az alábbi adatokkal rögzítettük a foglalásodat a(z) {apartmanName} apartmanhoz.'
+const DEFAULT_GUEST_SMS_TEMPLATE =
+    'Kedves {guestName}! Foglalásodat rögzítettük: {apartmanName}, {roomName}, érkezés: {startDate}, távozás: {endDate}. Végösszeg: {totalPrice}.'
+
 const props = defineProps({
     apartmanId: { type: Number, required: true },
 })
@@ -17,6 +22,8 @@ const formData = reactive({
     password: '',
     senderEmail: '',
     senderName: '',
+    guestEmailIntroTemplate: DEFAULT_GUEST_EMAIL_INTRO_TEMPLATE,
+    guestSmsTemplate: DEFAULT_GUEST_SMS_TEMPLATE,
     useSsl: true,
     isEnabled: true,
     hasPassword: false,
@@ -31,6 +38,8 @@ function applySetting(setting) {
     formData.password = ''
     formData.senderEmail = setting?.senderEmail ?? ''
     formData.senderName = setting?.senderName ?? ''
+    formData.guestEmailIntroTemplate = setting?.guestEmailIntroTemplate ?? DEFAULT_GUEST_EMAIL_INTRO_TEMPLATE
+    formData.guestSmsTemplate = setting?.guestSmsTemplate ?? DEFAULT_GUEST_SMS_TEMPLATE
     formData.useSsl = setting?.useSsl ?? true
     formData.isEnabled = setting?.isEnabled ?? true
     formData.hasPassword = setting?.hasPassword ?? false
@@ -51,6 +60,8 @@ async function saveSmtpSetting() {
         password: formData.password || null,
         senderEmail: formData.senderEmail,
         senderName: formData.senderName || null,
+        guestEmailIntroTemplate: formData.guestEmailIntroTemplate || null,
+        guestSmsTemplate: formData.guestSmsTemplate || null,
         useSsl: formData.useSsl,
         isEnabled: formData.isEnabled,
     }
@@ -61,7 +72,7 @@ async function saveSmtpSetting() {
 
 async function deleteSmtpSetting() {
     if (!smtpExists.value) return
-    if (!confirm('Biztosan torlod az SMTP beallitast?')) return
+    if (!confirm('Biztosan törlöd az SMTP beállítást?')) return
 
     await apartmanStore.deleteSmtpSetting(props.apartmanId)
     applySetting(null)
@@ -78,15 +89,15 @@ watch(() => props.apartmanId, loadSmtpSetting, { immediate: true })
                     <Mail class="h-5 w-5" />
                 </div>
                 <div class="min-w-0">
-                    <h3 class="text-sm font-bold text-gray-900 leading-tight">SMTP beallitasok</h3>
+                    <h3 class="text-sm font-bold text-gray-900 leading-tight">SMTP beállítások</h3>
                     <p class="text-xs text-gray-500 truncate">
-                        {{ smtpExists ? 'Aktiv apartman email fiok' : 'Nincs mentett SMTP fiok' }}
+                        {{ smtpExists ? 'Aktív apartman email fiók' : 'Nincs mentett SMTP fiók' }}
                     </p>
                 </div>
             </div>
             <label class="flex items-center gap-2 text-xs font-semibold text-gray-600">
                 <input v-model="formData.isEnabled" type="checkbox" class="h-4 w-4 accent-blue-600">
-                Aktiv
+                Aktív
             </label>
         </div>
 
@@ -105,27 +116,40 @@ watch(() => props.apartmanId, loadSmtpSetting, { immediate: true })
             </div>
 
             <label class="flex flex-col gap-1 text-sm text-black/60">
-                Felhasznalonev
+                Felhasználónév
                 <input v-model="formData.userName" maxlength="255" autocomplete="off"
                     class="px-3 py-2 w-full bg-gray-200 focus:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100">
             </label>
             <label class="flex flex-col gap-1 text-sm text-black/60">
-                Jelszo
+                Jelszó
                 <input v-model="formData.password" type="password" maxlength="1024" autocomplete="new-password"
-                    :placeholder="formData.hasPassword ? 'Mar van mentett jelszo' : ''"
+                    :placeholder="formData.hasPassword ? 'Már van mentett jelszó' : ''"
                     class="px-3 py-2 w-full bg-gray-200 focus:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100">
             </label>
 
             <label class="flex flex-col gap-1 text-sm text-black/60">
-                Felado email
+                Feladó email
                 <input v-model="formData.senderEmail" required type="email" maxlength="255"
                     class="px-3 py-2 w-full bg-gray-200 focus:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100">
             </label>
             <label class="flex flex-col gap-1 text-sm text-black/60">
-                Felado nev
+                Feladó név
                 <input v-model="formData.senderName" maxlength="100"
                     class="px-3 py-2 w-full bg-gray-200 focus:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100">
             </label>
+
+            <div class="md:col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-3 border-t border-gray-200 pt-3 mt-1">
+                <label class="flex flex-col gap-1 text-sm text-black/60">
+                    Email beköszönő szöveg
+                    <textarea v-model="formData.guestEmailIntroTemplate" maxlength="1000" rows="4"
+                        class="px-3 py-2 w-full bg-gray-200 focus:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100 resize-y"></textarea>
+                </label>
+                <label class="flex flex-col gap-1 text-sm text-black/60">
+                    SMS sablon
+                    <textarea v-model="formData.guestSmsTemplate" maxlength="1000" rows="4"
+                        class="px-3 py-2 w-full bg-gray-200 focus:ring-2 ring-0 ring-blue-500 rounded-lg outline-none transition-all duration-100 resize-y"></textarea>
+                </label>
+            </div>
 
             <div class="md:col-span-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
                 <label class="flex items-center gap-2 text-sm font-semibold text-gray-600">
@@ -137,12 +161,12 @@ watch(() => props.apartmanId, loadSmtpSetting, { immediate: true })
                     <button v-if="smtpExists" type="button" @click="deleteSmtpSetting"
                         class="inline-flex items-center gap-2 px-3 py-2 text-sm rounded-lg text-red-600 border border-red-200 hover:bg-red-50 transition-colors">
                         <Trash2 class="h-4 w-4" />
-                        Torles
+                        Törlés
                     </button>
                     <button type="submit"
                         class="inline-flex items-center gap-2 px-3 py-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
                         <Save class="h-4 w-4" />
-                        SMTP mentes
+                        SMTP mentés
                     </button>
                 </div>
             </div>

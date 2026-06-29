@@ -36,6 +36,12 @@ namespace ApartManBackend.RequestModels.ApartmanSmtpSetting
 
             RuleFor(x => x.SenderName)
                 .MaximumLength(100).WithMessage("A felado neve legfeljebb 100 karakter lehet.");
+
+            RuleFor(x => x.GuestEmailIntroTemplate)
+                .MaximumLength(1000).WithMessage("Az email bevezeto szoveg legfeljebb 1000 karakter lehet.");
+
+            RuleFor(x => x.GuestSmsTemplate)
+                .MaximumLength(1000).WithMessage("Az SMS sablon legfeljebb 1000 karakter lehet.");
         }
     }
 }

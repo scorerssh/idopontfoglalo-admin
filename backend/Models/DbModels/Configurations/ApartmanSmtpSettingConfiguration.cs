@@ -31,6 +31,12 @@ namespace ApartManBackend.Models.DbModels.Configurations
             builder.Property(x => x.SenderName)
                 .HasMaxLength(100);
 
+            builder.Property(x => x.GuestEmailIntroTemplate)
+                .HasMaxLength(1000);
+
+            builder.Property(x => x.GuestSmsTemplate)
+                .HasMaxLength(1000);
+
             builder.Property(x => x.IsEnabled)
                 .HasDefaultValue(true);
 

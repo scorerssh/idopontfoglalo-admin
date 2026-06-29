@@ -241,8 +241,8 @@ namespace ApartManBackend.Services
             var message = new MailMessage
             {
                 From = new MailAddress(smtpSetting.SenderEmail, senderName),
-                Subject = $"Foglalas visszaigazolas - {apartman.Name}",
-                Body = BuildGuestHtmlBody(reservation, apartman),
+                Subject = $"Foglalás visszaigazolás - {apartman.Name}",
+                Body = BuildGuestHtmlBody(smtpSetting, reservation, apartman),
                 IsBodyHtml = true,
                 BodyEncoding = Encoding.UTF8,
                 SubjectEncoding = Encoding.UTF8
@@ -265,7 +265,7 @@ namespace ApartManBackend.Services
             var message = new MailMessage
             {
                 From = new MailAddress(smtpSetting.SenderEmail, senderName),
-                Subject = $"Uj foglalas erkezett - {apartman.Name}",
+                Subject = $"Új foglalás érkezett - {apartman.Name}",
                 Body = BuildApartmanUserHtmlBody(reservation, apartman),
                 IsBodyHtml = true,
                 BodyEncoding = Encoding.UTF8,
@@ -276,21 +276,23 @@ namespace ApartManBackend.Services
             return message;
         }
 
-        private static string BuildGuestHtmlBody(Reservation reservation, Apartman apartman)
+        private static string BuildGuestHtmlBody(ApartmanSmtpSetting smtpSetting, Reservation reservation, Apartman apartman)
         {
+            var intro = ReservationNotificationTemplateRenderer.RenderGuestEmailIntro(smtpSetting, reservation, apartman);
+
             return BuildHtmlLayout(
-                "Foglalas visszaigazolva",
+                "Foglalás visszaigazolva",
                 $"Kedves {reservation.Name}!",
-                $"Koszonjuk a foglalast. Az alabbi adatokkal rogzitettuk a foglalasodat a(z) {apartman.Name} apartmanhoz.",
+                intro,
                 BuildReservationDetailsHtml(reservation, includeGuestContact: false));
         }
 
         private static string BuildApartmanUserHtmlBody(Reservation reservation, Apartman apartman)
         {
             return BuildHtmlLayout(
-                "Uj foglalas erkezett",
+                "Új foglalás érkezett",
                 apartman.Name,
-                "Az apartmanhoz uj weboldali foglalas erkezett. A foglalas adatai:",
+                "Az apartmanhoz új weboldali foglalás érkezett. A foglalás adatai:",
                 BuildReservationDetailsHtml(reservation, includeGuestContact: true));
         }
 
@@ -308,13 +310,13 @@ namespace ApartManBackend.Services
                     <div style="padding:24px;">
                         <div style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
                             <div style="background:#275bf6;color:#ffffff;padding:20px 24px;">
-                                <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.85;">Apartman foglalas</div>
+                                <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.85;">Apartman foglalás</div>
                                 <h1 style="margin:8px 0 0;font-size:24px;line-height:1.25;">{H(headline)}</h1>
                             </div>
                             <div style="padding:24px;">
-                                <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#374151;">{H(intro)}</p>
+                                <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#374151;">{BuildMultilineHtml(intro)}</p>
                                 {detailsHtml}
-                                <p style="margin:22px 0 0;font-size:12px;line-height:1.5;color:#6b7280;">Ez egy automatikusan kuldott email, kerlek ne valaszolj ra kozvetlenul.</p>
+                                <p style="margin:22px 0 0;font-size:12px;line-height:1.5;color:#6b7280;">Ez egy automatikusan küldött email, kérlek ne válaszolj rá közvetlenül.</p>
                             </div>
                         </div>
                     </div>
@@ -328,22 +330,22 @@ namespace ApartManBackend.Services
             var rows = new List<string>
             {
                 BuildDetailRow("Szoba", reservation.Room.Name),
-                BuildDetailRow("Erkezes", reservation.StartTIme.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)),
-                BuildDetailRow("Tavozas", reservation.EndTime.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)),
-                BuildDetailRow("Vendegek szama", reservation.PearsonCount.ToString(CultureInfo.InvariantCulture)),
-                BuildDetailRow("Vegosszeg", $"{reservation.TotalPrice.ToString("N0", CultureInfo.GetCultureInfo("hu-HU"))} Ft")
+                BuildDetailRow("Érkezés", ReservationNotificationTemplateRenderer.FormatDate(reservation.StartTIme)),
+                BuildDetailRow("Távozás", ReservationNotificationTemplateRenderer.FormatDate(reservation.EndTime)),
+                BuildDetailRow("Vendégek száma", reservation.PearsonCount.ToString(CultureInfo.InvariantCulture)),
+                BuildDetailRow("Végösszeg", ReservationNotificationTemplateRenderer.FormatPrice(reservation.TotalPrice))
             };
 
             if (includeGuestContact)
             {
-                rows.Add(BuildDetailRow("Foglalas neve", reservation.Name));
+                rows.Add(BuildDetailRow("Foglalás neve", reservation.Name));
                 rows.Add(BuildDetailRow("Telefon", reservation.PhoneNumber));
                 rows.Add(BuildDetailRow("Email", reservation.Email));
             }
 
             if (!string.IsNullOrWhiteSpace(reservation.Description))
             {
-                rows.Add(BuildDetailRow("Megjegyzes", reservation.Description));
+                rows.Add(BuildDetailRow("Megjegyzés", reservation.Description));
             }
 
             return $"""
@@ -368,6 +370,16 @@ namespace ApartManBackend.Services
         private static string H(string? value)
         {
             return WebUtility.HtmlEncode(value ?? string.Empty);
+        }
+
+        private static string BuildMultilineHtml(string? value)
+        {
+            var lines = (value ?? string.Empty)
+                .Replace("\r\n", "\n")
+                .Replace("\r", "\n")
+                .Split('\n');
+
+            return string.Join("<br>", lines.Select(H));
         }
     }
 }

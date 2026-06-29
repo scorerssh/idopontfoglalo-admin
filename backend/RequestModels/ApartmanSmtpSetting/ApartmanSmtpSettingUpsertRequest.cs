@@ -9,6 +9,8 @@ namespace ApartManBackend.RequestModels.ApartmanSmtpSetting
         public string? Password { get; set; }
         public string? SenderEmail { get; set; }
         public string? SenderName { get; set; }
+        public string? GuestEmailIntroTemplate { get; set; }
+        public string? GuestSmsTemplate { get; set; }
         public bool? UseSsl { get; set; }
         public bool? IsEnabled { get; set; }
     }

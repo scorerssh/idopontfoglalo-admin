@@ -54,6 +54,12 @@ namespace ApartManBackend.Services
 
             smtpSetting.SenderEmail = request.SenderEmail!.Trim();
             smtpSetting.SenderName = string.IsNullOrWhiteSpace(request.SenderName) ? null : request.SenderName.Trim();
+            smtpSetting.GuestEmailIntroTemplate = string.IsNullOrWhiteSpace(request.GuestEmailIntroTemplate)
+                ? null
+                : request.GuestEmailIntroTemplate.Trim();
+            smtpSetting.GuestSmsTemplate = string.IsNullOrWhiteSpace(request.GuestSmsTemplate)
+                ? null
+                : request.GuestSmsTemplate.Trim();
             smtpSetting.UseSsl = request.UseSsl ?? false;
             smtpSetting.IsEnabled = request.IsEnabled ?? true;
 
